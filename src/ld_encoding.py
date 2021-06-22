@@ -331,7 +331,8 @@ while min(currentCorrectAnswers) < correctAnswersMax and nBlock < nbBlocksMax:
 
         random.shuffle(cueCards)
 
-        matrix_i.playSound(soundsAllocation_index, volumeAdjusted=volumeAdjusted)
+        sound_played = matrix_i.playSound(soundsAllocation_index, volumeAdjusted=volumeAdjusted)
+        exp.add_experiment_info('SoundPlayed_' + str(sound_played))
         exp.clock.wait(SoundBeforeImageTime, process_control_events=True)
 
         for i in range(len(classPictures)):
