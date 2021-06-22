@@ -352,7 +352,7 @@ while min(currentCorrectAnswers) < correctAnswersMax and nBlock < nbBlocksMax:
                                             -windowSize[1] / float(2) + (2 * matrices[0].gap + cardSize[1]) / float(2)),
                                         text_font=None, text_size=textSize, text_bold=None, text_italic=None,
                                         text_underline=None, text_colour=textColor,
-                                        background_colour=bgColor,
+                                        background_colour=misc.constants.C_YELLOW,
                                         max_width=None)
         instructions.plot(bs)
         bs.present(False, True)
@@ -399,7 +399,7 @@ while min(currentCorrectAnswers) < correctAnswersMax and nBlock < nbBlocksMax:
                                                         text_font=None, text_size=textSize, text_bold=None,
                                                         text_italic=None,
                                                         text_underline=None, text_colour=textColor,
-                                                        background_colour=bgColor,
+                                                        background_colour=misc.constants.C_YELLOW,
                                                         max_width=None)
                         instructions.plot(bs)
                         bs.present(False, True)
