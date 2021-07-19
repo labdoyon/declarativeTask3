@@ -212,7 +212,11 @@ while min(currentCorrectAnswers) < correctAnswersMax and nBlock < nbBlocksMax:
 
             for nCard in presentationOrder:
                 mouse.hide_cursor(True, True)
-                matrix_i.playSound(soundsAllocation_index, volumeAdjusted=volumeAdjusted)
+                sound_played_command, sound_played = matrix_i.playSound(soundsAllocation_index, volumeAdjusted=volumeAdjusted)
+                exp.add_experiment_info(f"SoundPlayed_{str(sound_played)}_timing_{exp.clock.time}")
+                exp.add_experiment_info("sound_played_command")
+                exp.add_experiment_info(sound_played_command)
+                del sound_played_command, sound_played
                 exp.clock.wait(SoundBeforeImageTime, process_control_events=True)
                 matrix_i.plotCard(nCard, True, bs, True)  # Show Location for ( 2s )
                 exp.add_experiment_info('ShowCard_pos_{}_card_{}_timing_{}_sound_{}'.format(
@@ -331,8 +335,11 @@ while min(currentCorrectAnswers) < correctAnswersMax and nBlock < nbBlocksMax:
 
         random.shuffle(cueCards)
 
-        sound_played = matrix_i.playSound(soundsAllocation_index, volumeAdjusted=volumeAdjusted)
-        exp.add_experiment_info('SoundPlayed_' + str(sound_played))
+        sound_played_command, sound_played = matrix_i.playSound(soundsAllocation_index, volumeAdjusted=volumeAdjusted)
+        exp.add_experiment_info(f"SoundPlayed_{str(sound_played)}_timing_{exp.clock.time}")
+        exp.add_experiment_info("sound_played_command")
+        exp.add_experiment_info(sound_played_command)
+        del sound_played_command, sound_played
         exp.clock.wait(SoundBeforeImageTime, process_control_events=True)
 
         for i in range(len(classPictures)):
@@ -352,7 +359,7 @@ while min(currentCorrectAnswers) < correctAnswersMax and nBlock < nbBlocksMax:
                                             -windowSize[1] / float(2) + (2 * matrices[0].gap + cardSize[1]) / float(2)),
                                         text_font=None, text_size=textSize, text_bold=None, text_italic=None,
                                         text_underline=None, text_colour=textColor,
-                                        background_colour=misc.constants.C_YELLOW,
+                                        background_colour=bgColor,
                                         max_width=None)
         instructions.plot(bs)
         bs.present(False, True)
@@ -399,7 +406,7 @@ while min(currentCorrectAnswers) < correctAnswersMax and nBlock < nbBlocksMax:
                                                         text_font=None, text_size=textSize, text_bold=None,
                                                         text_italic=None,
                                                         text_underline=None, text_colour=textColor,
-                                                        background_colour=misc.constants.C_YELLOW,
+                                                        background_colour=bgColor,
                                                         max_width=None)
                         instructions.plot(bs)
                         bs.present(False, True)
@@ -440,7 +447,11 @@ while min(currentCorrectAnswers) < correctAnswersMax and nBlock < nbBlocksMax:
                                             'MatrixResponse_pos_{}_ERROR_timing_{}'.format(currentCard, exp.clock.time))
                                     if currentCard == chosenCueCard['pos']:
                                         if experimentName == 'Encoding' and nbBlocksMax != 1:
-                                            matrix_i.playSound(soundsAllocation_index, volumeAdjusted=volumeAdjusted)
+                                            sound_played_command, sound_played = matrix_i.playSound(soundsAllocation_index, volumeAdjusted=volumeAdjusted)
+                                            exp.add_experiment_info(f"SoundPlayed_{str(sound_played)}_timing_{exp.clock.time}")
+                                            exp.add_experiment_info("sound_played_command")
+                                            exp.add_experiment_info(sound_played_command)
+                                            del sound_played_command, sound_played
                                         correctAnswers[matrix_index, nBlock] += 1
                                     exp.data.add([exp.clock.time, nBlock,
                                                   path_leaf(matrix_i._matrix.item(chosenCueCard['pos']).stimuli[0].filename),
@@ -488,7 +499,11 @@ while min(currentCorrectAnswers) < correctAnswersMax and nBlock < nbBlocksMax:
 
                         # We use subject_correct parameter set to True in order to have green feedback on the correct
                         # image/card
-                        matrix_i.playSound(soundsAllocation_index, volumeAdjusted=volumeAdjusted)
+                        sound_played_command, sound_played = matrix_i.playSound(soundsAllocation_index, volumeAdjusted=volumeAdjusted)
+                        exp.add_experiment_info(f"SoundPlayed_{str(sound_played)}_timing_{exp.clock.time}")
+                        exp.add_experiment_info("sound_played_command")
+                        exp.add_experiment_info(sound_played_command)
+                        del sound_played_command, sound_played
                         matrix_i.response_feedback_stimuli_frame(bs, (matrix_i._cueCard[k]).position, True,
                                                                  show_or_hide=True, draw=True)
                         exp.clock.wait(feedback_time, process_control_events=True)
@@ -528,13 +543,13 @@ while min(currentCorrectAnswers) < correctAnswersMax and nBlock < nbBlocksMax:
                                        text_font=None, text_size=textSize, text_bold=None, text_italic=None,
                                        text_underline=None, text_colour=textColor,
                                        background_colour=bgColor,
-                                       text_justification=0)
+                                       text_justification=1)
         instructionRectangle_results = stimuli.Rectangle(size=(windowSize[0], 4 * cardSize[1]), position=(0, 0),
                                                          colour=constants.C_DARKGREY)
 
         instructions.plot(bs)
         bs.present(False, True)
-        exp.clock.wait(shortRest, process_control_events=True)
+        exp.clock.wait(thankYouRest, process_control_events=True)
         instructionRectangle_results.plot(bs)
         bs.present(False, True)
 

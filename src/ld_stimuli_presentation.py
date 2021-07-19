@@ -166,7 +166,11 @@ for category in classPicturesPresentationOrder:
         sound_textbox[language] + soundNames[language][soundIndex],
         (0, -(2*cardSize[1])))
     show_and_hide_text_box(bs, instructions_listen_sound, 0, just_show=True)
-    m.playSound(soundsAllocation_index, volumeAdjusted=volumeAdjusted)
+    sound_played_command, sound_played = m.playSound(soundsAllocation_index, volumeAdjusted=volumeAdjusted)
+    exp.add_experiment_info(f"SoundPlayed_{str(sound_played)}_timing_{exp.clock.time}")
+    exp.add_experiment_info("sound_played_command")
+    exp.add_experiment_info(sound_played_command)
+    del sound_played_command, sound_played
     exp.clock.wait(presentationCard, process_control_events=True)
     exp.add_experiment_info(
         'PlayedSound_category_{}_timing_{}_soundIndex_{}_soundId_{}'.format(

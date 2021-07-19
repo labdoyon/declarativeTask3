@@ -124,13 +124,17 @@ class LdMatrix(object):
 
     def playSound(self, soundsAllocation_index, volumeAdjusted = False):
         if volumeAdjusted:
+            sound = tempSounds[soundsAllocation_index[self._category]]
             command = 'ffplay -nodisp -loglevel quiet -autoexit ' + soundsFolder +\
-                      tempSounds[soundsAllocation_index[self._category]]
+                      sound
             subprocess.call(command)
+            return command, sound
         else:
+            sound = sounds[soundsAllocation_index[self._category]]
             command = 'ffplay -nodisp -loglevel quiet -autoexit ' + soundsFolder +\
-                      sounds[soundsAllocation_index[self._category]]
+                      sound
             subprocess.call(command)
+            return command, sound
 
     def playCueSound(self, volumeAdjusted = False):
         if volumeAdjusted:
