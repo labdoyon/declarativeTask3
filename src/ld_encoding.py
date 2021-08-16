@@ -603,5 +603,17 @@ instructionRectangle.plot(bs)
 bs.present(False, True)
 
 control.end()
-
 delete_temp_files()
+
+try:
+    import csv
+    with open(dataFolder + 'sub-' + subjectName + '_task-' + experimentName + '.txt', 'w', newline='') as outfile:
+        writer = csv.writer(outfile, delimiter=';')
+        for i in range(nBlock):
+            row = []
+            for j in range(len(classPictures)):
+                row.append(
+                    f"""category_{classPictures[j]}:{str(int(correctAnswers[j, nBlock]))}/{str(matrices[j]._matrix.size - len(removeCards))} """)
+            writer.writerow(row)
+except:
+    pass
