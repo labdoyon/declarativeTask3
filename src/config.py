@@ -190,3 +190,14 @@ inter_feedback_delay_time = 1000
 choose_location_minimum_response_time = 5000
 
 debug = False
+
+sessions = ['expePreNap', 'expePostNap']
+experiment_session = {
+    'choose-language':      'expePreNap',
+    'soundVolumeAdjustment':'expePreNap',
+    'stimuli-presentation': 'expePreNap',
+    'Example':              'expePreNap',
+    'Encoding':             'expePreNap',
+    'Test-Encoding':        'expePreNap',
+    'ReTest-Encoding':      'expePostNap',
+    'DayOne-Recognition':   'expePostNap'}

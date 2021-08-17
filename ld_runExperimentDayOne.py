@@ -2,6 +2,7 @@ from cursesmenu import *
 from cursesmenu.items import *
 import sys
 import os
+import glob
 import numpy as np
 from ast import literal_eval
 
@@ -9,8 +10,21 @@ from datetime import datetime
 import expyriment
 from dateutil.parser import parse
 
+sep = os.path.sep
 
 rawFolder = os.getcwd() + os.path.sep
+subjectName = sys.argv[1]
+sessions = ['expePreNap', 'expePostNap']
+experiment_session = {
+    'choose-sound-association': 'expePreNap',
+    'Example':              'expePreNap',
+    'Encoding':             'expePreNap',
+    'Test-Encoding':        'expePreNap',
+    'ReTest-Encoding':      'expePostNap',
+    'DayOne-Recognition':   'expePostNap'}
+subject_dir = rawFolder + 'sourcedata' + sep + 'sub-' + subjectName + sep
+if not os.path.isdir(subject_dir):
+    os.mkdir(subject_dir)
 dataFolder = rawFolder + 'data' + os.path.sep
 sounds = ['shortest-1-100ms.wav', 'shortest-2-100ms.wav', 'shortest-3-100ms.wav']
 classPictures = ['a', 'b', 'c']
@@ -23,14 +37,29 @@ soundNames = {
     'french': {0: 'standard', 1: 'bruit', 2: 'aigu'}}
 
 
+def generate_bids_filename(subject_id, session, task, filename_suffix='_beh', filename_extension='.xpd',
+                           run=None):
+    if run is None:
+        return 'sub-' + subject_id + '_ses-' + session + '_task-' + task + filename_suffix + filename_extension
+    else:
+        return 'sub-' + subject_id + '_ses-' + session + '_task-' + task +\
+               '_run-' + str(run) +\
+               filename_suffix + filename_extension
+
+
 def getPrevious(subjectName, daysBefore, experienceName, target):
     currentDate = datetime.now()
-    dataFiles = [file for file in os.listdir(dataFolder) if file.endswith('.xpd')]
-
     output = None
 
-    for dataFile in dataFiles:
-        agg = expyriment.misc.data_preprocessing.read_datafile(dataFolder + dataFile, only_header_and_variable_names=True)
+    data_files = []
+    for session in sessions:
+        session_dir = subject_dir + 'ses-' + session + sep + 'beh' + sep
+        if os.path.isdir(session_dir):
+            data_files = data_files + \
+                         [session_dir + file for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
+
+    for dataFile in data_files:
+        agg = expyriment.misc.data_preprocessing.read_datafile(dataFile, only_header_and_variable_names=True)
         previousDate = parse(agg[2]['date'])
 
         try:
@@ -67,14 +96,25 @@ def newSoundAllocation():
     return soundToClasses_index, soundToClasses
 
 
-subjectName = sys.argv[1]
 language = getPrevious(subjectName, 0, 'choose-language', 'language:')
 
 soundsAllocation_index = getPrevious(subjectName, 0, 'choose-sound-association', 'Image classes to sounds (index):')
 if soundsAllocation_index is None:
     soundsAllocation_index, soundsAllocation = newSoundAllocation()
     expyriment.control.set_develop_mode(on=True, intensive_logging=False, skip_wait_methods=True)
-    exp = expyriment.design.Experiment('choose-sound-association')  # Save experiment name
+    experiment_name = 'choose-sound-association'
+    exp = expyriment.design.Experiment(experiment_name)  # Save experiment name
+
+    session = experiment_session[experiment_name]
+    session_dir = 'sourcedata' + os.path.sep + \
+                  'sub-' + subjectName + os.path.sep + \
+                  'ses-' + session + os.path.sep
+    output_dir = session_dir + 'beh'
+    if not os.path.isdir(session_dir):
+        os.mkdir(session_dir)
+    expyriment.io.defaults.datafile_directory = output_dir
+    expyriment.io.defaults.eventfile_directory = output_dir
+
     exp.add_experiment_info('Subject: ')  # Save Subject Code
     exp.add_experiment_info(subjectName)
     exp.add_experiment_info('Image classes order:')
@@ -86,7 +126,24 @@ if soundsAllocation_index is None:
     exp.add_experiment_info('Image classes to sounds (index):')
     exp.add_experiment_info(str(soundsAllocation_index))
     expyriment.control.initialize(exp)
+    i = 1
+    wouldbe_datafile = generate_bids_filename(
+        subjectName, session, experiment_name, filename_suffix='_beh', filename_extension='.xpd')
+    wouldbe_eventfile = generate_bids_filename(
+        subjectName, session, experiment_name, filename_suffix='_events', filename_extension='.xpe')
+
+    while os.path.isfile(expyriment.io.defaults.datafile_directory + sep + wouldbe_datafile) or \
+            os.path.isfile(expyriment.io.defaults.eventfile_directory + sep + wouldbe_eventfile):
+        i += 1
+        i_string = '0' * (2 - len(str(i))) + str(i)  # 0 padding, assuming 2-digits number
+        wouldbe_datafile = generate_bids_filename(subjectName, session, experiment_name, filename_suffix='_beh',
+                                                  filename_extension='.xpd', run=i_string)
+        wouldbe_eventfile = generate_bids_filename(subjectName, session, experiment_name, filename_suffix='_events',
+                                                   filename_extension='.xpe', run=i_string)
+
     expyriment.control.start(exp, auto_create_subject_id=True, skip_ready_screen=True)
+    exp.data.rename(wouldbe_datafile)
+    exp.events.rename(wouldbe_eventfile)
     expyriment.control.end()
 
 menu_soundsAllocation_index = {classNames[language][key]: soundNames[language][soundsAllocation_index[key]] for key in soundsAllocation_index.keys()}

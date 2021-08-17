@@ -16,7 +16,8 @@ from expyriment.misc._timer import get_time
 from expyriment.misc.geometry import coordinates2position
 
 from config import linesThickness, cardSize, colorLine, windowSize, bgColor, matrixSize, dataFolder, removeCards
-from config import classPictures, sounds, ignore_learned_matrices
+from config import classPictures, sounds, ignore_learned_matrices, sessions, rawFolder
+sep = os.path.sep
 
 
 def checkWindowParameters(iWindowSize):
@@ -102,11 +103,17 @@ def getPreviousMatrix(subjectName, daysBefore, experienceName, matrix_index, mat
 
     currentDate = datetime.now()
 
-    dataFiles = [each for each in os.listdir(dataFolder) if each.endswith('.xpd')]
+    subject_dir = rawFolder + 'sourcedata' + sep + 'sub-' + subjectName + sep
+    data_files = []
+    for session in sessions:
+        session_dir = subject_dir + 'ses-' + session + sep + 'beh' + sep
+        if os.path.isdir(session_dir):
+            data_files = data_files + \
+                         [session_dir + file for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
 
-    for dataFile in dataFiles:
+    for dataFile in data_files:
         try:
-            agg = misc.data_preprocessing.read_datafile(dataFolder + dataFile, only_header_and_variable_names=True)
+            agg = misc.data_preprocessing.read_datafile(dataFile, only_header_and_variable_names=True)
         except TypeError:
             continue
         previousDate = parse(agg[2]['date'])
@@ -134,11 +141,17 @@ def getPreviousSoundsAllocation(subjectName, daysBefore, experienceName):
     # Duplicate of get previous matrix but for sounds
     currentDate = datetime.now()
 
-    dataFiles = [each for each in os.listdir(dataFolder) if each.endswith('.xpd')]
+    subject_dir = rawFolder + 'sourcedata' + sep + 'sub-' + subjectName + sep
+    data_files = []
+    for session in sessions:
+        session_dir = subject_dir + 'ses-' + session + sep + 'beh' + sep
+        if os.path.isdir(session_dir):
+            data_files = data_files + \
+                         [session_dir + file for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
 
-    for dataFile in dataFiles:
+    for dataFile in data_files:
         try:
-            agg = misc.data_preprocessing.read_datafile(dataFolder + dataFile, only_header_and_variable_names=True)
+            agg = misc.data_preprocessing.read_datafile(dataFile, only_header_and_variable_names=True)
         except TypeError:
             continue
         previousDate = parse(agg[2]['date'])
@@ -166,11 +179,17 @@ def getPreviousMatrixOrder(subjectName, daysBefore, experienceName):
     output = False
     currentDate = datetime.now()
 
-    dataFiles = [each for each in os.listdir(dataFolder) if each.endswith('.xpd')]
+    subject_dir = rawFolder + 'sourcedata' + sep + 'sub-' + subjectName + sep
+    data_files = []
+    for session in sessions:
+        session_dir = subject_dir + 'ses-' + session + sep + 'beh' + sep
+        if os.path.isdir(session_dir):
+            data_files = data_files + \
+                         [session_dir + file for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
 
-    for dataFile in dataFiles:
+    for dataFile in data_files:
         try:
-            agg = misc.data_preprocessing.read_datafile(dataFolder + dataFile, only_header_and_variable_names=True)
+            agg = misc.data_preprocessing.read_datafile(dataFile, only_header_and_variable_names=True)
         except TypeError:
             continue
         previousDate = parse(agg[2]['date'])
@@ -204,13 +223,19 @@ def getPreviousMatrixOrder(subjectName, daysBefore, experienceName):
 
 def getLanguage(subjectName, daysBefore, experienceName):
     currentDate = datetime.now()
-    dataFiles = [file for file in os.listdir(dataFolder) if file.endswith('.xpd')]
-
     output = None
 
-    for dataFile in dataFiles:
+    subject_dir = rawFolder + 'sourcedata' + sep + 'sub-' + subjectName + sep
+    data_files = []
+    for session in sessions:
+        session_dir = subject_dir + 'ses-' + session + sep + 'beh' + sep
+        if os.path.isdir(session_dir):
+            data_files = data_files + \
+                         [session_dir + file for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
+
+    for dataFile in data_files:
         try:
-            agg = misc.data_preprocessing.read_datafile(dataFolder + dataFile, only_header_and_variable_names=True)
+            agg = misc.data_preprocessing.read_datafile(dataFile, only_header_and_variable_names=True)
         except TypeError:
             continue
         previousDate = parse(agg[2]['date'])
@@ -381,3 +406,13 @@ def newSoundAllocation():
 
 def absoluteTime(firstTime):
     return int((time()*1000))-firstTime
+
+
+def generate_bids_filename(subject_id, session, task, filename_suffix='_beh', filename_extension='.xpd',
+                           run=None):
+    if run is None:
+        return 'sub-' + subject_id + '_ses-' + session + '_task-' + task + filename_suffix + filename_extension
+    else:
+        return 'sub-' + subject_id + '_ses-' + session + '_task-' + task +\
+               '_run-' + str(run) +\
+               filename_suffix + filename_extension

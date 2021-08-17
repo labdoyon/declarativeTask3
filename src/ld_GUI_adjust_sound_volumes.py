@@ -1,5 +1,6 @@
 import sys
 import pickle
+import os
 
 from expyriment import control, misc, design, stimuli, io
 from expyriment.misc import constants
@@ -7,7 +8,8 @@ from expyriment.misc._timer import get_time
 
 from config import debug, windowMode, windowSize, classPictures, sounds, \
     bgColor, arrow, textSize, textColor, cardColor, responseTime, mouseButton, clickColor, clicPeriod
-from ld_utils import getLanguage, setCursor, cardSize, readMouse
+from config import experiment_session
+from ld_utils import getLanguage, setCursor, cardSize, readMouse, generate_bids_filename
 from ld_stimuli_names import soundNames, ttl_instructions_text
 from ld_sound import change_volume, play_sound, delete_temp_files, dataFolder, create_temp_sound_files
 from ttl_catch_keyboard import wait_for_ttl_keyboard
@@ -28,6 +30,17 @@ experimentName = arguments[0]
 subject_name = arguments[1]
 
 exp = design.Experiment(experimentName)  # Save experiment name
+
+session = experiment_session[experimentName]
+session_dir = 'sourcedata' + os.path.sep +\
+             'sub-' + subject_name + os.path.sep +\
+             'ses-' + session
+output_dir = session_dir + os.path.sep + 'beh'
+if not os.path.isdir(session_dir):
+    os.mkdir(session_dir)
+io.defaults.datafile_directory = output_dir
+io.defaults.eventfile_directory = output_dir
+
 control.initialize(exp)
 exp.add_experiment_info('Subject: ')
 exp.add_experiment_info(subject_name)
@@ -39,6 +52,24 @@ exp.add_experiment_info(str(classPictures))
 
 # 0. Starting Experiment
 control.start(exp, auto_create_subject_id=True, skip_ready_screen=True)
+
+i = 1
+wouldbe_datafile = generate_bids_filename(
+        subject_name, session, experimentName, filename_suffix='_beh', filename_extension='.xpd')
+wouldbe_eventfile = generate_bids_filename(
+    subject_name, session, experimentName, filename_suffix='_events', filename_extension='.xpe')
+
+while os.path.isfile(io.defaults.datafile_directory + os.path.sep + wouldbe_datafile) or \
+        os.path.isfile(io.defaults.eventfile_directory + os.path.sep + wouldbe_eventfile):
+    i += 1
+    i_string = '0' * (2 - len(str(i))) + str(i)  # 0 padding, assuming 2-digits number
+    wouldbe_datafile = generate_bids_filename(subject_name, session, experimentName, filename_suffix='_beh',
+                                              filename_extension='.xpd', run=i_string)
+    wouldbe_eventfile = generate_bids_filename(subject_name, session, experimentName, filename_suffix='_events',
+                                               filename_extension='.xpe', run=i_string)
+exp.data.rename(wouldbe_datafile)
+exp.events.rename(wouldbe_eventfile)
+
 exp.add_experiment_info(['StartExp: {}'.format(exp.clock.time)])  # Add sync info
 
 mouse = io.Mouse()  # Create Mouse instance
@@ -48,7 +79,7 @@ setCursor(arrow)
 bs = stimuli.BlankScreen(bgColor)  # Create blank screen
 
 subject_file = 'soundsVolumeAdjustmentIndB_' + subject_name + '.pkl'
-with open(dataFolder + subject_file, 'wb') as f:
+with open(io.defaults.datafile_directory + os.path.sep + subject_file, 'wb') as f:
     pickle.dump([0] * len(sounds), f)
 soundsVolumeAdjustmentIndB = create_temp_sound_files(subject_name)
 
@@ -167,7 +198,7 @@ for sound_index in range(len(sounds)):
 # Saving sounds adjustment: (this script is supposed to be executed in src)
 exp.add_experiment_info('Sounds Volume adjustment (in dB):')
 exp.add_experiment_info(str(soundsVolumeAdjustmentIndB))
-with open(dataFolder + subject_file, 'wb') as f:
+with open(io.defaults.datafile_directory + os.path.sep + subject_file, 'wb') as f:
     pickle.dump(soundsVolumeAdjustmentIndB, f)
 
 control.end()
