@@ -11,7 +11,7 @@ from config import windowMode, windowSize, bgColor, textColor, cardSize, textSiz
     min_max_ISI, debug, thankYouRest, sounds, experiment_session
 from ld_stimuli_names import pictureNames, classNames, ending_screen_text, soundNames, ttl_instructions_text
 from ld_stimuli_names import sound_textbox
-from ld_utils import getLanguage, getPreviousSoundsAllocation, generate_bids_filename
+from ld_utils import getLanguage, getPreviousSoundsAllocation, rename_output_files_to_BIDS
 from ld_sound import create_temp_sound_files, delete_temp_files
 from ttl_catch_keyboard import wait_for_ttl_keyboard
 
@@ -98,21 +98,11 @@ m.changeCueCardPosition((0, 0), cuecard_index)
 control.initialize(exp)
 control.start(exp, auto_create_subject_id=True, skip_ready_screen=True)
 
-wouldbe_datafile = generate_bids_filename(
-        subjectName, session, experimentName, filename_suffix='_beh', filename_extension='.xpd')
-wouldbe_eventfile = generate_bids_filename(
-    subjectName, session, experimentName, filename_suffix='_events', filename_extension='.xpe')
-i = 1
-while os.path.isfile(io.defaults.datafile_directory + os.path.sep + wouldbe_datafile) or \
-        os.path.isfile(io.defaults.eventfile_directory + os.path.sep + wouldbe_eventfile):
-    i += 1
-    i_string = '0' * (2 - len(str(i))) + str(i)  # 0 padding, assuming 2-digits number
-    wouldbe_datafile = generate_bids_filename(subjectName, session, experimentName, filename_suffix='_beh',
-                                              filename_extension='.xpd', run=i_string)
-    wouldbe_eventfile = generate_bids_filename(subjectName, session, experimentName, filename_suffix='_events',
-                                               filename_extension='.xpe', run=i_string)
-exp.data.rename(wouldbe_datafile)
-exp.events.rename(wouldbe_eventfile)
+bids_datafile, bids_eventfile = rename_output_files_to_BIDS(subjectName, session, experimentName,
+                                                            io.defaults.datafile_directory,
+                                                            io.defaults.eventfile_directory)
+exp.data.rename(bids_datafile)
+exp.events.rename(bids_eventfile)
 
 # randomising presentation order of the categories
 classPicturesPresentationOrder = list(np.random.permutation(classPictures))

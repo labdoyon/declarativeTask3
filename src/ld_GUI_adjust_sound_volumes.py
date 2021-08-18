@@ -9,7 +9,7 @@ from expyriment.misc._timer import get_time
 from config import debug, windowMode, windowSize, classPictures, sounds, \
     bgColor, arrow, textSize, textColor, cardColor, responseTime, mouseButton, clickColor, clicPeriod
 from config import experiment_session
-from ld_utils import getLanguage, setCursor, cardSize, readMouse, generate_bids_filename
+from ld_utils import getLanguage, setCursor, cardSize, readMouse, rename_output_files_to_BIDS
 from ld_stimuli_names import soundNames, ttl_instructions_text
 from ld_sound import change_volume, play_sound, delete_temp_files, dataFolder, create_temp_sound_files
 from ttl_catch_keyboard import wait_for_ttl_keyboard
@@ -53,22 +53,11 @@ exp.add_experiment_info(str(classPictures))
 # 0. Starting Experiment
 control.start(exp, auto_create_subject_id=True, skip_ready_screen=True)
 
-i = 1
-wouldbe_datafile = generate_bids_filename(
-        subject_name, session, experimentName, filename_suffix='_beh', filename_extension='.xpd')
-wouldbe_eventfile = generate_bids_filename(
-    subject_name, session, experimentName, filename_suffix='_events', filename_extension='.xpe')
-
-while os.path.isfile(io.defaults.datafile_directory + os.path.sep + wouldbe_datafile) or \
-        os.path.isfile(io.defaults.eventfile_directory + os.path.sep + wouldbe_eventfile):
-    i += 1
-    i_string = '0' * (2 - len(str(i))) + str(i)  # 0 padding, assuming 2-digits number
-    wouldbe_datafile = generate_bids_filename(subject_name, session, experimentName, filename_suffix='_beh',
-                                              filename_extension='.xpd', run=i_string)
-    wouldbe_eventfile = generate_bids_filename(subject_name, session, experimentName, filename_suffix='_events',
-                                               filename_extension='.xpe', run=i_string)
-exp.data.rename(wouldbe_datafile)
-exp.events.rename(wouldbe_eventfile)
+bids_datafile, bids_eventfile = rename_output_files_to_BIDS(subject_name, session, experimentName,
+                                                            io.defaults.datafile_directory,
+                                                            io.defaults.eventfile_directory)
+exp.data.rename(bids_datafile)
+exp.events.rename(bids_eventfile)
 
 exp.add_experiment_info(['StartExp: {}'.format(exp.clock.time)])  # Add sync info
 
