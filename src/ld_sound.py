@@ -53,10 +53,10 @@ def delete_temp_files():
 # TODO rename create_temp_sound_files to get_temp_sound_files wherever appropriate
 
 
-def create_temp_sound_files(subject_name):
+def create_temp_sound_files(subject_name, datafile_directory):
     subject_file = 'soundsVolumeAdjustmentIndB_' + subject_name + '.pkl'
     # Getting back the objects:
-    subject_file_full_path = dataFolder + subject_file
+    subject_file_full_path = datafile_directory + os.path.sep + subject_file
     if os.path.exists(subject_file_full_path):
         if os.path.getsize(subject_file_full_path) > 0:
             with open(subject_file_full_path, "rb") as f:
