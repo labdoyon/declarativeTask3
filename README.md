@@ -14,6 +14,9 @@ this experiment is made of 8 phases
 7. Recognition
 8. Association
 
+#
+Please mind the 265 characters path limit size in Windows
+
 A phase typically has one associated script
 e.g. example phase: src/ld_example.py
 
