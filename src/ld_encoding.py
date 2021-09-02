@@ -7,7 +7,7 @@ from expyriment.misc import constants
 from expyriment.misc._timer import get_time
 
 from ld_matrix import LdMatrix
-from ld_utils import getPreviousSoundsAllocation, getPreviousMatrixOrder, normalize_test_presentation_order
+from ld_utils import getPreviousSoundsAllocation, normalize_test_presentation_order
 from ld_utils import setCursor, newRandomPresentation, getPreviousMatrix, getLanguage, path_leaf, readMouse
 from ld_utils import rename_output_files_to_BIDS
 from ld_sound import create_temp_sound_files, delete_temp_files
@@ -167,9 +167,9 @@ matrices_to_present = np.array(range(len(classPictures)))
 # elif experimentName == 'ReTest-Encoding':
 #     test_matrix_presentation_order = getPreviousMatrixOrder(subjectName, 0, 'Test-Encoding')
 
-while min(currentCorrectAnswers) < correctAnswersMax and nBlock < nbBlocksMax:
+while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True) < min_number_learned_matrices \
+        and nBlock < nbBlocksMax:
 
-    # TODO change this line <1 != nbBlocksMax> to reflect relevant experiment more accurately
     # PRESENTATION BLOCK
     if 1 != nbBlocksMax or experimentName == 'Encoding':
         exp.add_experiment_info('Presentation_Block_{}_timing_{}'.format(nBlock, exp.clock.time))
@@ -582,8 +582,13 @@ while min(currentCorrectAnswers) < correctAnswersMax and nBlock < nbBlocksMax:
         for i in range(len(classPictures)):
             matrix_i.plotCueCard(i, False, bs, draw=True)
 
-    if ignore_learned_matrices and correctAnswers[i, nBlock] > correctAnswersMax:
-        matrices_to_present = np.delete(matrices_to_present, i)
+    if ignore_one_learned_matrices and \
+            [correctAnswers[i, nBlock] >= correctAnswersMax for i in range(numberClasses)].count(True) == 1:
+        # one learned matrix
+        index_matrix_not_to_present_again =\
+            [correctAnswers[i, nBlock] >= correctAnswersMax for i in range(numberClasses)].index(True)
+        matrices_to_present = np.delete(matrices_to_present, index_matrix_not_to_present_again)
+
 
     ISI = design.randomize.rand_int(min_max_ISI[0], min_max_ISI[1])
     exp.clock.wait(ISI, process_control_events=True)

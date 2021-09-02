@@ -16,7 +16,7 @@ from expyriment.misc._timer import get_time
 from expyriment.misc.geometry import coordinates2position
 
 from config import linesThickness, cardSize, colorLine, windowSize, bgColor, matrixSize, dataFolder, removeCards
-from config import classPictures, sounds, ignore_learned_matrices, sessions, rawFolder
+from config import classPictures, sounds, ignore_one_learned_matrices, sessions, rawFolder
 sep = os.path.sep
 
 
@@ -174,51 +174,51 @@ def getPreviousSoundsAllocation(subjectName, daysBefore, experienceName):
     return False
 
 
-def getPreviousMatrixOrder(subjectName, daysBefore, experienceName):
-    # Duplicate of get previous matrix but for matrix order
-    output = False
-    currentDate = datetime.now()
-
-    subject_dir = rawFolder + 'sourcedata' + sep + 'sub-' + subjectName + sep
-    data_files = []
-    for session in sessions:
-        session_dir = subject_dir + 'ses-' + session + sep + 'beh' + sep
-        if os.path.isdir(session_dir):
-            data_files = data_files + \
-                         [session_dir + file for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
-
-    for dataFile in data_files:
-        try:
-            agg = misc.data_preprocessing.read_datafile(dataFile, only_header_and_variable_names=True)
-        except TypeError:
-            continue
-        previousDate = parse(agg[2]['date'])
-
-        try:
-            agg[3].index(experienceName)
-        except (ValueError):
-            continue
-
-        if daysBefore == 0 or ((currentDate-previousDate).total_seconds() > 72000*daysBefore and (currentDate-previousDate).total_seconds() < 100800*daysBefore):
-            header = agg[3].split('\n#e ')
-
-            indexSubjectName = header.index('Subject:') + 1
-            if subjectName in header[indexSubjectName]:
-                print('File found: ' + dataFile)
-                elements = [element for element in header if 'MatrixPresentationOrder_' in element]
-                target = elements[-1]
-                target = re.search('MatrixPresentationOrder_(.+?)_', target).group(0)
-                target = target.replace('MatrixPresentationOrder_', '').replace('_', '')
-                target = ast.literal_eval(target)
-                if not ignore_learned_matrices:
-                    output = target
-                else:
-                    if len(target) == len(classPictures):
-                        output = target
-                    elif not output:
-                        output = target
-
-    return output
+# def getPreviousMatrixOrder(subjectName, daysBefore, experienceName):
+#     # Duplicate of get previous matrix but for matrix order
+#     output = False
+#     currentDate = datetime.now()
+#
+#     subject_dir = rawFolder + 'sourcedata' + sep + 'sub-' + subjectName + sep
+#     data_files = []
+#     for session in sessions:
+#         session_dir = subject_dir + 'ses-' + session + sep + 'beh' + sep
+#         if os.path.isdir(session_dir):
+#             data_files = data_files + \
+#                          [session_dir + file for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
+#
+#     for dataFile in data_files:
+#         try:
+#             agg = misc.data_preprocessing.read_datafile(dataFile, only_header_and_variable_names=True)
+#         except TypeError:
+#             continue
+#         previousDate = parse(agg[2]['date'])
+#
+#         try:
+#             agg[3].index(experienceName)
+#         except (ValueError):
+#             continue
+#
+#         if daysBefore == 0 or ((currentDate-previousDate).total_seconds() > 72000*daysBefore and (currentDate-previousDate).total_seconds() < 100800*daysBefore):
+#             header = agg[3].split('\n#e ')
+#
+#             indexSubjectName = header.index('Subject:') + 1
+#             if subjectName in header[indexSubjectName]:
+#                 print('File found: ' + dataFile)
+#                 elements = [element for element in header if 'MatrixPresentationOrder_' in element]
+#                 target = elements[-1]
+#                 target = re.search('MatrixPresentationOrder_(.+?)_', target).group(0)
+#                 target = target.replace('MatrixPresentationOrder_', '').replace('_', '')
+#                 target = ast.literal_eval(target)
+#                 # if not ignore_one_learned_matrices:
+#                 #     output = target
+#                 # else:
+#                 #     if len(target) == len(classPictures):
+#                 #         output = target
+#                 #     elif not output:
+#                 output = target
+#
+#     return output
 
 
 def getLanguage(subjectName, daysBefore, experienceName):
