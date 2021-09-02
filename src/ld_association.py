@@ -82,7 +82,7 @@ soundsAllocation = getPreviousSoundsAllocation(subjectName, 0, 'DayOne-Learning'
 exp.add_experiment_info('Image classes to sounds:')
 exp.add_experiment_info(str(soundsAllocation))
 
-soundsVolumeAdjustmentIndB = create_temp_sound_files(subjectName)
+soundsVolumeAdjustmentIndB = create_temp_sound_files(subjectName, io.defaults.datafile_directory)
 exp.add_experiment_info('Sounds Volume adjustment (in dB):')
 exp.add_experiment_info(str(soundsVolumeAdjustmentIndB))
 if soundsVolumeAdjustmentIndB != [0, 0, 0]:
