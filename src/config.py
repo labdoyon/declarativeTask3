@@ -46,7 +46,7 @@ cardSize = (90, 90)
 
 startSpace = cardSize[1] + 20
 
-nbBlocksMax = 10
+nbBlocksMax = 3
 
 presentationCard = 2000
 

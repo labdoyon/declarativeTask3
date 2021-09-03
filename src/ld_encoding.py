@@ -74,6 +74,8 @@ exp.add_experiment_info(str(classPictures))
 
 matrices = []
 pictures_allocation = []
+if ignore_one_learned_matrices:
+    index_matrix_not_to_present_again = None
 for i, category in enumerate(classPictures):
     if keepPreviousMatrix:
         previousMatrix = getPreviousMatrix(subjectName, 0, 'Encoding', i, category)
@@ -589,7 +591,6 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
             [correctAnswers[i, nBlock] >= correctAnswersMax for i in range(numberClasses)].index(True)
         matrices_to_present = np.delete(matrices_to_present, index_matrix_not_to_present_again)
 
-
     ISI = design.randomize.rand_int(min_max_ISI[0], min_max_ISI[1])
     exp.clock.wait(ISI, process_control_events=True)
     exp.clock.wait(shortRest, process_control_events=True)
@@ -612,6 +613,10 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
     bs.present(False, True)
 
     currentCorrectAnswers = correctAnswers[:, nBlock]
+    if ignore_one_learned_matrices:
+        if index_matrix_not_to_present_again is not None:
+            currentCorrectAnswers[index_matrix_not_to_present_again] = 13
+
     nBlock += 1
 
 instructions = stimuli.TextLine(
