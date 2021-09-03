@@ -70,7 +70,7 @@ bs = stimuli.BlankScreen(bgColor)  # Create blank screen
 subject_file = 'soundsVolumeAdjustmentIndB_' + subject_name + '.pkl'
 with open(io.defaults.datafile_directory + os.path.sep + subject_file, 'wb') as f:
     pickle.dump([0] * len(sounds), f)
-soundsVolumeAdjustmentIndB = create_temp_sound_files(subjectName, io.defaults.datafile_directory)
+soundsVolumeAdjustmentIndB = create_temp_sound_files(subject_name, io.defaults.datafile_directory)
 
 # 1. PLOT INTERFACE
 
