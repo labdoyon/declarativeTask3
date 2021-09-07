@@ -122,7 +122,7 @@ class LdMatrix(object):
     def returnPicture(self, nCard):
         return self._matrix.item(nCard).picture
 
-    def playSound(self, soundsAllocation_index, volumeAdjusted = False):
+    def playSound(self, soundsAllocation_index, volumeAdjusted=False):
         if volumeAdjusted:
             sound = tempSounds[soundsAllocation_index[self._category]]
             command = 'ffplay -nodisp -loglevel quiet -autoexit ' + soundsFolder +\

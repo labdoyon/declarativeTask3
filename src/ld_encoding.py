@@ -9,7 +9,7 @@ from expyriment.misc._timer import get_time
 from ld_matrix import LdMatrix
 from ld_utils import getPreviousSoundsAllocation, normalize_test_presentation_order
 from ld_utils import setCursor, newRandomPresentation, getPreviousMatrix, getLanguage, path_leaf, readMouse
-from ld_utils import rename_output_files_to_BIDS
+from ld_utils import rename_output_files_to_BIDS, generate_bids_filename
 from ld_sound import create_temp_sound_files, delete_temp_files
 from config import *
 from ttl_catch_keyboard import wait_for_ttl_keyboard
@@ -637,13 +637,23 @@ delete_temp_files()
 
 try:
     import csv
-    with open(dataFolder + 'sub-' + subjectName + '_task-' + experimentName + '.txt', 'w', newline='') as outfile:
+    i = 1
+    score_file = generate_bids_filename(subjectName, session, experimentName,
+                                  filename_suffix='_score', filename_extension='.txt', run=None)
+    while os.path.isfile(io.defaults.datafile_directory + os.path.sep + score_file):
+        i += 1
+        i_string = '0' * (2 - len(str(i))) + str(i)  # 0 padding, assuming 2-digits number
+        score_file = generate_bids_filename(subjectName, session, experimentName,
+                                      filename_suffix='_score', filename_extension='.txt', run=i_string)
+
+    with open(io.defaults.datafile_directory + os.path.sep + score_file, 'w', newline='') as outfile:
         writer = csv.writer(outfile, delimiter=';')
-        for i in range(nBlock):
+        for i in range(nBlock-1):  # because there is a <nBlock += 1> at the very end
             row = []
             for j in range(len(classPictures)):
                 row.append(
                     f"""category_{classPictures[j]}:{str(int(correctAnswers[j, nBlock]))}/{str(matrices[j]._matrix.size - len(removeCards))} """)
+            print(row)
             writer.writerow(row)
 except:
     pass
