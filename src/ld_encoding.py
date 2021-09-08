@@ -1,7 +1,8 @@
 import sys
+import random
 
 import numpy as np
-import random
+import pandas as pd
 from expyriment import control, stimuli, io, design, misc
 from expyriment.misc import constants
 from expyriment.misc._timer import get_time
@@ -206,7 +207,7 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
         # LOG and SYNC: Start Presentation
         exp.add_experiment_info('StartPresentation_Block_{}_timing_{}'.format(nBlock, exp.clock.time))  # Add sync info
 
-        for i in learning_matrix_presentation_order:
+        for index_matrix_pres_order, i in enumerate(learning_matrix_presentation_order):
             presentationOrder = newRandomPresentation(presentationOrder)
             matrix_i = matrices[i]
             matrix_i.plotDefault(bs, True)
@@ -268,7 +269,19 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
         bs.present(False, True)
         exp.add_experiment_info(
             ['StartShortRest_block_{}_timing_{}'.format(nBlock, exp.clock.time)])  # Add sync info
-        exp.clock.wait(restPeriod, process_control_events=True)
+
+        # Preparing Trials for test block
+        start_time = get_time()
+        pictures_allocation = [list(picture_matrix) for picture_matrix in pictures_allocation]
+        pictures_allocation = [[card.rstrip('.png') for card in picture_matrix] for picture_matrix in
+                               pictures_allocation]
+        trials_order = sum(pictures_allocation, [])
+        trials_order = [card.rstrip('.png') for card in trials_order]
+        random.shuffle(trials_order)
+        trials_order = normalize_test_presentation_order(trials_order, pictures_allocation)
+        while (get_time() - start_time) * 1000 < restPeriod:
+            exp.keyboard.process_control_keys()
+
         exp.add_experiment_info(
             ['EndShortRest_block_{}_timing_{}'.format(nBlock, exp.clock.time)])  # Add sync info
         instructionRectangle.plot(bs)
@@ -299,13 +312,17 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
 
     ''' Cue Recall '''
 
-    trials_order = []
-    pictures_allocation = [list(picture_matrix) for picture_matrix in pictures_allocation]
-    pictures_allocation = [[card.rstrip('.png') for card in picture_matrix] for picture_matrix in pictures_allocation]
-    trials_order = sum(pictures_allocation, [])
-    trials_order = [card.rstrip('.png') for card in trials_order]
-    random.shuffle(trials_order)
-    trials_order = normalize_test_presentation_order(trials_order, pictures_allocation)
+    if nbBlocksMax == 1 or experimentName != 'Encoding':
+        # Trials weren't created at the end of the learning phase, since there wasn't a learning phase
+
+        # Preparing Trials for test block
+        pictures_allocation = [list(picture_matrix) for picture_matrix in pictures_allocation]
+        pictures_allocation = [[card.rstrip('.png') for card in picture_matrix] for picture_matrix in
+                               pictures_allocation]
+        trials_order = sum(pictures_allocation, [])
+        trials_order = [card.rstrip('.png') for card in trials_order]
+        random.shuffle(trials_order)
+        trials_order = normalize_test_presentation_order(trials_order, pictures_allocation)
 
     exp.add_experiment_info(
         f'Test_Block_{nBlock}_timing_{exp.clock.time}')  # Add sync info

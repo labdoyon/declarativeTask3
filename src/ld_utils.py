@@ -3,6 +3,7 @@ import ntpath
 import os
 import random
 
+import pandas as pd
 import pygame
 from datetime import datetime
 from time import time
@@ -284,12 +285,22 @@ def normalize_test_presentation_order(trials_order, pictures_allocation):
         matrix_index = classPictures.index(category)
         positions.append(pictures_allocation[matrix_index].index(card))
 
-    while any([positions[i] == positions[i + 1] for i in range(len(positions) - 1)]):
+    trial_category = {}
+    trial_category_longest_sequence = {element: 3 for element in classPictures}
+
+    while any([positions[i] == positions[i + 1] for i in range(len(positions) - 1)]) or \
+            any(value > 2 for value in trial_category_longest_sequence.values()):
         zipped_lists = list(zip(positions, trials_order))
         random.shuffle(zipped_lists)
 
         positions, trials_order = zip(*zipped_lists)
         positions, trials_order = list(positions), list(trials_order)
+
+        for category_j in classPictures:
+            # counting longest uninterrupted sequence of trials of the same category
+            trial_category[category_j] = pd.Series([trial[0] == category_j for trial in trials_order], dtype=bool)
+            trial_category_longest_sequence[category_j] = (~trial_category[category_j]).cumsum()[
+                trial_category[category_j]].value_counts().max()
 
     return trials_order
 
