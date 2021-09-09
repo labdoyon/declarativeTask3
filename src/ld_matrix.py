@@ -268,9 +268,9 @@ class LdMatrix(object):
         else:
             color = bgColor
 
-        geometry.vertices_frame(size=(100, 100), frame_thickness=10)
+        geometry.vertices_frame(size=(110, 110), frame_thickness=10)
         response_stimuli = Shape(position=position,
-                                 vertex_list=geometry.vertices_frame(size=(100, 100), frame_thickness=10),
+                                 vertex_list=geometry.vertices_frame(size=(110, 110), frame_thickness=10),
                                  colour=color)
 
         response_stimuli.plot(bs)
