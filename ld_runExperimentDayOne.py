@@ -33,8 +33,8 @@ classNames = {'english': {'a': 'animals', 'b': 'household', 'c': 'clothes'},
               None: {'a': 'a', 'b': 'b', 'c': 'c'}}
 soundNames = {
     None: {0: 'S1', 1: 'S2', 2: 'S3'},
-    'english': {0: 'standard', 1: 'noise', 2: 'high pitch'},
-    'french': {0: 'standard', 1: 'bruit', 2: 'aigu'}}
+    'english': {0: 'standard', 1: 'noise', 2: 'A'},
+    'french': {0: 'standard', 1: 'bruit', 2: 'A'}}
 
 
 def generate_bids_filename(subject_id, session, task, filename_suffix='_beh', filename_extension='.xpd',
