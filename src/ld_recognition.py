@@ -42,7 +42,6 @@ io.defaults.eventfile_directory = output_dir
 
 exp.add_experiment_info('Subject: ')  # Save Subject Code
 exp.add_experiment_info(subjectName)  # Save Subject Code
-exp.add_experiment_info(subjectName)
 language = str(getLanguage(subjectName, 0, 'choose-language'))
 exp.add_experiment_info('language: ')
 

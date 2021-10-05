@@ -56,16 +56,13 @@ exp.add_data_variable_names(['Time', 'NBlock', 'Picture', 'Answers', 'RT'])
 
 keepMatrix = True
 if experimentName == 'Encoding':
-    keepPreviousMatrix = False
     no_feedback = False
     cuecard_response_logging_text = 'CorrectCueCardResponse'
 elif experimentName == 'Test-Encoding':
-    keepPreviousMatrix = True
     nbBlocksMax = 1
     no_feedback = True
     cuecard_response_logging_text = 'CueCardResponse'
 elif experimentName == 'ReTest-Encoding':
-    keepPreviousMatrix = True
     nbBlocksMax = 1
     no_feedback = True
     cuecard_response_logging_text = 'CueCardResponse'
@@ -78,12 +75,12 @@ pictures_allocation = []
 if ignore_one_learned_matrices:
     index_matrix_not_to_present_again = None
 for i, category in enumerate(classPictures):
-    if keepPreviousMatrix:
-        previousMatrix = getPreviousMatrix(subjectName, 0, 'Encoding', i, category)
-    else:
-        previousMatrix = None
+    previousMatrix = getPreviousMatrix(subjectName, 0, 'Encoding', i, category)
+    # previousMatrix will be <None> if there is no previous matrix, the findMatrix function will generate a new matrix
+    # if it is fed <None> as previousMatrix
     matrices.append(LdMatrix(matrixSize, windowSize))  # Create matrices
-    pictures_allocation.append(matrices[i].findMatrix(category, previousMatrix, keepMatrix))  # Find pictures_allocation
+    pictures_allocation.append(matrices[i].findMatrix(category, previousMatrix=previousMatrix, keep=True))
+    # Find pictures_allocation
     matrices[i].associateCategory(category)
 
 control.initialize(exp)

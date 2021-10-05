@@ -106,7 +106,7 @@ def getPreviousMatrix(subjectName, daysBefore, experienceName, matrix_index, mat
 
     subject_dir = rawFolder + 'sourcedata' + sep + 'sub-' + subjectName + sep
     data_files = []
-    output = False
+    output = None
     for session in sessions:
         session_dir = subject_dir + 'ses-' + session + sep + 'beh' + sep
         if os.path.isdir(session_dir):
