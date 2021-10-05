@@ -79,7 +79,10 @@ def getPrevious(subjectName, daysBefore, experienceName, target):
                 except:  # string
                     output = previousTarget
 
-    # This ensures the latest language choice is used
+    # This ensures the latest language choice (or other information) is used, as, if several files have been generated,
+    # they should be named <something> <something>_run-02.xpd , <something>_run-03.xpd , etc. etc. And since files are
+    # sorted in alphabetical order, the <output> variable that will be returned is the one from the latest file,
+    # both alphabetical-wise, run-wise, and time-wise
     return output
 
 

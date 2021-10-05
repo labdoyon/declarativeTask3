@@ -106,6 +106,7 @@ def getPreviousMatrix(subjectName, daysBefore, experienceName, matrix_index, mat
 
     subject_dir = rawFolder + 'sourcedata' + sep + 'sub-' + subjectName + sep
     data_files = []
+    output = False
     for session in sessions:
         session_dir = subject_dir + 'ses-' + session + sep + 'beh' + sep
         if os.path.isdir(session_dir):
@@ -133,9 +134,13 @@ def getPreviousMatrix(subjectName, daysBefore, experienceName, matrix_index, mat
                 indexPositions = header.index('matrix {}, pictures from class {}:'.format(matrix_index,
                                                                                           matrix_category)) + 1
                 previousMatrix = ast.literal_eval(header[indexPositions].split('\n')[0].split('\n')[0])
-                return previousMatrix
+                output = previousMatrix
 
-    return False
+    # This ensures the latest matrix (or other information) is used, as, if several files have been generated,
+    # they should be named <something> <something>_run-02.xpd , <something>_run-03.xpd , etc. etc. And since files are
+    # sorted in alphabetical order, the <output> variable that will be returned is the one from the latest file,
+    # both alphabetical-wise, run-wise, and time-wise
+    return output
 
 
 def getPreviousSoundsAllocation(subjectName, daysBefore, experienceName):
@@ -144,6 +149,7 @@ def getPreviousSoundsAllocation(subjectName, daysBefore, experienceName):
 
     subject_dir = rawFolder + 'sourcedata' + sep + 'sub-' + subjectName + sep
     data_files = []
+    output = False
     for session in sessions:
         session_dir = subject_dir + 'ses-' + session + sep + 'beh' + sep
         if os.path.isdir(session_dir):
@@ -169,10 +175,14 @@ def getPreviousSoundsAllocation(subjectName, daysBefore, experienceName):
             if subjectName in header[indexSubjectName]:
                 print('File found: ' + dataFile)
                 indexPositions = header.index('Image classes to sounds (index):') + 1
-                previousMatrix = ast.literal_eval(header[indexPositions].split('\n')[0].split('\n')[0])
-                return previousMatrix
+                sound_allocation = ast.literal_eval(header[indexPositions].split('\n')[0].split('\n')[0])
+                output = sound_allocation
 
-    return False
+    # This ensures the latest sound allocation (or other information) is used, as, if several files have been generated,
+    # they should be named <something> <something>_run-02.xpd , <something>_run-03.xpd , etc. etc. And since files are
+    # sorted in alphabetical order, the <output> variable that will be returned is the one from the latest file,
+    # both alphabetical-wise, run-wise, and time-wise
+    return output
 
 
 # def getPreviousMatrixOrder(subjectName, daysBefore, experienceName):
