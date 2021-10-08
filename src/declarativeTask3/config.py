@@ -1,15 +1,14 @@
 import glob
-import os
+from os.path import normpath, join, dirname, basename
 # from math import ceil
 from expyriment.misc import constants
 
-rawFolder = os.getcwd() + os.path.sep
+rawFolder = normpath(join(dirname(__file__), '..', '..'))
 
-picturesFolder = rawFolder + 'stimulis' + os.path.sep
-picturesExamplesFolder = rawFolder + 'stimulisExample' + os.path.sep
-picturesXFolder = picturesFolder + 'association_test_X' + os.path.sep
-dataFolder = rawFolder + 'data' + os.path.sep
-soundsFolder = rawFolder + 'stimulis' + os.path.sep + 'sounds' + os.path.sep
+picturesFolder = normpath(join(rawFolder, 'stimulis'))
+picturesExamplesFolder = normpath(join(rawFolder, 'stimulisExample'))
+picturesXFolder = normpath(join(picturesFolder, 'association_test_X'))
+soundsFolder = normpath(join(rawFolder, 'stimulis',  'sounds'))
 
 mouseButton = 1
 
@@ -24,7 +23,7 @@ soundNames = {
     'english': {0: 'standard', 1: 'noise', 2: 'A'},
     'french': {0: 'standard', 1: 'bruit', 2: 'A'}}
 
-templatePicture = picturesFolder + 'class_a' + os.path.sep + 'a001.png'
+templatePicture = normpath(join(picturesFolder, 'class_a', 'a001.png'))
 
 linesThickness = 0
 colorLine = (0, 0, 0)  # expyriment.misc.constants.C_BLACK
@@ -175,7 +174,7 @@ classNames = {'english': {'a': 'animals', 'b': 'household', 'c': 'clothes'},
               'french': {'a': 'animaux', 'b': 'maison', 'c': 'vêtements'},
               None: {'a': 'a', 'b': 'b', 'c': 'c'}}
 
-picturesFolderClass = {category: picturesFolder+'class_'+category+os.path.sep for category in classPictures}
+picturesFolderClass = {category: join(picturesFolder, 'class_'+category) for category in classPictures}
 # one category (as we'll later rename (refactor) classes) should always be a single lowercase letter
 numberClasses = len(classPictures)
 # The setting below allows the experimenter to prevent a learned matrix (currentCorrectAnswers > correctAnswersMax)
@@ -187,10 +186,11 @@ min_number_learned_matrices = 2
 
 listPictures = {}
 for classPicture in classPictures:
-    listPictures[classPicture] = glob.glob(picturesFolderClass[classPicture] + classPicture + '*[0-9][0-9][0-9].png')
+    listPictures[classPicture] = glob.glob(
+        join(picturesFolderClass[classPicture], classPicture + '*[0-9][0-9][0-9].png'))
 
 for category in classPictures:
-    listPictures[category] = [p.replace(picturesFolderClass[category], '') for p in listPictures[category]]
+    listPictures[category] = [basename(p) for p in listPictures[category]]
 
 feedback_frame_correct_color = constants.C_GREEN
 feedback_frame_wrong_color = constants.C_RED

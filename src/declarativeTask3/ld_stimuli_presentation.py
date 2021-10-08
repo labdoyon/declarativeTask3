@@ -37,11 +37,8 @@ subjectName = arguments[1]
 exp = design.Experiment(experimentName)  # Save experiment name
 
 session = experiment_session[experimentName]
-session_dir = 'sourcedata' + os.path.sep +\
-             'sub-' + subjectName + os.path.sep +\
-             'ses-' + session
-output_dir = session_dir + os.path.sep +\
-             'beh'
+session_dir = os.path.normpath(os.path.join('sourcedata', 'sub-' + subjectName, 'ses-' + session))
+output_dir = os.path.normpath(os.path.join(session_dir, 'beh'))
 if not os.path.isdir(session_dir):
     os.mkdir(session_dir)
 io.defaults.datafile_directory = output_dir
@@ -200,7 +197,7 @@ for category in classPicturesPresentationOrder:
     exp.clock.wait(ISI, process_control_events=True)
 
     for i, picture in enumerate(category_pictures):
-        m._cueCard[cuecard_index].setPicture(picturesFolderClass[category] + picture)  # Associate Picture to CueCard
+        m._cueCard[cuecard_index].setPicture(os.path.join(picturesFolderClass[category], picture))  # Associate Picture to CueCard
 
         picture_name = picture.replace('.png', '')
         picture_title = pictureNames[language][picture_name]

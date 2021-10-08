@@ -1,4 +1,5 @@
 import sys
+import os
 
 import numpy as np
 from expyriment import control, stimuli, io, design, misc
@@ -26,11 +27,8 @@ subjectName = arguments[1]
 exp = design.Experiment(experimentName)  # Save experiment name
 
 session = experiment_session[experimentName]
-session_dir = 'sourcedata' + os.path.sep +\
-             'sub-' + subjectName + os.path.sep +\
-             'ses-' + session
-output_dir = session_dir + os.path.sep +\
-             'beh'
+session_dir = os.path.normpath(os.path.join('sourcedata', 'sub-' + subjectName, 'ses-' + session))
+output_dir = os.path.normpath(os.path.join(session_dir, 'beh'))
 if not os.path.isdir(session_dir):
     os.mkdir(session_dir)
 io.defaults.datafile_directory = output_dir
@@ -63,7 +61,7 @@ exp.events.rename(bids_eventfile)
 
 nPict = 0
 for nCard in presentationOrder:
-    m._matrix.item(nCard).setPicture(picturesExamplesFolder + picturesExamples[nPict])
+    m._matrix.item(nCard).setPicture(os.path.join(picturesExamplesFolder, picturesExamples[nPict]))
     nPict += 1
 
 mouse = io.Mouse()  # Create Mouse instance

@@ -4,6 +4,7 @@ import subprocess
 from expyriment.stimuli import Circle, Rectangle, Shape
 from expyriment.misc import constants, geometry
 from playsound import playsound
+from os.path import join
 
 from declarativeTask3.ld_card import LdCard
 from declarativeTask3.config import cardSize, linesThickness, cueCardColor, matrixTemplate, listPictures, removeCards, dotColor, bgColor
@@ -125,26 +126,22 @@ class LdMatrix(object):
     def playSound(self, soundsAllocation_index, volumeAdjusted=False):
         if volumeAdjusted:
             sound = tempSounds[soundsAllocation_index[self._category]]
-            command = 'ffplay -nodisp -loglevel quiet -autoexit ' + soundsFolder +\
-                      sound
-            subprocess.call(command)
-            return command, sound
         else:
             sound = sounds[soundsAllocation_index[self._category]]
-            command = 'ffplay -nodisp -loglevel quiet -autoexit ' + soundsFolder +\
-                      sound
-            subprocess.call(command)
-            return command, sound
+        # f'"{}"' is in order to handle potential spaces in file names or paths
+        command = 'ffplay -nodisp -loglevel quiet -autoexit ' + f'"{join(soundsFolder, sound)}"'
+        subprocess.call(command)
+        return command, sound
 
     def playCueSound(self, volumeAdjusted = False):
         if volumeAdjusted:
-            command = 'ffplay -nodisp -loglevel quiet -autoexit ' + soundsFolder + \
-                      tempSounds[self._cueCard.sound]
-            subprocess.call(command)
+            sound = tempSounds[self._cueCard.sound]
         else:
-            command = 'ffplay -nodisp -loglevel quiet -autoexit ' + soundsFolder + \
-                      sounds[self._cueCard.sound]
-            subprocess.call(command)
+            sound = sounds[self._cueCard.sound]
+        # f'"{}"' is in order to handle potential spaces in file names or paths
+        command = 'ffplay -nodisp -loglevel quiet -autoexit ' +\
+                  f'"{join(soundsFolder, sound)}"'
+        subprocess.call(command)
 
     def plotDefault(self, bs, draw=False, show_matrix=True):
         for nCard in range(self._matrix.size):
@@ -212,10 +209,10 @@ class LdMatrix(object):
             if nCard not in removeCards:
                 if newMatrix[nPict][0] in classPictures:
                     self._matrix.item(nCard).setPicture(
-                        picturesFolderClass[newMatrix[nPict][0]] + newMatrix[nPict], False, picture=newMatrix[nPict])
+                        join(picturesFolderClass[newMatrix[nPict][0]], newMatrix[nPict]), False, picture=newMatrix[nPict])
                 else:
                     self._matrix.item(nCard).setPicture(
-                        pictureFolder + newMatrix[nPict], False, picture=newMatrix[nPict])
+                        join(pictureFolder, newMatrix[nPict]), False, picture=newMatrix[nPict])
                 self._matrix.item(nCard).stimuli[0].scale(self._matrix.item(nCard).size[0]/float(300))
                 self._listPictures.append(newMatrix[nPict])
                 nPict += 1

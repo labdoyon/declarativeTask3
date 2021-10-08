@@ -35,10 +35,8 @@ else:
     exp = expyriment.design.Experiment(experimentName)  # Save experiment name
 
     session = experiment_session[experimentName]
-    session_dir = 'sourcedata' + os.path.sep + \
-                  'sub-' + subject_name + os.path.sep + \
-                  'ses-' + session
-    output_dir = session_dir + os.path.sep + 'beh'
+    session_dir = os.path.normpath(os.path.join('sourcedata', 'sub-' + subject_name, 'ses-' + session))
+    output_dir = os.path.normpath(os.path.join(session_dir, 'beh'))
     if not os.path.isdir(session_dir):
         os.mkdir(session_dir)
     expyriment.io.defaults.datafile_directory = output_dir

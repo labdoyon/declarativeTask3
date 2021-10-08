@@ -1,5 +1,6 @@
 import sys
 import random
+import os
 
 import numpy as np
 import pandas as pd
@@ -35,11 +36,8 @@ subjectName = arguments[1]
 exp = design.Experiment(experimentName)  # Save experiment name
 
 session = experiment_session[experimentName]
-session_dir = 'sourcedata' + os.path.sep +\
-             'sub-' + subjectName + os.path.sep +\
-             'ses-' + session
-output_dir = session_dir + os.path.sep +\
-             'beh'
+session_dir = os.path.normpath(os.path.join('sourcedata', 'sub-' + subjectName, 'ses-' + session))
+output_dir = os.path.normpath(os.path.join(session_dir, 'beh'))
 if not os.path.isdir(session_dir):
     os.mkdir(session_dir)
 io.defaults.datafile_directory = output_dir
@@ -654,13 +652,13 @@ try:
     i = 1
     score_file = generate_bids_filename(subjectName, session, experimentName,
                                   filename_suffix='_score', filename_extension='.txt', run=None)
-    while os.path.isfile(io.defaults.datafile_directory + os.path.sep + score_file):
+    while os.path.isfile(os.path.join(io.defaults.datafile_directory, score_file)):
         i += 1
         i_string = '0' * (2 - len(str(i))) + str(i)  # 0 padding, assuming 2-digits number
         score_file = generate_bids_filename(subjectName, session, experimentName,
                                       filename_suffix='_score', filename_extension='.txt', run=i_string)
 
-    with open(io.defaults.datafile_directory + os.path.sep + score_file, 'w', newline='') as outfile:
+    with open(os.path.join(io.defaults.datafile_directory, score_file), 'w', newline='') as outfile:
         writer = csv.writer(outfile, delimiter=';')
         for i in range(nBlock-1):  # because there is a <nBlock += 1> at the very end
             row = []

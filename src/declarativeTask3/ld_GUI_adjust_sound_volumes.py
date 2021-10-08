@@ -11,7 +11,7 @@ from declarativeTask3.config import debug, windowMode, windowSize, classPictures
 from declarativeTask3.config import experiment_session
 from declarativeTask3.ld_utils import getLanguage, setCursor, cardSize, readMouse, rename_output_files_to_BIDS
 from declarativeTask3.ld_stimuli_names import soundNames, ttl_instructions_text
-from declarativeTask3.ld_sound import change_volume, play_sound, delete_temp_files, dataFolder, create_temp_sound_files
+from declarativeTask3.ld_sound import change_volume, play_sound, delete_temp_files, create_temp_sound_files
 from declarativeTask3.ttl_catch_keyboard import wait_for_ttl_keyboard
 
 if not windowMode:  # Check WindowMode and Resolution
@@ -32,10 +32,8 @@ subject_name = arguments[1]
 exp = design.Experiment(experimentName)  # Save experiment name
 
 session = experiment_session[experimentName]
-session_dir = 'sourcedata' + os.path.sep +\
-             'sub-' + subject_name + os.path.sep +\
-             'ses-' + session
-output_dir = session_dir + os.path.sep + 'beh'
+session_dir = os.path.normpath(os.path.join('sourcedata', 'sub-' + subject_name, 'ses-' + session))
+output_dir = os.path.normpath(os.path.join(session_dir, 'beh'))
 if not os.path.isdir(session_dir):
     os.mkdir(session_dir)
 io.defaults.datafile_directory = output_dir

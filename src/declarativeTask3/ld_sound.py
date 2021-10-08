@@ -1,7 +1,7 @@
 import subprocess
 import os
 import pickle
-from declarativeTask3.config import soundsFolder, dataFolder, sounds, tempSounds
+from declarativeTask3.config import soundsFolder, sounds, tempSounds
 
 # Documentation: https://trac.ffmpeg.org/wiki/AudioVolume
 # https://ffmpeg.org/ffmpeg.html#Main-options
@@ -11,13 +11,16 @@ from declarativeTask3.config import soundsFolder, dataFolder, sounds, tempSounds
 
 
 def play_sound(j):
-    print('ffplay -nodisp -loglevel quiet -autoexit ' + soundsFolder + tempSounds[j])
-    subprocess.call('ffplay -nodisp -loglevel quiet -autoexit ' + soundsFolder + tempSounds[j])
+    # f'"{}"' is in order to handle potential spaces in file names or paths
+    command = 'ffplay -nodisp -loglevel quiet -autoexit ' + f'"{os.path.join(soundsFolder, tempSounds[j])}"'
+    print(command)
+    subprocess.call(command)
 
 
 def change_volume(j, volume_adjustment_db=0):
-    input_sound = soundsFolder + sounds[j]
-    output_sound = soundsFolder + tempSounds[j]
+    # f'"{}"' is in order to handle potential spaces in file names or paths
+    input_sound = f'"{os.path.join(soundsFolder, sounds[j])}"'
+    output_sound = f'"{os.path.join(soundsFolder, tempSounds[j])}"'
     command = 'ffmpeg -loglevel quiet -y -i ' + input_sound + \
               ' -filter:a "volume=' + str(volume_adjustment_db) + 'dB" ' + output_sound + ' -nostdin'
     print(command)
@@ -44,7 +47,7 @@ def present_options(j):
 def delete_temp_files():
     for j in range(len(sounds)):
         try:
-            output_sound = soundsFolder + tempSounds[j]
+            output_sound = os.path.join(soundsFolder, tempSounds[j])
             os.remove(output_sound)
         except:
             pass
@@ -56,7 +59,7 @@ def delete_temp_files():
 def create_temp_sound_files(subject_name, datafile_directory):
     subject_file = 'soundsVolumeAdjustmentIndB_' + subject_name + '.pkl'
     # Getting back the objects:
-    subject_file_full_path = datafile_directory + os.path.sep + subject_file
+    subject_file_full_path = os.path.join(datafile_directory, subject_file)
     if os.path.exists(subject_file_full_path):
         if os.path.getsize(subject_file_full_path) > 0:
             with open(subject_file_full_path, "rb") as f:

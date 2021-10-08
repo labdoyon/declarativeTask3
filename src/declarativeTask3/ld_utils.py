@@ -1,5 +1,6 @@
 import ast
 import ntpath
+from os.path import join
 import os
 import random
 
@@ -16,9 +17,8 @@ from expyriment.io import Keyboard
 from expyriment.misc._timer import get_time
 from expyriment.misc.geometry import coordinates2position
 
-from declarativeTask3.config import linesThickness, cardSize, colorLine, windowSize, bgColor, matrixSize, dataFolder, removeCards
+from declarativeTask3.config import linesThickness, cardSize, colorLine, windowSize, bgColor, matrixSize, removeCards
 from declarativeTask3.config import classPictures, sounds, ignore_one_learned_matrices, sessions, rawFolder
-sep = os.path.sep
 
 
 def checkWindowParameters(iWindowSize):
@@ -104,14 +104,14 @@ def getPreviousMatrix(subjectName, daysBefore, experienceName, matrix_index, mat
 
     currentDate = datetime.now()
 
-    subject_dir = rawFolder + 'sourcedata' + sep + 'sub-' + subjectName + sep
+    subject_dir = join(rawFolder, 'sourcedata', 'sub-' + subjectName)
     data_files = []
     output = None
     for session in sessions:
-        session_dir = subject_dir + 'ses-' + session + sep + 'beh' + sep
+        session_dir = join(subject_dir, 'ses-' + session, 'beh')
         if os.path.isdir(session_dir):
             data_files = data_files + \
-                         [session_dir + file for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
+                         [join(session_dir, file) for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
 
     for dataFile in data_files:
         try:
@@ -160,14 +160,14 @@ def getPreviousSoundsAllocation(subjectName, daysBefore, experienceName):
     # Duplicate of get previous matrix but for sounds
     currentDate = datetime.now()
 
-    subject_dir = rawFolder + 'sourcedata' + sep + 'sub-' + subjectName + sep
+    subject_dir = join(rawFolder, 'sourcedata', 'sub-' + subjectName)
     data_files = []
     output = False
     for session in sessions:
-        session_dir = subject_dir + 'ses-' + session + sep + 'beh' + sep
+        session_dir = join(subject_dir, 'ses-' + session, 'beh')
         if os.path.isdir(session_dir):
             data_files = data_files + \
-                         [session_dir + file for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
+                         [join(session_dir, file) for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
 
     for dataFile in data_files:
         try:
@@ -204,10 +204,10 @@ def getPrevious(subjectName, subject_dir, daysBefore, experienceName, target):
 
     data_files = []
     for session in sessions:
-        session_dir = subject_dir + 'ses-' + session + sep + 'beh' + sep
+        session_dir = join(subject_dir, 'ses-' + session, 'beh')
         if os.path.isdir(session_dir):
             data_files = data_files + \
-                         [session_dir + file for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
+                         [join(session_dir, file) for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
 
     for dataFile in data_files:
         agg = misc.data_preprocessing.read_datafile(dataFile, only_header_and_variable_names=True)
@@ -241,13 +241,13 @@ def getLanguage(subjectName, daysBefore, experienceName):
     currentDate = datetime.now()
     output = None
 
-    subject_dir = rawFolder + 'sourcedata' + sep + 'sub-' + subjectName + sep
+    subject_dir = join(rawFolder, 'sourcedata', 'sub-' + subjectName)
     data_files = []
     for session in sessions:
-        session_dir = subject_dir + 'ses-' + session + sep + 'beh' + sep
+        session_dir = join(subject_dir, 'ses-' + session, 'beh')
         if os.path.isdir(session_dir):
             data_files = data_files + \
-                         [session_dir + file for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
+                         [join(session_dir, file) for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
 
     for dataFile in data_files:
         try:
@@ -452,8 +452,8 @@ def rename_output_files_to_BIDS(subject_name, session, experiment_name,
     wouldbe_eventfile = generate_bids_filename(
         subject_name, session, experiment_name, filename_suffix='_events', filename_extension='.xpe')
 
-    while os.path.isfile(datafile_dir + os.path.sep + wouldbe_datafile) or \
-            os.path.isfile(eventfile_dir + os.path.sep + wouldbe_eventfile):
+    while os.path.isfile(join(datafile_dir, wouldbe_datafile)) or \
+            os.path.isfile(join(eventfile_dir, wouldbe_eventfile)):
         i += 1
         i_string = '0' * (2 - len(str(i))) + str(i)  # 0 padding, assuming 2-digits number
         wouldbe_datafile = generate_bids_filename(subject_name, session, experiment_name, filename_suffix='_beh',
