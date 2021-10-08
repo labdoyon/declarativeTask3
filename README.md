@@ -23,5 +23,6 @@ e.g. example phase: src/ld_example.py
 A subject must go through all phases for the experiment to be complete
 
 # Installation
-Please use  python3.8.1
+Preferably use python3.8.1, though the program should work with all python>3.6
+sys.version_info(major=3, minor=8, micro=1, releaselevel='final', serial=0)
 install requirements with pip: <pip install -r requirements.txt>
