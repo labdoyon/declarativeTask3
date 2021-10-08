@@ -5,11 +5,11 @@ from expyriment import control, stimuli, design, misc, io
 from expyriment.misc import constants
 from expyriment.misc._timer import get_time
 
-from ld_sound import create_temp_sound_files, delete_temp_files
-from ld_utils import getPreviousSoundsAllocation, readMouse, getLanguage
-from ld_matrix import LdMatrix
-from ld_stimuli_names import ending_screen_text, presentation_screen_text
-from config import *
+from declarativeTask3.ld_sound import create_temp_sound_files, delete_temp_files
+from declarativeTask3.ld_utils import getPreviousSoundsAllocation, readMouse, getLanguage
+from declarativeTask3.ld_matrix import LdMatrix
+from declarativeTask3.ld_stimuli_names import ending_screen_text, presentation_screen_text
+from declarativeTask3.config import *
 
 if not windowMode:  # Check WindowMode and Resolution
     control.defaults.window_mode = windowMode

@@ -1,7 +1,7 @@
 import keyboard
 import mouse
 import sys
-from ld_sound import *
+from declarativeTask3.ld_sound import *
 
 ########################################################################################################################
 subject_name = ''.join(sys.argv[1:])

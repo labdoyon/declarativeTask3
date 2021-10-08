@@ -6,13 +6,13 @@ from expyriment import control, stimuli, io, design, misc
 from expyriment.misc import constants
 from expyriment.misc._timer import get_time
 
-from ld_matrix import LdMatrix
-from ld_utils import setCursor, newRandomPresentation, getPreviousMatrix, path_leaf, readMouse
-from ld_utils import getPreviousSoundsAllocation, newSoundAllocation
-from ld_utils import absoluteTime
-from ttl_catch_keyboard import wait_for_ttl_keyboard
-from config import *
-from ld_sound import create_temp_sound_files, delete_temp_files
+from declarativeTask3.ld_matrix import LdMatrix
+from declarativeTask3.ld_utils import setCursor, newRandomPresentation, getPreviousMatrix, path_leaf, readMouse
+from declarativeTask3.ld_utils import getPreviousSoundsAllocation, newSoundAllocation
+from declarativeTask3.ld_utils import absoluteTime
+from declarativeTask3.ttl_catch_keyboard import wait_for_ttl_keyboard
+from declarativeTask3.config import *
+from declarativeTask3.ld_sound import create_temp_sound_files, delete_temp_files
 
 if not windowMode:  # Check WindowMode and Resolution
     control.defaults.window_mode = windowMode

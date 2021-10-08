@@ -2,106 +2,24 @@ from cursesmenu import *
 from cursesmenu.items import *
 import sys
 import os
-import glob
-import numpy as np
-from ast import literal_eval
 
-from datetime import datetime
 import expyriment
-from dateutil.parser import parse
-
+from declarativeTask3.config import experiment_session, classPictures, classNames, sounds, soundNames
+from declarativeTask3.ld_utils import getPrevious, generate_bids_filename, newSoundAllocation
 sep = os.path.sep
 
 rawFolder = os.getcwd() + os.path.sep
 subjectName = sys.argv[1]
-sessions = ['expePreNap', 'expePostNap']
-experiment_session = {
-    'choose-sound-association': 'expePreNap',
-    'Example':              'expePreNap',
-    'Encoding':             'expePreNap',
-    'Test-Encoding':        'expePreNap',
-    'ReTest-Encoding':      'expePostNap',
-    'DayOne-Recognition':   'expePostNap'}
-subject_dir = rawFolder + 'sourcedata' + sep + 'sub-' + subjectName + sep
+
+subject_dir = os.getcwd() + os.path.sep + 'sourcedata' + sep + 'sub-' + subjectName + sep
 if not os.path.isdir(subject_dir):
     os.mkdir(subject_dir)
-dataFolder = rawFolder + 'data' + os.path.sep
-sounds = ['shortest-1-100ms.wav', 'shortest-2-100ms.wav', 'shortest-3-100ms.wav']
-classPictures = ['a', 'b', 'c']
-classNames = {'english': {'a': 'animals', 'b': 'household', 'c': 'clothes'},
-              'french': {'a': 'animaux', 'b': 'maison', 'c': 'vêtements'},
-              None: {'a': 'a', 'b': 'b', 'c': 'c'}}
-soundNames = {
-    None: {0: 'S1', 1: 'S2', 2: 'S3'},
-    'english': {0: 'standard', 1: 'noise', 2: 'A'},
-    'french': {0: 'standard', 1: 'bruit', 2: 'A'}}
 
+language = getPrevious(subjectName, subject_dir, 0, 'choose-language', 'language:')
 
-def generate_bids_filename(subject_id, session, task, filename_suffix='_beh', filename_extension='.xpd',
-                           run=None):
-    if run is None:
-        return 'sub-' + subject_id + '_ses-' + session + '_task-' + task + filename_suffix + filename_extension
-    else:
-        return 'sub-' + subject_id + '_ses-' + session + '_task-' + task +\
-               '_run-' + str(run) +\
-               filename_suffix + filename_extension
+soundsAllocation_index = getPrevious(subjectName, subject_dir, 0,
+                                     'choose-sound-association', 'Image classes to sounds (index):')
 
-
-def getPrevious(subjectName, daysBefore, experienceName, target):
-    currentDate = datetime.now()
-    output = None
-
-    data_files = []
-    for session in sessions:
-        session_dir = subject_dir + 'ses-' + session + sep + 'beh' + sep
-        if os.path.isdir(session_dir):
-            data_files = data_files + \
-                         [session_dir + file for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
-
-    for dataFile in data_files:
-        agg = expyriment.misc.data_preprocessing.read_datafile(dataFile, only_header_and_variable_names=True)
-        previousDate = parse(agg[2]['date'])
-
-        try:
-            agg[3].index(experienceName)
-        except ValueError:
-            continue
-        if daysBefore == 0 or ((currentDate-previousDate).total_seconds() > 72000*daysBefore and (currentDate-previousDate).total_seconds() < 100800*daysBefore):
-            header = agg[3].split('\n#e ')
-
-            indexSubjectName = header.index('Subject:') + 1
-            if subjectName in header[indexSubjectName]:
-                print('File found: ' + dataFile)
-                indexPositions = header.index(target) + 1
-                previousTarget = header[indexPositions].split('\n')[0].split('\n')[0]
-                try:  # dictionary or list
-                    output = literal_eval(previousTarget)
-                except:  # string
-                    output = previousTarget
-
-    # This ensures the latest language choice (or other information) is used, as, if several files have been generated,
-    # they should be named <something> <something>_run-02.xpd , <something>_run-03.xpd , etc. etc. And since files are
-    # sorted in alphabetical order, the <output> variable that will be returned is the one from the latest file,
-    # both alphabetical-wise, run-wise, and time-wise
-    return output
-
-
-def newSoundAllocation():
-    # Random permutation to assign sounds to picture classes
-    soundToClasses = {}
-    soundToClasses_index = {}
-    sounds_index = list(range(len(classPictures)))
-    for category in classPictures:
-        soundToClasses_index[category] = np.random.choice(sounds_index)
-        soundToClasses[category] = sounds[soundToClasses_index[category]]
-        sounds_index.remove(soundToClasses_index[category])
-
-    return soundToClasses_index, soundToClasses
-
-
-language = getPrevious(subjectName, 0, 'choose-language', 'language:')
-
-soundsAllocation_index = getPrevious(subjectName, 0, 'choose-sound-association', 'Image classes to sounds (index):')
 if soundsAllocation_index is None:
     soundsAllocation_index, soundsAllocation = newSoundAllocation()
     expyriment.control.set_develop_mode(on=True, intensive_logging=False, skip_wait_methods=True)
@@ -162,80 +80,63 @@ menu = CursesMenu(
                                                      replace('{', '').replace('}', ''))
 
 dayOneChooseLanguage = CommandItem(text='choose language',
-                            command=python + " src" + os.path.sep + "ld_choose_language.py",
-                            arguments='choose-language, ' + sys.argv[1] + ', ' + 'None',
-                            menu=menu,
-                            should_exit=False)
+                                   command=python + " " + 
+                                           os.path.join("src", "declarativeTask3", "ld_choose_language.py"),
+                                   arguments='choose-language, ' + sys.argv[1] + ', ' + 'None',
+                                   menu=menu,
+                                   should_exit=False)
 
 dayOneExample = CommandItem(text='Example',
-                            command=python + " src" + os.path.sep + "ld_example.py",
+                            command=python + " " + os.path.join("src", "declarativeTask3", "ld_example.py"),
                             arguments='Example, ' + sys.argv[1],
                             menu=menu,
                             should_exit=False)
 
 dayOneStimuliPresentation = CommandItem(text='stimuli presentation',
-                            command=python + " src" + os.path.sep + "ld_stimuli_presentation.py",
-                            arguments='stimuli-presentation, ' + sys.argv[1],
-                            menu=menu,
-                            should_exit=False)
+                                        command=python + " " + 
+                                                os.path.join("src", "declarativeTask3", "ld_stimuli_presentation.py"),
+                                        arguments='stimuli-presentation, ' + sys.argv[1],
+                                        menu=menu,
+                                        should_exit=False)
 
 soundVolumeAdjustment = CommandItem(text='sound Volume Adjustment',
-                            command=python + " src" + os.path.sep + "ld_GUI_adjust_sound_volumes.py",
-                            arguments='soundVolumeAdjustment, ' + sys.argv[1],
-                            menu=menu,
-                            should_exit=False)
-
-# dayOneAssociationLearning = CommandItem(text='Sound Category Association Learning',
-#                             command=python + " src" + os.path.sep + "ld_association_learning.py",
-#                             arguments='Association-Learning, ' + sys.argv[1],
-#                             menu=menu,
-#                             should_exit=False)
+                                    command=python + " " +
+                                            os.path.join("src", "declarativeTask3", "ld_GUI_adjust_sound_volumes.py"),
+                                    arguments='soundVolumeAdjustment, ' + sys.argv[1],
+                                    menu=menu,
+                                    should_exit=False)
 
 dayOneEncoding = CommandItem(text='Encoding',
-                            command=python + " src" + os.path.sep + "ld_encoding.py",
-                            arguments='Encoding, ' + sys.argv[1],
-                            menu=menu,
-                            should_exit=False)
+                             command=python + " " + os.path.join("src", "declarativeTask3", "ld_encoding.py"),
+                             arguments='Encoding, ' + sys.argv[1],
+                             menu=menu,
+                             should_exit=False)
 
 dayOneTestEncoding = CommandItem(text='Test Encoding',
-                            command=python + " src" + os.path.sep + "ld_encoding.py",
-                            arguments='Test-Encoding, ' + sys.argv[1],
-                            menu=menu,
-                            should_exit=False)
+                                 command=python + " " + os.path.join("src", "declarativeTask3", "ld_encoding.py"),
+                                arguments='Test-Encoding, ' + sys.argv[1],
+                                menu=menu,
+                                should_exit=False)
 
 dayOneReTestEncoding = CommandItem(text='ReTest Encoding',
-                            command=python + " src" + os.path.sep + "ld_encoding.py",
-                            arguments='ReTest-Encoding, ' + sys.argv[1],
-                            menu=menu,
-                            should_exit=False)
+                                   command=python + " " + os.path.join("src", "declarativeTask3", "ld_encoding.py"),
+                                   arguments='ReTest-Encoding, ' + sys.argv[1],
+                                   menu=menu,
+                                   should_exit=False)
 
 dayOneRecognition = CommandItem(text="Recognition",
-                                  command=python + " src" + os.path.sep + "ld_recognition.py ",
-                                  arguments="Day One - Recognition, " + sys.argv[1],
-                                  menu=menu,
-                                  should_exit=False)
-
-# dayOneTestAssociationLearning = CommandItem(text='Test Sound Category Association Learning',
-#                             command=python + " src" + os.path.sep + "ld_association_learning.py",
-#                             arguments='Test-Association-Learning, ' + sys.argv[1],
-#                             menu=menu,
-#                             should_exit=False)
-
-# dayOneConfig = CommandItem(text='Show config file',
-#                            command=python + " src" + os.path.sep + "ld_showConfigFile.py",
-#                            menu=menu,
-#                            should_exit=False)
+                                command=python + " " + os.path.join("src", "declarativeTask3", "ld_recognition.py "),
+                                arguments="Day One - Recognition, " + sys.argv[1],
+                                menu=menu,
+                                should_exit=False)
 
 menu.append_item(dayOneChooseLanguage)
 menu.append_item(dayOneExample)
 menu.append_item(soundVolumeAdjustment)
 menu.append_item(dayOneStimuliPresentation)
-# menu.append_item(dayOneAssociationLearning)
 menu.append_item(dayOneEncoding)
 menu.append_item(dayOneTestEncoding)
 menu.append_item(dayOneReTestEncoding)
 menu.append_item(dayOneRecognition)
-# menu.append_item(dayOneTestAssociationLearning)
-# menu.append_item(dayOneConfig)
 
 menu.show()

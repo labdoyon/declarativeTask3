@@ -7,14 +7,14 @@ from expyriment import control, stimuli, io, design, misc
 from expyriment.misc import constants
 from expyriment.misc._timer import get_time
 
-from ld_matrix import LdMatrix
-from ld_utils import getPreviousSoundsAllocation, normalize_test_presentation_order
-from ld_utils import setCursor, newRandomPresentation, getPreviousMatrix, getLanguage, path_leaf, readMouse
-from ld_utils import rename_output_files_to_BIDS, generate_bids_filename
-from ld_sound import create_temp_sound_files, delete_temp_files
-from config import *
-from ttl_catch_keyboard import wait_for_ttl_keyboard
-from ld_stimuli_names import classNames, ttl_instructions_text, presentation_screen_text, rest_screen_text, \
+from declarativeTask3.ld_matrix import LdMatrix
+from declarativeTask3.ld_utils import getPreviousSoundsAllocation, normalize_test_presentation_order
+from declarativeTask3.ld_utils import setCursor, newRandomPresentation, getPreviousMatrix, getLanguage, path_leaf, readMouse
+from declarativeTask3.ld_utils import rename_output_files_to_BIDS, generate_bids_filename
+from declarativeTask3.ld_sound import create_temp_sound_files, delete_temp_files
+from declarativeTask3.config import *
+from declarativeTask3.ttl_catch_keyboard import wait_for_ttl_keyboard
+from declarativeTask3.ld_stimuli_names import classNames, ttl_instructions_text, presentation_screen_text, rest_screen_text, \
     ending_screen_text, choose_image_text, choose_position_text
 
 if not windowMode:  # Check WindowMode and Resolution

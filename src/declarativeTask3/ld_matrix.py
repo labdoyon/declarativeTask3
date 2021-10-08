@@ -5,11 +5,11 @@ from expyriment.stimuli import Circle, Rectangle, Shape
 from expyriment.misc import constants, geometry
 from playsound import playsound
 
-from ld_card import LdCard
-from config import cardSize, linesThickness, cueCardColor, matrixTemplate, listPictures, removeCards, dotColor, bgColor
-from config import numberClasses, classPictures, picturesFolderClass, picturesFolder
-from config import sounds, soundsFolder, tempSounds
-from config import feedback_frame_correct_color, feedback_frame_wrong_color
+from declarativeTask3.ld_card import LdCard
+from declarativeTask3.config import cardSize, linesThickness, cueCardColor, matrixTemplate, listPictures, removeCards, dotColor, bgColor
+from declarativeTask3.config import numberClasses, classPictures, picturesFolderClass, picturesFolder
+from declarativeTask3.config import sounds, soundsFolder, tempSounds
+from declarativeTask3.config import feedback_frame_correct_color, feedback_frame_wrong_color
 
 class LdMatrix(object):
     def __init__(self, size, windowSize):

@@ -5,15 +5,15 @@ import os
 from expyriment import control, stimuli, io, design, misc
 from expyriment.misc import constants
 
-from ld_matrix import LdMatrix
-from config import windowMode, windowSize, bgColor, textColor, cardSize, textSize, \
+from declarativeTask3.ld_matrix import LdMatrix
+from declarativeTask3.config import windowMode, windowSize, bgColor, textColor, cardSize, textSize, \
     classPictures, matrixSize, listPictures, shortRest, presentationCard, picturesFolderClass,\
     min_max_ISI, debug, thankYouRest, sounds, experiment_session
-from ld_stimuli_names import pictureNames, classNames, ending_screen_text, soundNames, ttl_instructions_text
-from ld_stimuli_names import sound_textbox
-from ld_utils import getLanguage, getPreviousSoundsAllocation, rename_output_files_to_BIDS
-from ld_sound import create_temp_sound_files, delete_temp_files
-from ttl_catch_keyboard import wait_for_ttl_keyboard
+from declarativeTask3.ld_stimuli_names import pictureNames, classNames, ending_screen_text, soundNames, ttl_instructions_text
+from declarativeTask3.ld_stimuli_names import sound_textbox
+from declarativeTask3.ld_utils import getLanguage, getPreviousSoundsAllocation, rename_output_files_to_BIDS
+from declarativeTask3.ld_sound import create_temp_sound_files, delete_temp_files
+from declarativeTask3.ttl_catch_keyboard import wait_for_ttl_keyboard
 
 # This script is part of declarative Task 3 and is meant to present and name all the stimulis used in the experiment
 # in order to prepare the participant for all subsequent phases

@@ -1,14 +1,16 @@
 # Python version used for developent: sys.version_info(major=3, minor=8, micro=1, releaselevel='final', serial=0)
-numpy==1.20.1
+curses-menu==0.5.0
 expyriment==0.10.0
 future==0.18.2
-pygame==1.9.6
-PyOpenGL==3.1.5
-curses-menu==0.5.0
-windows-curses==2.2.0
-playsound==1.2.2
-python-dateutil==2.6.0
-six==1.15.0
 keyboard==0.13.4
 mouse==0.7.0
+numpy==1.20.1
+pandas==1.3.3
+playsound==1.2.2
+pygame==1.9.6
+PyOpenGL==3.1.5
+python-dateutil==2.8.2
+pytz==2021.3
 scipy==1.6.2
+six==1.16.0
+windows-curses==2.2.0

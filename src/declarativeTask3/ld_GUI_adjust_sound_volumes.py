@@ -6,13 +6,13 @@ from expyriment import control, misc, design, stimuli, io
 from expyriment.misc import constants
 from expyriment.misc._timer import get_time
 
-from config import debug, windowMode, windowSize, classPictures, sounds, \
+from declarativeTask3.config import debug, windowMode, windowSize, classPictures, sounds, \
     bgColor, arrow, textSize, textColor, cardColor, responseTime, mouseButton, clickColor, clicPeriod
-from config import experiment_session
-from ld_utils import getLanguage, setCursor, cardSize, readMouse, rename_output_files_to_BIDS
-from ld_stimuli_names import soundNames, ttl_instructions_text
-from ld_sound import change_volume, play_sound, delete_temp_files, dataFolder, create_temp_sound_files
-from ttl_catch_keyboard import wait_for_ttl_keyboard
+from declarativeTask3.config import experiment_session
+from declarativeTask3.ld_utils import getLanguage, setCursor, cardSize, readMouse, rename_output_files_to_BIDS
+from declarativeTask3.ld_stimuli_names import soundNames, ttl_instructions_text
+from declarativeTask3.ld_sound import change_volume, play_sound, delete_temp_files, dataFolder, create_temp_sound_files
+from declarativeTask3.ttl_catch_keyboard import wait_for_ttl_keyboard
 
 if not windowMode:  # Check WindowMode and Resolution
     control.defaults.window_mode = windowMode

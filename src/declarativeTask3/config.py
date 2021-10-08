@@ -19,6 +19,10 @@ windowSize = (1024, 768)  # if windowMode is True then use windowSize
 picturesExamples = ['triangle.png', 'square.png', 'circle.png']
 sounds = ['shortest-1-100ms.wav', 'shortest-2-100ms.wav', 'shortest-3-100ms.wav']
 tempSounds = ['sound' + str(i) + '.wav' for i in range(len(sounds))]
+soundNames = {
+    None: {0: 'S1', 1: 'S2', 2: 'S3'},
+    'english': {0: 'standard', 1: 'noise', 2: 'A'},
+    'french': {0: 'standard', 1: 'bruit', 2: 'A'}}
 
 templatePicture = picturesFolder + 'class_a' + os.path.sep + 'a001.png'
 
@@ -167,6 +171,10 @@ if numberBlocksSubUnit * numberLearningSubUnits != numberBlocksLearning:
     its number of subUnits * the number of blocks during a subUnit""")
 
 classPictures = ['a', 'b', 'c']
+classNames = {'english': {'a': 'animals', 'b': 'household', 'c': 'clothes'},
+              'french': {'a': 'animaux', 'b': 'maison', 'c': 'vêtements'},
+              None: {'a': 'a', 'b': 'b', 'c': 'c'}}
+
 picturesFolderClass = {category: picturesFolder+'class_'+category+os.path.sep for category in classPictures}
 # one category (as we'll later rename (refactor) classes) should always be a single lowercase letter
 numberClasses = len(classPictures)
@@ -194,11 +202,12 @@ debug = False
 
 sessions = ['expePreNap', 'expePostNap']
 experiment_session = {
-    'choose-language':      'expePreNap',
-    'soundVolumeAdjustment':'expePreNap',
-    'stimuli-presentation': 'expePreNap',
-    'Example':              'expePreNap',
-    'Encoding':             'expePreNap',
-    'Test-Encoding':        'expePreNap',
-    'ReTest-Encoding':      'expePostNap',
-    'DayOne-Recognition':   'expePostNap'}
+    'choose-sound-association': 'expePreNap',
+    'choose-language':          'expePreNap',
+    'soundVolumeAdjustment':    'expePreNap',
+    'stimuli-presentation':     'expePreNap',
+    'Example':                  'expePreNap',
+    'Encoding':                 'expePreNap',
+    'Test-Encoding':            'expePreNap',
+    'ReTest-Encoding':          'expePostNap',
+    'DayOne-Recognition':       'expePostNap'}

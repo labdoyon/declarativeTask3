@@ -5,10 +5,10 @@ from expyriment import control, stimuli, io, design, misc
 from expyriment.misc import constants
 from expyriment.misc._timer import get_time
 
-from ld_matrix import LdMatrix
-from ld_utils import setCursor, newRandomPresentation, readMouse, path_leaf, rename_output_files_to_BIDS
-from ttl_catch_keyboard import wait_for_ttl_keyboard
-from config import *
+from declarativeTask3.ld_matrix import LdMatrix
+from declarativeTask3.ld_utils import setCursor, newRandomPresentation, readMouse, path_leaf, rename_output_files_to_BIDS
+from declarativeTask3.ttl_catch_keyboard import wait_for_ttl_keyboard
+from declarativeTask3.config import *
 
 if not windowMode:  # Check WindowMode and Resolution
     control.defaults.window_mode = windowMode
