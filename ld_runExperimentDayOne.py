@@ -15,10 +15,9 @@ subject_dir = os.getcwd() + os.path.sep + 'sourcedata' + sep + 'sub-' + subjectN
 if not os.path.isdir(subject_dir):
     os.mkdir(subject_dir)
 
-language = getPrevious(subjectName, subject_dir, 0, 'choose-language', 'language:')
+language = getPrevious(subjectName, 0, 'choose-language', 'language:')
 
-soundsAllocation_index = getPrevious(subjectName, subject_dir, 0,
-                                     'choose-sound-association', 'Image classes to sounds (index):')
+soundsAllocation_index = getPrevious(subjectName, 0, 'choose-sound-association', 'Image classes to sounds (index):')
 
 if soundsAllocation_index is None:
     soundsAllocation_index, soundsAllocation = newSoundAllocation()

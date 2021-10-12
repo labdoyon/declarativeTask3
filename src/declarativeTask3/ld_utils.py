@@ -193,9 +193,10 @@ def getPreviousSoundsAllocation(subjectName, daysBefore, experienceName):
     return None
 
 
-def getPrevious(subjectName, subject_dir, daysBefore, experienceName, target):
+def getPrevious(subjectName, daysBefore, experienceName, target):
     currentDate = datetime.now()
 
+    subject_dir = join(rawFolder, 'sourcedata', 'sub-' + subjectName)
     data_files = []
     for session in sessions:
         session_dir = join(subject_dir, 'ses-' + session, 'beh')
