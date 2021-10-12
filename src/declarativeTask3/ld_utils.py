@@ -106,13 +106,15 @@ def getPreviousMatrix(subjectName, daysBefore, experienceName, matrix_index, mat
 
     subject_dir = join(rawFolder, 'sourcedata', 'sub-' + subjectName)
     data_files = []
-    output = None
+
     for session in sessions:
         session_dir = join(subject_dir, 'ses-' + session, 'beh')
         if os.path.isdir(session_dir):
             data_files = data_files + \
-                         [join(session_dir, file) for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
+                         [join(session_dir, file) for file in os.listdir(session_dir) if file.endswith('_beh.xpd') and
+                          'task-' + experienceName in file]
 
+    data_files.sort(reverse=True)  # latest runs first
     for dataFile in data_files:
         try:
             agg = misc.data_preprocessing.read_datafile(dataFile, only_header_and_variable_names=True)
@@ -134,13 +136,9 @@ def getPreviousMatrix(subjectName, daysBefore, experienceName, matrix_index, mat
                 indexPositions = header.index('matrix {}, pictures from class {}:'.format(matrix_index,
                                                                                           matrix_category)) + 1
                 previousMatrix = ast.literal_eval(header[indexPositions].split('\n')[0].split('\n')[0])
-                output = previousMatrix
+                return previousMatrix
 
-    # This ensures the latest matrix (or other information) is used, as, if several files have been generated,
-    # they should be named <something> <something>_run-02.xpd , <something>_run-03.xpd , etc. etc. And since files are
-    # sorted in alphabetical order, the <output> variable that will be returned is the one from the latest file,
-    # both alphabetical-wise, run-wise, and time-wise
-    return output
+    return None
 
 
 def newSoundAllocation():
@@ -162,13 +160,14 @@ def getPreviousSoundsAllocation(subjectName, daysBefore, experienceName):
 
     subject_dir = join(rawFolder, 'sourcedata', 'sub-' + subjectName)
     data_files = []
-    output = False
     for session in sessions:
         session_dir = join(subject_dir, 'ses-' + session, 'beh')
         if os.path.isdir(session_dir):
             data_files = data_files + \
-                         [join(session_dir, file) for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
+                         [join(session_dir, file) for file in os.listdir(session_dir) if file.endswith('_beh.xpd') and
+                          'task-' + experienceName in file]
 
+    data_files.sort(reverse=True)  # latest runs first
     for dataFile in data_files:
         try:
             agg = misc.data_preprocessing.read_datafile(dataFile, only_header_and_variable_names=True)
@@ -189,26 +188,23 @@ def getPreviousSoundsAllocation(subjectName, daysBefore, experienceName):
                 print('File found: ' + dataFile)
                 indexPositions = header.index('Image classes to sounds (index):') + 1
                 sound_allocation = ast.literal_eval(header[indexPositions].split('\n')[0].split('\n')[0])
-                output = sound_allocation
+                return sound_allocation
 
-    # This ensures the latest sound allocation (or other information) is used, as, if several files have been generated,
-    # they should be named <something> <something>_run-02.xpd , <something>_run-03.xpd , etc. etc. And since files are
-    # sorted in alphabetical order, the <output> variable that will be returned is the one from the latest file,
-    # both alphabetical-wise, run-wise, and time-wise
-    return output
+    return None
 
 
 def getPrevious(subjectName, subject_dir, daysBefore, experienceName, target):
     currentDate = datetime.now()
-    output = None
 
     data_files = []
     for session in sessions:
         session_dir = join(subject_dir, 'ses-' + session, 'beh')
         if os.path.isdir(session_dir):
             data_files = data_files + \
-                         [join(session_dir, file) for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
+                         [join(session_dir, file) for file in os.listdir(session_dir) if file.endswith('_beh.xpd') and
+                          'task-' + experienceName in file]
 
+    data_files.sort(reverse=True)  # latest runs first
     for dataFile in data_files:
         agg = misc.data_preprocessing.read_datafile(dataFile, only_header_and_variable_names=True)
         previousDate = parse(agg[2]['date'])
@@ -227,19 +223,15 @@ def getPrevious(subjectName, subject_dir, daysBefore, experienceName, target):
                 previousTarget = header[indexPositions].split('\n')[0].split('\n')[0]
                 try:  # dictionary or list
                     output = literal_eval(previousTarget)
-                except:  # string
+                except (SyntaxError, ValueError):  # string
                     output = previousTarget
+                return output
 
-    # This ensures the latest language choice (or other information) is used, as, if several files have been generated,
-    # they should be named <something> <something>_run-02.xpd , <something>_run-03.xpd , etc. etc. And since files are
-    # sorted in alphabetical order, the <output> variable that will be returned is the one from the latest file,
-    # both alphabetical-wise, run-wise, and time-wise
-    return output
+    return None
 
 
 def getLanguage(subjectName, daysBefore, experienceName):
     currentDate = datetime.now()
-    output = None
 
     subject_dir = join(rawFolder, 'sourcedata', 'sub-' + subjectName)
     data_files = []
@@ -247,8 +239,10 @@ def getLanguage(subjectName, daysBefore, experienceName):
         session_dir = join(subject_dir, 'ses-' + session, 'beh')
         if os.path.isdir(session_dir):
             data_files = data_files + \
-                         [join(session_dir, file) for file in os.listdir(session_dir) if file.endswith('_beh.xpd')]
+                         [join(session_dir, file) for file in os.listdir(session_dir) if file.endswith('_beh.xpd') and
+                          'task-' + experienceName in file]
 
+    data_files.sort(reverse=True)  # latest runs first
     for dataFile in data_files:
         try:
             agg = misc.data_preprocessing.read_datafile(dataFile, only_header_and_variable_names=True)
@@ -268,10 +262,9 @@ def getLanguage(subjectName, daysBefore, experienceName):
                 print('File found: ' + dataFile)
                 indexPositions = header.index('language:') + 1
                 language = header[indexPositions].split('\n')[0].split('\n')[0]
-                output = language
+                return language
 
-    # This ensures the latest language choice is used
-    return output
+    return None
 
 
 def normalize_presentation_order(presentation_order, learning_matrix, random_matrix):
