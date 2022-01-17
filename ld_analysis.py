@@ -22,17 +22,19 @@ sep = os.path.sep
 #
 # Declaring <subject_folder> and <outputFile> variables, which are self-explanatory
 subject_location = sys.argv[1]
-subject_id = os.path.basename(subject_location).replace('sub-', '')
-
+subject_id = os.path.basename(os.path.normpath(subject_location)).replace('sub-', '')
 subject_folder = os.path.abspath(os.path.join(os.getcwd(), subject_location))
 
-output_file = os.path.abspath(os.path.join(os.getcwd(), subject_id + '_preprocessed_data.csv'))
-output_file_tests = os.path.abspath(os.path.join(os.getcwd(), subject_id + '_tests&recognition.csv'))
-output_file_learning = os.path.abspath(os.path.join(os.getcwd(), subject_id + '_learning.csv'))
+output_file = os.path.abspath(os.path.join(os.getcwd(), preprocessed_data_path, subject_id + '_preprocessed_data.csv'))
+output_file_tests = os.path.abspath(os.path.join(os.getcwd(), preprocessed_data_path, subject_id + '_tests&recognition.csv'))
+output_file_learning = os.path.abspath(os.path.join(os.getcwd(), preprocessed_data_path, subject_id + '_learning.csv'))
 
 # Gathering all subject files
 allFiles = glob.glob(os.path.join(subject_folder, '*', 'beh', '*.xpd'))
-print(allFiles)
+encoding_file = [file for file in allFiles if 'task-' + "Encoding" in file][0]
+
+allFiles.remove(encoding_file)
+allFiles.insert(0, encoding_file)
 # encodingFiles = []
 # associationFiles = []
 # for iFile in allFiles:
@@ -73,7 +75,7 @@ for iFile in allFiles:
     if 'task-' + "Encoding" in iFile:
         events, matrices, matrix_size, classes_order, sounds_order, classes_to_sounds_index, ttl_timestamp = \
             extract_matrix_and_data(subject_folder, iFile, learning=True)
-        print(matrices)
+
         day1_learning.cards_order, day1_learning.cards_distance_to_correct_card,\
             day1_learning.position_response_reaction_time,\
             day1_learning.number_blocks, day1_learning.show_card_absolute_time, \
@@ -105,7 +107,7 @@ for iFile in allFiles:
                   classes_to_sounds_index=classes_to_sounds_index,
                   day=day1_learning)
 
-    if 'task=' + "Test-Encoding" in iFile:
+    if 'task-' + "Test-Encoding" in iFile:
         day2_test.events, day2_test.matrices, day2_test.matrix_size, \
             day2_test.classes_order, day2_test.sounds_order, day2_test.classes_to_sounds_index,\
             day2_test.ttl_in_data = \
@@ -121,7 +123,7 @@ for iFile in allFiles:
                            ttl_timestamp=day2_test.ttl_in_data)
         day2_test_not_reached = False
 
-    if 'task' + "ReTest-Encoding" in iFile:
+    if 'task-' + "ReTest-Encoding" in iFile:
         day3_test.events, day3_test.matrices, day3_test.matrix_size, \
             day3_test.classes_order, day3_test.sounds_order, day3_test.classes_to_sounds_index,\
             day3_test.ttl_in_data = \
