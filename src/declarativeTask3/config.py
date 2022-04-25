@@ -1,7 +1,11 @@
+import sys
+
 import glob
 from os.path import normpath, join, dirname, basename
 # from math import ceil
 from expyriment.misc import constants
+
+python_interpreter = '"'+sys.executable+'"'  # the '"' are there in case of spaces in the fullpath to the python_interpreter interpreter
 
 rawFolder = normpath(join(dirname(__file__), '..', '..'))
 

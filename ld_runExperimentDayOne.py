@@ -4,7 +4,8 @@ import sys
 import os
 
 import expyriment
-from declarativeTask3.config import experiment_session, classPictures, classNames, sounds, soundNames
+from declarativeTask3.config import python_interpreter, experiment_session, classPictures, classNames, sounds,\
+    soundNames
 from declarativeTask3.ld_utils import getPrevious, generate_bids_filename, newSoundAllocation
 sep = os.path.sep
 
@@ -69,8 +70,6 @@ if soundsAllocation_index is None:
 menu_soundsAllocation_index = {classNames[language][key]: soundNames[language][soundsAllocation_index[key]] for key in soundsAllocation_index.keys()}
 # 'None' if no languages were chosen previously, said language otherwise, e.g. 'french'
 
-python = 'py'
-
 # Create the menu
 menu = CursesMenu(
     title="Declarative Task - Day One", subtitle='Subject: ' + sys.argv[1] + ' ; language: ' +
@@ -79,52 +78,52 @@ menu = CursesMenu(
                                                      replace('{', '').replace('}', ''))
 
 dayOneChooseLanguage = CommandItem(text='choose language',
-                                   command=python + " " + 
+                                   command=python_interpreter + " " +
                                            os.path.join("src", "declarativeTask3", "ld_choose_language.py"),
                                    arguments='choose-language, ' + sys.argv[1] + ', ' + 'None',
                                    menu=menu,
                                    should_exit=False)
 
 dayOneExample = CommandItem(text='Example',
-                            command=python + " " + os.path.join("src", "declarativeTask3", "ld_example.py"),
+                            command=python_interpreter + " " + os.path.join("src", "declarativeTask3", "ld_example.py"),
                             arguments='Example, ' + sys.argv[1],
                             menu=menu,
                             should_exit=False)
 
 dayOneStimuliPresentation = CommandItem(text='stimuli presentation',
-                                        command=python + " " + 
+                                        command=python_interpreter + " " +
                                                 os.path.join("src", "declarativeTask3", "ld_stimuli_presentation.py"),
                                         arguments='stimuli-presentation, ' + sys.argv[1],
                                         menu=menu,
                                         should_exit=False)
 
 soundVolumeAdjustment = CommandItem(text='sound Volume Adjustment',
-                                    command=python + " " +
+                                    command=python_interpreter + " " +
                                             os.path.join("src", "declarativeTask3", "ld_GUI_adjust_sound_volumes.py"),
                                     arguments='soundVolumeAdjustment, ' + sys.argv[1],
                                     menu=menu,
                                     should_exit=False)
 
 dayOneEncoding = CommandItem(text='Encoding',
-                             command=python + " " + os.path.join("src", "declarativeTask3", "ld_encoding.py"),
+                             command=python_interpreter + " " + os.path.join("src", "declarativeTask3", "ld_encoding.py"),
                              arguments='Encoding, ' + sys.argv[1],
                              menu=menu,
                              should_exit=False)
 
 dayOneTestEncoding = CommandItem(text='Test Encoding',
-                                 command=python + " " + os.path.join("src", "declarativeTask3", "ld_encoding.py"),
+                                 command=python_interpreter + " " + os.path.join("src", "declarativeTask3", "ld_encoding.py"),
                                 arguments='Test-Encoding, ' + sys.argv[1],
                                 menu=menu,
                                 should_exit=False)
 
 dayOneReTestEncoding = CommandItem(text='ReTest Encoding',
-                                   command=python + " " + os.path.join("src", "declarativeTask3", "ld_encoding.py"),
+                                   command=python_interpreter + " " + os.path.join("src", "declarativeTask3", "ld_encoding.py"),
                                    arguments='ReTest-Encoding, ' + sys.argv[1],
                                    menu=menu,
                                    should_exit=False)
 
 dayOneRecognition = CommandItem(text="Recognition",
-                                command=python + " " + os.path.join("src", "declarativeTask3", "ld_recognition.py "),
+                                command=python_interpreter + " " + os.path.join("src", "declarativeTask3", "ld_recognition.py "),
                                 arguments="Day One - Recognition, " + sys.argv[1],
                                 menu=menu,
                                 should_exit=False)

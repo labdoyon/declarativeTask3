@@ -6,7 +6,7 @@ from cursesmenu.items import *
 
 from declarativeTask3.ld_stimuli_names import supported_languages
 from declarativeTask3.ld_utils import rename_output_files_to_BIDS
-from declarativeTask3.config import experiment_session
+from declarativeTask3.config import python_interpreter, experiment_session
 
 arguments = str(''.join(sys.argv[1:])).split(',')
 experimentName = arguments[0]
@@ -15,14 +15,13 @@ language = arguments[2]
 sep = os.path.sep
 
 if language == 'None':
-    python = 'py'
     menu = CursesMenu(title="choose a language")
 
     choose_language = []
     for i, supported_language in enumerate(supported_languages):
         choose_language.append(
             CommandItem(text='choose ' + supported_language + ' for the experiment for this participant',
-                        command=python + " " + os.path.join("src", "declarativeTask3", "ld_choose_language.py"),
+                        command=python_interpreter + " " + os.path.join("src", "declarativeTask3", "ld_choose_language.py"),
                         arguments='choose-language, ' + subject_name + ', ' + supported_language,
                         menu=menu,
                         should_exit=False)
