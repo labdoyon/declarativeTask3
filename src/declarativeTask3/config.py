@@ -20,12 +20,12 @@ windowMode = False  # if False use FullScreen
 windowSize = (1024, 768)  # if windowMode is True then use windowSize
 
 picturesExamples = ['triangle.png', 'square.png', 'circle.png']
-sounds = ['shortest-1-100ms.wav', 'shortest-2-100ms.wav', 'shortest-3-100ms.wav']
+sounds = ['shortest-1-100ms.wav', 'shortest-3-100ms.wav']
 tempSounds = ['sound' + str(i) + '.wav' for i in range(len(sounds))]
 soundNames = {
-    None: {0: 'S1', 1: 'S2', 2: 'S3'},
-    'english': {0: 'standard', 1: 'noise', 2: 'A'},
-    'french': {0: 'standard', 1: 'bruit', 2: 'A'}}
+    None: {0: 'S1', 1: 'S3'},
+    'english': {0: 'standard', 1: 'A'},
+    'french': {0: 'standard', 1: 'A'}}
 
 templatePicture = normpath(join(picturesFolder, 'class_a', 'a001.png'))
 
@@ -46,7 +46,7 @@ textColor = (0, 0, 0)  # expyriment.misc.constants.C_BLACK
 
 
 textSize = 50
-matrixSize = (5, 4)
+matrixSize = (6, 4)
 cardSize = (90, 90)
 
 ''' Circles '''
@@ -160,23 +160,17 @@ elif matrixSize == (7, 7):
                       0, 2, 1, 2, 0, 1, 2,
                       1, 2, 1, 0, 2, 0, 1,
                       0, 1, 0, 1, 2, 2, 0]
-elif matrixSize == (5, 4):
-    matrixTemplate = [0] * 20
+elif matrixSize == (6, 4):
+    matrixTemplate = [0] * 24
     removeCards = []
 
 # correctAnswersMax = int(ceil((matrixSize[0]*matrixSize[0] - len(removeCards))*7./10))
-correctAnswersMax = 13
-numberBlocksLearning = 10
-numberBlocksSubUnit = 2
-numberLearningSubUnits = 5
-if numberBlocksSubUnit * numberLearningSubUnits != numberBlocksLearning:
-    raise ValueError("""the number of blocks of learning is not equal to
-    its number of subUnits * the number of blocks during a subUnit""")
+correctAnswersMax = 16  # 65%
 
-classPictures = ['a', 'b', 'c']
+classPictures = ['a', 'c']
 classNames = {'english': {'a': 'animals', 'b': 'household', 'c': 'clothes'},
               'french': {'a': 'animaux', 'b': 'maison', 'c': 'vêtements'},
-              None: {'a': 'a', 'b': 'b', 'c': 'c'}}
+              None: {'a': 'a', 'c': 'c'}}
 
 picturesFolderClass = {category: join(picturesFolder, 'class_'+category) for category in classPictures}
 # one category (as we'll later rename (refactor) classes) should always be a single lowercase letter

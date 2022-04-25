@@ -8,8 +8,8 @@ from expyriment.misc import constants
 from declarativeTask3.ld_matrix import LdMatrix
 from declarativeTask3.config import windowMode, windowSize, bgColor, textColor, cardSize, textSize, \
     classPictures, matrixSize, listPictures, shortRest, presentationCard, picturesFolderClass,\
-    min_max_ISI, debug, thankYouRest, sounds, experiment_session
-from declarativeTask3.ld_stimuli_names import pictureNames, classNames, ending_screen_text, soundNames, ttl_instructions_text
+    min_max_ISI, debug, thankYouRest, sounds, experiment_session, soundNames
+from declarativeTask3.ld_stimuli_names import pictureNames, classNames, ending_screen_text, ttl_instructions_text
 from declarativeTask3.ld_stimuli_names import sound_textbox
 from declarativeTask3.ld_utils import getLanguage, getPreviousSoundsAllocation, rename_output_files_to_BIDS
 from declarativeTask3.ld_sound import create_temp_sound_files, delete_temp_files
@@ -69,7 +69,7 @@ exp.add_experiment_info(str(soundsAllocation_index))
 soundsVolumeAdjustmentIndB = create_temp_sound_files(subjectName, io.defaults.datafile_directory)
 exp.add_experiment_info('Sounds Volume adjustment (in dB):')
 exp.add_experiment_info(str(soundsVolumeAdjustmentIndB))
-if soundsVolumeAdjustmentIndB != [0, 0, 0]:
+if soundsVolumeAdjustmentIndB != [0] * len(sounds):
     volumeAdjusted = True
 else:
     volumeAdjusted = False

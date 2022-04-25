@@ -4,7 +4,7 @@ supported_languages = ['french', 'english']
 picturesNamesEnglish = {
     'a001': 'penguin',
     'a002': 'pig',
-    'a003': 'snake',
+    'a003': 'swan',
     'a004': 'squirrel',
     'a005': 'turtle',
     'a006': 'crocodile',
@@ -22,28 +22,11 @@ picturesNamesEnglish = {
     'a018': 'cat',
     'a019': 'duck',
     'a020': 'racoon',
+    'a021': 'camel',
+    'a022': 'giraffe',
+    'a023': 'kangaroo',
+    'a024': 'zebra',
 
-    'b001': 'pliers',
-    'b002': 'power outlet',
-    'b003': 'fridge',
-    'b004': 'chair',
-    'b005': 'rolling pin',
-    'b006': 'salt',
-    'b007': 'television',
-    'b008': 'watering can',
-    'b009': 'glass',
-    'b010': 'hammer',
-    'b011': 'key',
-    'b012': 'lamp',
-    'b013': 'saw',
-    'b014': 'pan',
-    'b015': 'screwdriver',
-    'b016': 'spoon',
-    'b017': 'axe',
-    'b018': 'broom',
-    'b019': 'table',
-    'b020': 'toaster',
-    
     'c001': 'pants',
     'c002': 'shoe',
     'c003': 'skirt',
@@ -63,13 +46,17 @@ picturesNamesEnglish = {
     'c017': 'ribbon',
     'c018': 'watch',
     'c019': 'shirt',
-    'c020': 'cap'
+    'c020': 'cap',
+    'c021': 'blouse',
+    'c022': 'coat',
+    'c023': 'ring',
+    'c024': 'boot'
 }
 
 picturesNamesFrench = {
     'a001': 'pingouin',
     'a002': 'cochon',
-    'a003': 'serpent',
+    'a003': 'cygne',
     'a004': 'écureuil',
     'a005': 'tortue',
     'a006': 'crocodile',
@@ -87,27 +74,10 @@ picturesNamesFrench = {
     'a018': 'chat',
     'a019': 'canard',
     'a020': 'raton laveur',
-
-    'b001': 'pinces',
-    'b002': 'prise',
-    'b003': 'réfrigérateur',
-    'b004': 'chaise',
-    'b005': 'rouleau',
-    'b006': 'sel',
-    'b007': 'télévision',
-    'b008': 'arrosoir',
-    'b009': 'verre',
-    'b010': 'marteau',
-    'b011': 'clé',
-    'b012': 'lampe',
-    'b013': 'scie',
-    'b014': 'casserole',
-    'b015': 'tournevis',
-    'b016': 'cuillère',
-    'b017': 'hache',
-    'b018': 'balai',
-    'b019': 'table',
-    'b020': 'grille-pain',
+    'a021': 'chameau',
+    'a022': 'girafe',
+    'a023': 'kangourou',
+    'a024': 'zébre',
 
     'c001': 'pantalon',
     'c002': 'chaussure',
@@ -119,7 +89,7 @@ picturesNamesFrench = {
     'c008': 'ceinture',
     'c009': 'robe',
     'c010': 'chapeau',
-    'c011': 'manteau',
+    'c011': 'veste',
     'c012': 'moufle',
     'c013': 'collier',
     'c014': 'gant',
@@ -128,17 +98,16 @@ picturesNamesFrench = {
     'c017': 'ruban',
     'c018': 'montre',
     'c019': 'chemise',
-    'c020': 'casquette'
+    'c021': 'chemisier',
+    'c022': 'manteau',
+    'c023': 'lunettes',
+    'c024': 'botte'
 }
 
 pictureNames = {'english': picturesNamesEnglish, 'french': picturesNamesFrench}
-classNames = {'english': {'a': 'animals', 'b': 'household', 'c': 'clothes'},
-              'french': {'a': 'animaux', 'b': 'maison', 'c': 'vêtements'},
-              None: {'a': 'a', 'b': 'b', 'c': 'c'}}
-soundNames = {
-    None: {0: 'S1', 1: 'S2', 2: 'S3'},
-    'english': {0: 'standard', 1: 'noise', 2: 'A'},
-    'french': {0: 'standard', 1: 'bruit', 2: 'A'}}
+classNames = {'english': {'a': 'animals', 'c': 'clothes'},
+              'french': {'a': 'animaux', 'c': 'vêtements'},
+              None: {'a': 'a', 'c': 'c'}}
 
 sound_textbox = {'english': ' Sound: ', 'french': ' Son: '}
 rest_screen_text = {'english': ' REST ', 'french': ' REPOS '}

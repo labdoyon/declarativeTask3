@@ -76,7 +76,7 @@ exp.add_experiment_info(str(soundsAllocation_index))
 soundsVolumeAdjustmentIndB = create_temp_sound_files(subjectName, io.defaults.datafile_directory)
 exp.add_experiment_info('Sounds Volume adjustment (in dB):')
 exp.add_experiment_info(str(soundsVolumeAdjustmentIndB))
-if soundsVolumeAdjustmentIndB != [0, 0, 0]:
+if soundsVolumeAdjustmentIndB != [0] * len(sounds):
     volumeAdjusted = True
 else:
     volumeAdjusted = False

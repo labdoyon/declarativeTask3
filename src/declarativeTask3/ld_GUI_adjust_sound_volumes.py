@@ -7,10 +7,10 @@ from expyriment.misc import constants
 from expyriment.misc._timer import get_time
 
 from declarativeTask3.config import debug, windowMode, windowSize, classPictures, sounds, \
-    bgColor, arrow, textSize, textColor, cardColor, responseTime, mouseButton, clickColor, clicPeriod
+    bgColor, arrow, textSize, textColor, cardColor, responseTime, mouseButton, clickColor, clicPeriod, soundNames
 from declarativeTask3.config import experiment_session
 from declarativeTask3.ld_utils import getLanguage, setCursor, cardSize, readMouse, rename_output_files_to_BIDS
-from declarativeTask3.ld_stimuli_names import soundNames, ttl_instructions_text
+from declarativeTask3.ld_stimuli_names import ttl_instructions_text
 from declarativeTask3.ld_sound import change_volume, play_sound, delete_temp_files, create_temp_sound_files
 from declarativeTask3.ttl_catch_keyboard import wait_for_ttl_keyboard
 

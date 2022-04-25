@@ -68,6 +68,6 @@ def create_temp_sound_files(subject_name, datafile_directory):
                 change_volume(j, volume_adjustment_db=sounds_volume_adjustment[j])
             return sounds_volume_adjustment
         else:
-            return [0, 0, 0]
+            return [0]*len(sounds)
     else:  # no such file or directory
-        return [0, 0, 0]
+        return [0]*len(sounds)
