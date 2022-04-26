@@ -85,7 +85,7 @@ class LdMatrix(object):
                     iCard += 1
 
             for i in range(len(classPictures)):
-                rowPosition = 0 + (self.gap + sizeRows) * (i-1)
+                rowPosition = 0 - (self.gap + sizeRows)/2 + (self.gap + sizeRows) * i
                 (self._cueCard[i]).position = (rowPosition, self._windowSize[1]/float(2) - self.gap - sizeRows/float(2.0))
                 (self._cueCard[i]).stimuli[0].reposition(self._cueCard[i].position)
                 (self._cueCard[i]).stimuli[1].reposition(self._cueCard[i].position)
