@@ -165,7 +165,7 @@ elif matrixSize == (6, 4):
     removeCards = []
 
 # correctAnswersMax = int(ceil((matrixSize[0]*matrixSize[0] - len(removeCards))*7./10))
-correctAnswersMax = 16  # 65%
+correctAnswersMax = 15  # 65%
 
 classPictures = ['a', 'c']
 classNames = {'english': {'a': 'animals', 'b': 'household', 'c': 'clothes'},
