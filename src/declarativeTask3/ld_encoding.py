@@ -261,6 +261,10 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
             max_width=None)
 
         instructions.plot(bs)
+        for i in range(len(classPictures)):
+            matrices[0]._cueCard[i].color = bgColor
+            matrix_i.plotCueCard(i, False, bs, False)
+
         bs.present(False, True)
         exp.add_experiment_info(
             ['StartShortRest_block_{}_timing_{}'.format(nBlock, exp.clock.time)])  # Add sync info
@@ -292,6 +296,11 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
                                     max_width=None)
     instructionRectangle.plot(bs)
     instructions.plot(bs)
+
+    for i in range(len(classPictures)):
+        matrices[0]._cueCard[i].color = constants.C_WHITE
+        matrix_i.plotCueCard(i, False, bs, False)
+
     bs.present(False, True)
 
     # LOG and SYNC Start Test
