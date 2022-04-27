@@ -73,8 +73,6 @@ setCursor(arrow)
 bs = stimuli.BlankScreen(bgColor)  # Create blank screen
 m.plotDefault(bs, True)  # Draw default grid
 
-exp.clock.wait(shortRest, process_control_events=True)
-
 wait_for_ttl_keyboard()
 
 exp.add_experiment_info(['Block {} - Presentation'.format(0)])  # Add listPictures
