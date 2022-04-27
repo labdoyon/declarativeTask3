@@ -308,6 +308,8 @@ for i in matrix_presentation_order:
         ISI = design.randomize.rand_int(min_max_ISI[0], min_max_ISI[1])
         exp.clock.wait(ISI, process_control_events=True)
 
+instructionRectangle = stimuli.Rectangle(size=(windowSize[0], matrices[0].gap * 2 + cardSize[1]), position=(
+    0, -windowSize[1]/float(2) + (2 * matrices[0].gap + cardSize[1])/float(2)), colour=constants.C_DARKGREY)
 instructions = stimuli.TextLine(
     ending_screen_text[language],
     position=(0, -windowSize[1] / float(2) + (2 * matrices[0].gap + cardSize[1]) / float(2)),
@@ -315,6 +317,7 @@ instructions = stimuli.TextLine(
     text_underline=None, text_colour=textColor, background_colour=bgColor,
     max_width=None)
 
+instructionRectangle.plot(bs)
 instructions.plot(bs)
 bs.present(False, True)
 exp.clock.wait(thankYouRest, process_control_events=True)
