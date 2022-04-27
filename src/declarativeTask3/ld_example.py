@@ -73,8 +73,9 @@ setCursor(arrow)
 bs = stimuli.BlankScreen(bgColor)  # Create blank screen
 cuecard_index = 1
 m.changeCueCardPosition((0, m._windowSize[1]/float(2) - m.gap - m._matrix.item(0).size[0]/float(2.0)), cuecard_index)
-m._cueCard[0].color = bgColor
-m.plotCueCard(cuecard_index, False, bs, False)
+for cuecard_tmp_index in range(len(classPictures)):
+    m._cueCard[cuecard_tmp_index].color = bgColor
+    m.plotCueCard(cuecard_tmp_index, False, bs, False)
 m.plotDefault(bs, True)  # Draw default grid
 
 wait_for_ttl_keyboard()
@@ -122,6 +123,9 @@ instructions.plot(bs)
 bs.present(False, True)
 
 exp.clock.wait(shortRest, process_control_events=True)  # Short Rest between presentation and cue-recall
+
+m._cueCard[cuecard_index].color = constants.C_WHITE
+m.plotCueCard(cuecard_index, False, bs, False)
 
 instructionRectangle.plot(bs)
 bs.present(False, True)
