@@ -109,6 +109,9 @@ exp.add_experiment_info(str(classPicturesPresentationOrder))
 # Graphical instructions
 bs = stimuli.BlankScreen(bgColor)  # Create blank screen
 
+m._cueCard[cuecard_index].color = bgColor
+m.plotCueCard(cuecard_index, False, bs, False)
+
 instructionRectangle = stimuli.Rectangle(size=(windowSize[0], 2*cardSize[1]), position=(
     0, -(2*cardSize[1])), colour=constants.C_DARKGREY)
 
@@ -193,6 +196,9 @@ for category in classPicturesPresentationOrder:
             category, exp.clock.time, soundIndex, sound))
     show_and_hide_text_box(bs, instructions_listen_sound, 0, just_hide=True)
 
+    m._cueCard[cuecard_index].color = constants.C_WHITE
+    m.plotCueCard(cuecard_index, False, bs, False)
+
     ISI = design.randomize.rand_int(min_max_ISI[0], min_max_ISI[1])
     exp.clock.wait(ISI, process_control_events=True)
 
@@ -218,6 +224,9 @@ for category in classPicturesPresentationOrder:
 
         ISI = design.randomize.rand_int(min_max_ISI[0], min_max_ISI[1])
         exp.clock.wait(ISI, process_control_events=True)
+
+    m._cueCard[cuecard_index].color = bgColor
+    m.plotCueCard(cuecard_index, False, bs, True)
 
 instructions_rest = create_instructions_box(ending_screen_text[language],
                                             (0, -windowSize[1] / float(2) + (2 * m.gap + cardSize[1]) / float(2)))
