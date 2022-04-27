@@ -71,6 +71,10 @@ mouse.hide_cursor(True, True)  # Hide cursor
 setCursor(arrow)
 
 bs = stimuli.BlankScreen(bgColor)  # Create blank screen
+cuecard_index = 1
+m.changeCueCardPosition((0, m._windowSize[1]/float(2) - m.gap - m._matrix.item(0).size[0]/float(2.0)), cuecard_index)
+m._cueCard[0].color = bgColor
+m.plotCueCard(cuecard_index, False, bs, False)
 m.plotDefault(bs, True)  # Draw default grid
 
 wait_for_ttl_keyboard()
@@ -127,7 +131,6 @@ correctAnswers = 0
 exp.add_experiment_info(['Block {} - Test'.format(0)])  # Add listPictures
 exp.add_experiment_info(str(list(presentationOrder)))  # Add listPictures
 
-cuecard_index = int(len(classPictures)/2)
 
 for nCard in presentationOrder:
 
