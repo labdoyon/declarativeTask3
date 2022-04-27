@@ -98,9 +98,10 @@ picturesNamesFrench = {
     'c017': 'ruban',
     'c018': 'montre',
     'c019': 'chemise',
+    'c020': 'casquette',
     'c021': 'chemisier',
     'c022': 'manteau',
-    'c023': 'lunettes',
+    'c023': 'anneau',
     'c024': 'botte'
 }
 
