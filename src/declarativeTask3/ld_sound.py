@@ -1,7 +1,8 @@
 import subprocess
 import os
+import glob
 import pickle
-from declarativeTask3.config import soundsFolder, sounds, tempSounds
+from declarativeTask3.config import rawFolder, soundsFolder, sounds, tempSounds
 
 # Documentation: https://trac.ffmpeg.org/wiki/AudioVolume
 # https://ffmpeg.org/ffmpeg.html#Main-options
@@ -57,17 +58,23 @@ def delete_temp_files():
 
 
 def create_temp_sound_files(subject_name, datafile_directory):
-    subject_file = 'soundsVolumeAdjustmentIndB_' + subject_name + '.pkl'
+    subject_filename = 'soundsVolumeAdjustmentIndB_' + subject_name + '.pkl'
+    candidate_files = []
     # Getting back the objects:
-    subject_file_full_path = os.path.join(datafile_directory, subject_file)
+    subject_file_full_path = os.path.join(rawFolder, datafile_directory, subject_filename)
+    all_files = glob.glob(os.path.join(rawFolder, 'sourcedata', 'sub-'+subject_name, 'ses-*', 'beh', subject_filename))
     if os.path.exists(subject_file_full_path):
         if os.path.getsize(subject_file_full_path) > 0:
-            with open(subject_file_full_path, "rb") as f:
+            candidate_files.append(subject_file_full_path)
+    for tmp_file in all_files:
+        if os.path.getsize(tmp_file) > 0:
+            candidate_files.append(tmp_file)
+    if candidate_files:
+        for tmp_file in candidate_files:
+            with open(tmp_file, "rb") as f:
                 sounds_volume_adjustment = pickle.load(f)
             for j in range(len(sounds)):
                 change_volume(j, volume_adjustment_db=sounds_volume_adjustment[j])
             return sounds_volume_adjustment
-        else:
-            return [0]*len(sounds)
-    else:  # no such file or directory
-        return [0]*len(sounds)
+    else:
+        return [0]*len(sounds)  # importing sound volume settings failed. No valid file
