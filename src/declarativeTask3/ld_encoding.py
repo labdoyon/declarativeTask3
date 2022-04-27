@@ -205,6 +205,9 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
         for index_matrix_pres_order, i in enumerate(learning_matrix_presentation_order):
             presentationOrder = newRandomPresentation(presentationOrder)
             matrix_i = matrices[i]
+            for cuecard_index in range(len(classPictures)):
+                matrix_i._cueCard[cuecard_index].color = bgColor
+                matrix_i.plotCueCard(cuecard_index, False, bs, False)
             matrix_i.plotDefault(bs, True)
 
             exp.add_experiment_info('Presentation_Block_{}_matrix_{}_category_{}_timing_{}'.format(
@@ -261,9 +264,6 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
             max_width=None)
 
         instructions.plot(bs)
-        for i in range(len(classPictures)):
-            matrices[0]._cueCard[i].color = bgColor
-            matrix_i.plotCueCard(i, False, bs, False)
 
         bs.present(False, True)
         exp.add_experiment_info(
@@ -297,10 +297,6 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
     instructionRectangle.plot(bs)
     instructions.plot(bs)
 
-    for i in range(len(classPictures)):
-        matrices[0]._cueCard[i].color = constants.C_WHITE
-        matrix_i.plotCueCard(i, False, bs, False)
-
     bs.present(False, True)
 
     # LOG and SYNC Start Test
@@ -333,6 +329,9 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
     exp.add_experiment_info(f'Test_Block_{nBlock}_Presentation_Order')
     exp.add_experiment_info(str(trials_order))
     matrix_i = matrices[0]
+    for cuecard_index in range(len(classPictures)):
+        matrix_i._cueCard[cuecard_index].color = constants.C_WHITE
+        matrix_i.plotCueCard(cuecard_index, False, bs, False)
     matrix_i.plotDefault(bs, True)
     dont_reuse_previous_trial_pictures = [None] * len(classPictures)
     for trial_index, card in enumerate(trials_order):
