@@ -590,8 +590,8 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
         matrix_i.plotDefault(bs, draw=True, show_matrix=False)
         results_feedback = f"""You got:
         {classNames[language][classPictures[0]]}: {str(int(correctAnswers[0, nBlock]))} out of {str(matrices[0]._matrix.size - len(removeCards))}
-        {classNames[language][classPictures[1]]}: {str(int(correctAnswers[1, nBlock]))} out of {str(matrices[1]._matrix.size - len(removeCards))}
-        {classNames[language][classPictures[2]]}: {str(int(correctAnswers[2, nBlock]))} out of {str(matrices[2]._matrix.size - len(removeCards))}"""
+        {classNames[language][classPictures[1]]}: {str(int(correctAnswers[1, nBlock]))} out of {str(matrices[1]._matrix.size - len(removeCards))}"""
+        # {classNames[language][classPictures[2]]}: {str(int(correctAnswers[2, nBlock]))} out of {str(matrices[2]._matrix.size - len(removeCards))}
         instructions = stimuli.TextBox(results_feedback,
                                        size=(windowSize[0], 4 * cardSize[1]),
                                        position=(0, 0),
@@ -648,7 +648,7 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
     currentCorrectAnswers = correctAnswers[:, nBlock]
     if ignore_one_learned_matrices:
         if index_matrix_not_to_present_again is not None:
-            currentCorrectAnswers[index_matrix_not_to_present_again] = 13
+            currentCorrectAnswers[index_matrix_not_to_present_again] = 15
 
     nBlock += 1
 
