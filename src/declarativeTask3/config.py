@@ -26,6 +26,8 @@ soundNames = {
     None: {0: 'S1', 1: 'S3'},
     'english': {0: 'standard', 1: 'A'},
     'french': {0: 'standard', 1: 'A'}}
+# starting volume value for the sounds to be adjusted based on the system:
+starting_sound_volume = -40  # dB
 
 templatePicture = normpath(join(picturesFolder, 'class_a', 'a001.png'))
 
@@ -63,6 +65,7 @@ SoundBeforeImageTime = 200
 shortRest = 2500
 thankYouRest = 5000
 restPeriod = 15000
+pleaseGetReadyPeriod = 2000
 clicPeriod = 300
 
 min_max_ISI = [500, 1500]  # [min, max] inter_stimulus interval

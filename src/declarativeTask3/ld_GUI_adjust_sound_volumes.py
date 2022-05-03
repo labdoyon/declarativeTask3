@@ -7,7 +7,8 @@ from expyriment.misc import constants
 from expyriment.misc._timer import get_time
 
 from declarativeTask3.config import debug, windowMode, windowSize, classPictures, sounds, \
-    bgColor, arrow, textSize, textColor, cardColor, responseTime, mouseButton, clickColor, clicPeriod, soundNames
+    bgColor, arrow, textSize, textColor, cardColor, responseTime, mouseButton, clickColor, clicPeriod, soundNames,\
+    starting_sound_volume
 from declarativeTask3.config import experiment_session
 from declarativeTask3.ld_utils import getLanguage, setCursor, cardSize, readMouse, rename_output_files_to_BIDS
 from declarativeTask3.ld_stimuli_names import ttl_instructions_text
@@ -67,7 +68,7 @@ bs = stimuli.BlankScreen(bgColor)  # Create blank screen
 
 subject_file = 'soundsVolumeAdjustmentIndB_' + subject_name + '.pkl'
 with open(io.defaults.datafile_directory + os.path.sep + subject_file, 'wb') as f:
-    pickle.dump([0] * len(sounds), f)
+    pickle.dump([starting_sound_volume] * len(sounds), f)
 soundsVolumeAdjustmentIndB = create_temp_sound_files(subject_name, io.defaults.datafile_directory)
 
 # 1. PLOT INTERFACE
