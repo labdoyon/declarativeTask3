@@ -1,6 +1,7 @@
 import keyboard  # using module keyboard
 
 
+# Expecting a TTL signal (keyboard press, 5, or r, or t)
 def wait_for_ttl_keyboard():
     while True:
         try:
