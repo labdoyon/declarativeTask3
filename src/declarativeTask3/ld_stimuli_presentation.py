@@ -140,12 +140,12 @@ def show_and_hide_text_box(background, instructions_box, onscreen_time, just_sho
 
 if language == 'french':
     instructions_presentation_text = """ PRÉSENTATION: 
-     PRÉSENTATION DE TOUS LES STIMULIS """
+     PRÉSENTATION DE TOUS LES STIMULI """
     instructions_present1category_text = """ PRÉSENTATION:
     PRÉSENTATION DE LA CATÉGORIE: """
 elif language == 'english':
     instructions_presentation_text = """ PRESENTATION:
-     PRESENTING ALL STIMULIS """
+     PRESENTING ALL STIMULI """
     instructions_present1category_text = """ PRESENTATION: 
      PRESENTING CATEGORY """
 
