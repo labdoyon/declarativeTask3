@@ -114,7 +114,7 @@ sound_textbox = {'english': ' Sound: ', 'french': ' Son: '}
 rest_screen_text = {'english': ' REST ', 'french': ' REPOS '}
 ending_screen_text = {'english': ' THANK YOU ', 'french': ' MERCI '}
 presentation_screen_text = {'english': ' PRESENTATION ', 'french': ' PRÉSENTATION '}
-ttl_instructions_text = {'english': ' PLEASE INPUT TTL ', 'french': ' EN ATTENTE DU TTL '}
+ttl_instructions_text = {'english': ' PLEASE GET READY ', 'french': ' SOYEZ PRÊTS '}
 example_success_feedback_message = {'english': ' PERFECT ', 'french': ' PARFAIT '}
 example_failure_feedback_message = {'english': ' GOOD TRY. BUT YOU MISSED SOME... ',
                                     'french': ' BIEN ESSAYÉ. RÉ-ESSAYONS... '}
