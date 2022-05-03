@@ -63,7 +63,7 @@ SoundBeforeImageTime = 200
 shortRest = 2500
 thankYouRest = 5000
 restPeriod = 15000
-clicPeriod = 200
+clicPeriod = 300
 
 min_max_ISI = [500, 1500]  # [min, max] inter_stimulus interval
 
