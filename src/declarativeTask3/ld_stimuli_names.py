@@ -115,6 +115,9 @@ rest_screen_text = {'english': ' REST ', 'french': ' REPOS '}
 ending_screen_text = {'english': ' THANK YOU ', 'french': ' MERCI '}
 presentation_screen_text = {'english': ' PRESENTATION ', 'french': ' PRÉSENTATION '}
 ttl_instructions_text = {'english': ' PLEASE INPUT TTL ', 'french': ' EN ATTENTE DU TTL '}
+example_success_feedback_message = {'english': ' PERFECT ', 'french': ' PARFAIT '}
+example_failure_feedback_message = {'english': ' GOOD TRY. BUT YOU MISSED SOME... ',
+                                    'french': ' BIEN ESSAYÉ. RÉ-ESSAYONS... '}
 choose_image_text = {'english': ' Choose an image ', 'french': ' Choisissez une image '}
 choose_position_text = {'english': ' Choose a location ', 'french': ' Choisissez une position '}
 next_sound_text = {'english': ' Next Sound ', 'french': ' Suivant '}

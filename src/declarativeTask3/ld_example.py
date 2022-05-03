@@ -7,7 +7,9 @@ from expyriment.misc import constants
 from expyriment.misc._timer import get_time
 
 from declarativeTask3.ld_matrix import LdMatrix
-from declarativeTask3.ld_utils import setCursor, newRandomPresentation, readMouse, path_leaf, rename_output_files_to_BIDS
+from declarativeTask3.ld_utils import setCursor, newRandomPresentation, readMouse, path_leaf, \
+    rename_output_files_to_BIDS, getLanguage
+from declarativeTask3.ld_stimuli_names import example_success_feedback_message, example_failure_feedback_message
 from declarativeTask3.ttl_catch_keyboard import wait_for_ttl_keyboard
 from declarativeTask3.config import *
 
@@ -36,6 +38,8 @@ io.defaults.eventfile_directory = output_dir
 
 exp.add_experiment_info(['Subject: '])  # Save Subject Code
 exp.add_experiment_info([subjectName])  # Save Subject Code
+
+language = str(getLanguage(subjectName, 0, 'choose-language'))
 
 # Save time, nblocks, position, correctAnswer, RT
 exp.add_data_variable_names(['Time', 'NBlock', 'Picture', 'Answers', 'RT'])
@@ -194,15 +198,19 @@ for nCard in presentationOrder:
 
 
 if correctAnswers == 3:
-    instructions = stimuli.TextLine(' PERFECT ',
-                                    position=(0, -windowSize[1]/float(2) + (2*m.gap + cardSize[1])/float(2)),
-                                    text_font=None, text_size=textSize, text_bold=None, text_italic=None,
-                                    text_underline=None, text_colour=textColor,
-                                    background_colour=bgColor,
-                                    max_width=None)
-    instructions.plot(bs)
-    bs.present(False, True)
+    instruction_text = example_success_feedback_message[language]
+else:
+    instruction_text = example_failure_feedback_message[language]
 
-    exp.clock.wait(responseTime, process_control_events=True)
+instructions = stimuli.TextLine(instruction_text,
+                                position=(0, -windowSize[1]/float(2) + (2*m.gap + cardSize[1])/float(2)),
+                                text_font=None, text_size=textSize, text_bold=None, text_italic=None,
+                                text_underline=None, text_colour=textColor,
+                                background_colour=bgColor,
+                                max_width=None)
+instructions.plot(bs)
+bs.present(False, True)
+
+exp.clock.wait(responseTime, process_control_events=True)
 
 
