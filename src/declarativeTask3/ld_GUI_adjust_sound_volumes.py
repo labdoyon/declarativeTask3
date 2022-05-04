@@ -11,7 +11,8 @@ from declarativeTask3.config import debug, windowMode, windowSize, classPictures
     starting_sound_volume
 from declarativeTask3.config import experiment_session
 from declarativeTask3.ld_utils import getLanguage, setCursor, cardSize, readMouse, rename_output_files_to_BIDS
-from declarativeTask3.ld_stimuli_names import ttl_instructions_text
+from declarativeTask3.ld_stimuli_names import ttl_instructions_text, next_sound_text,\
+    ld_GUI_sound_volume_adjustment_end_text
 from declarativeTask3.ld_sound import change_volume, play_sound, delete_temp_files, create_temp_sound_files
 from declarativeTask3.ttl_catch_keyboard import wait_for_ttl_keyboard
 
@@ -115,7 +116,7 @@ instructionRectangle.plot(bs)
 bs.present(False, True)
 
 for sound_index in range(len(sounds)):
-    sound_title_box = stimuli.TextLine(text=' ' + soundNames[language][sound_index] + ' ',
+    sound_title_box = stimuli.TextLine(text=' ' + soundNames[language][sound_index].upper() + ' ',
                                        position=(0, windowSize[1] / float(2) - cardSize[1]),
                                        text_font=None, text_size=textSize, text_bold=None, text_italic=None,
                                        text_underline=None, text_colour=textColor,
@@ -125,9 +126,9 @@ for sound_index in range(len(sounds)):
                                                        position=(0, windowSize[1] / float(2) - cardSize[1]),
                                                        colour=bgColor)
     if sound_index == len(sounds) - 1:
-        next_sound_or_end_text = ' End '
+        next_sound_or_end_text = ld_GUI_sound_volume_adjustment_end_text[language]
     else:
-        next_sound_or_end_text = ' Next Sound '
+        next_sound_or_end_text = next_sound_text[language]
     next_sound_or_end_box = stimuli.TextLine(text=next_sound_or_end_text,
                                              position=(0, -windowSize[1] / float(2) + cardSize[1]),
                                              text_font=None, text_size=textSize, text_bold=None, text_italic=None,

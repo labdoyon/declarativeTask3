@@ -177,12 +177,12 @@ for category in classPicturesPresentationOrder:
     m.associateCategory(category)
     exp.add_experiment_info(' PRESENTATION: PRESENTING CATEGORY ' + classNames[language][category])
     instructions_present1category = create_instructions_box(
-        instructions_present1category_text + classNames[language][category] + ' ',
+        instructions_present1category_text + classNames[language][category].upper() + ' ',
         (0, -(2*cardSize[1])))
     show_and_hide_text_box(bs, instructions_present1category, shortRest)
 
     instructions_listen_sound = create_instructions_box(
-        sound_textbox[language] + soundNames[language][soundIndex],
+        sound_textbox[language].upper() + soundNames[language][soundIndex].upper(),
         (0, -(2*cardSize[1])))
     show_and_hide_text_box(bs, instructions_listen_sound, 0, just_show=True)
     sound_played_command, sound_played = m.playSound(soundsAllocation_index, volumeAdjusted=volumeAdjusted)
@@ -209,7 +209,7 @@ for category in classPicturesPresentationOrder:
         picture_title = pictureNames[language][picture_name]
 
         m.plotCueCard(cuecard_index, True, bs, True)  # Show Cue
-        title = create_instructions_box(picture_title,
+        title = create_instructions_box(picture_title.upper(),
                                         (0, -(2*cardSize[1])))
         show_and_hide_text_box(bs, title, 0, just_show=True, just_hide=False)
         exp.add_experiment_info(

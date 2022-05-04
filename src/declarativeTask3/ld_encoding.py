@@ -18,7 +18,7 @@ from declarativeTask3.ld_sound import create_temp_sound_files, delete_temp_files
 from declarativeTask3.config import *
 from declarativeTask3.ttl_catch_keyboard import wait_for_ttl_keyboard
 from declarativeTask3.ld_stimuli_names import classNames, ttl_instructions_text, presentation_screen_text, rest_screen_text, \
-    ending_screen_text, choose_image_text, choose_position_text
+    ending_screen_text, choose_image_text, choose_position_text, feedback_message
 
 if not windowMode:  # Check WindowMode and Resolution
     control.defaults.window_mode = windowMode
@@ -29,7 +29,7 @@ else:
     control.defaults.window_size = windowSize
 
 if debug:
-    control.set_develop_mode(on=True, intensive_logging=False, skip_wait_methods=True)
+    control.set_develop_mode(on=True, intensive_logging=False, skip_wait_methods=False)
 
 arguments = str(''.join(sys.argv[1:])).split(',')  # Get arguments - experiment name and subject
 experimentName = arguments[0]
@@ -224,7 +224,7 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
                 nBlock, i, matrix_i._category, exp.clock.time))
             exp.add_experiment_info(str(presentationOrder))
             instructions = stimuli.TextLine(
-                presentation_screen_text[language] + classNames[language][matrix_i._category] + ' ',
+                presentation_screen_text[language] + classNames[language][matrix_i._category].upper() + ' ',
                 position=(0, -windowSize[1] / float(2) + (2 * matrices[0].gap + cardSize[1]) / float(2)),
                 text_font=None, text_size=textSize, text_bold=None, text_italic=None,
                 text_underline=None, text_colour=textColor,
@@ -588,7 +588,7 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
 
     if nbBlocksMax != 1 and experimentName == 'Encoding':
         matrix_i.plotDefault(bs, draw=True, show_matrix=False)
-        results_feedback = f"""You got:
+        results_feedback = f"""{feedback_message[language]}:
         {classNames[language][classPictures[0]]}: {str(int(correctAnswers[0, nBlock]))} out of {str(matrices[0]._matrix.size - len(removeCards))}
         {classNames[language][classPictures[1]]}: {str(int(correctAnswers[1, nBlock]))} out of {str(matrices[1]._matrix.size - len(removeCards))}"""
         # {classNames[language][classPictures[2]]}: {str(int(correctAnswers[2, nBlock]))} out of {str(matrices[2]._matrix.size - len(removeCards))}

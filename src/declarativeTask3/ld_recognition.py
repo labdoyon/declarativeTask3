@@ -12,7 +12,8 @@ from declarativeTask3.ld_utils import getLanguage, normalize_presentation_order
 from declarativeTask3.ld_utils import rename_output_files_to_BIDS
 from declarativeTask3.ttl_catch_keyboard import wait_for_ttl_keyboard
 from declarativeTask3.config import *
-from declarativeTask3.ld_stimuli_names import classNames, ttl_instructions_text, ending_screen_text
+from declarativeTask3.ld_stimuli_names import classNames, ttl_instructions_text, ending_screen_text, \
+    correct_location_button_text, wrong_location_button_text
 
 from declarativeTask3.ld_sound import create_temp_sound_files, delete_temp_files
 
@@ -179,7 +180,7 @@ for i in matrix_presentation_order:
     exp.add_experiment_info('matrix_{}_category_{}_Presentation Order: '.format(i, category))  # Save Presentation Order
     exp.add_experiment_info(str(list(presentationOrder)))  # Add listPictures
 
-    matrixA = stimuli.TextLine('  Correct location  ',
+    matrixA = stimuli.TextLine(correct_location_button_text[language],
                                position=(-windowSize[0]/float(4),
                                          -windowSize[1]/float(2) + (2*matrix_i.gap + cardSize[1])/float(2)),
                                text_size=textSize,
@@ -189,7 +190,7 @@ for i in matrix_presentation_order:
     matrixARectangle = stimuli.Rectangle(size=matrixA.surface_size, position=matrixA.position,
                                          colour=cardColor)
 
-    matrixNone = stimuli.TextLine('  Wrong location  ',
+    matrixNone = stimuli.TextLine(wrong_location_button_text[language],
                                   position=(windowSize[0]/float(4),
                                           -windowSize[1]/float(2) + (2*matrix_i.gap + cardSize[1])/float(2)),
                                   text_size=textSize,
@@ -249,7 +250,7 @@ for i in matrix_presentation_order:
                 if matrixARectangle.overlapping_with_position(position):
                     valid_response = True
                     exp.data.add([exp.clock.time, category, showMatrix, bool(presentationOrder[1][nCard] == 0), rt])
-                    matrixA = stimuli.TextLine('  Correct location  ',
+                    matrixA = stimuli.TextLine(correct_location_button_text[language],
                                                position=(-windowSize[0]/float(4),
                                                          -windowSize[1]/float(2) + (2*matrix_i.gap + cardSize[1])/float(2)),
                                                text_font=None, text_size=textSize, text_bold=None, text_italic=None,
@@ -259,7 +260,7 @@ for i in matrix_presentation_order:
                     matrixA.plot(bs)
                     bs.present(False, True)
                     exp.clock.wait(clicPeriod, process_control_events=True)
-                    matrixA = stimuli.TextLine('  Correct location  ',
+                    matrixA = stimuli.TextLine(correct_location_button_text[language],
                                               position=(-windowSize[0]/float(4),
                                                         -windowSize[1]/float(2) + (2*matrix_i.gap + cardSize[1])/float(2)),
                                               text_font=None, text_size=textSize, text_bold=None, text_italic=None,
@@ -273,7 +274,7 @@ for i in matrix_presentation_order:
                 elif matrixNoneRectangle.overlapping_with_position(position):
                     valid_response = True
                     exp.data.add([exp.clock.time, category, showMatrix, bool(presentationOrder[1][nCard] == 1), rt])
-                    matrixNone = stimuli.TextLine('  Wrong location  ',
+                    matrixNone = stimuli.TextLine(wrong_location_button_text[language],
                                                   position=(windowSize[0]/float(4),
                                                             -windowSize[1]/float(2) + (2*matrix_i.gap + cardSize[1])/float(2)),
                                                   text_font=None, text_size=textSize, text_bold=None, text_italic=None,
@@ -283,7 +284,7 @@ for i in matrix_presentation_order:
                     matrixNone.plot(bs)
                     bs.present(False, True)
                     exp.clock.wait(clicPeriod, process_control_events=True)
-                    matrixNone = stimuli.TextLine('  Wrong location  ',
+                    matrixNone = stimuli.TextLine(wrong_location_button_text[language],
                                                   position=(windowSize[0]/float(4),
                                                             -windowSize[1]/float(2) + (2*matrix_i.gap + cardSize[1])/float(2)),
                                                   text_font=None, text_size=textSize, text_bold=None, text_italic=None,

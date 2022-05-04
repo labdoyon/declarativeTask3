@@ -77,7 +77,7 @@ picturesNamesFrench = {
     'a021': 'chameau',
     'a022': 'girafe',
     'a023': 'kangourou',
-    'a024': 'zébre',
+    'a024': 'zèbre',
 
     'c001': 'pantalon',
     'c002': 'chaussure',
@@ -111,14 +111,25 @@ classNames = {'english': {'a': 'animals', 'c': 'clothes'},
               None: {'a': 'a', 'c': 'c'}}
 
 sound_textbox = {'english': ' Sound: ', 'french': ' Son: '}
-rest_screen_text = {'english': ' REST ', 'french': ' REPOS '}
-ending_screen_text = {'english': ' THANK YOU ', 'french': ' MERCI '}
-presentation_screen_text = {'english': ' PRESENTATION ', 'french': ' PRÉSENTATION '}
+
+# all steps
 ttl_instructions_text = {'english': ' PLEASE GET READY ', 'french': ' SOYEZ PRÊTS '}
+ending_screen_text = {'english': ' THANK YOU ', 'french': ' MERCI '}
+
+# ld_example.py specific
 example_success_feedback_message = {'english': ' PERFECT ', 'french': ' PARFAIT '}
 example_failure_feedback_message = {'english': ' GOOD TRY. BUT YOU MISSED SOME... ',
                                     'french': ' BIEN ESSAYÉ. RÉ-ESSAYONS... '}
-choose_image_text = {'english': ' Choose an image ', 'french': ' Choisissez une image '}
-choose_position_text = {'english': ' Choose a location ', 'french': ' Choisissez une position '}
-next_sound_text = {'english': ' Next Sound ', 'french': ' Suivant '}
-ld_GUI_end_text = {'english': ' End ', 'french': ' Fin '}
+# ld_GUI_adjust_sound_volumes.py specific
+next_sound_text = {'english': ' NEXT SOUND ', 'french': ' PROCHAIN SON '}
+ld_GUI_sound_volume_adjustment_end_text = {'english': ' END ', 'french': ' FIN '}
+# ld_encoding.py specific
+presentation_screen_text = {'english': ' PRESENTATION ', 'french': ' PRÉSENTATION '}
+feedback_message = {'english': 'YOUR SCORE', 'french': 'VOTRE SCORE'}
+choose_image_text = {'english': ' CHOOSE AN IMAGE ', 'french': ' CHOISISSEZ UNE IMAGE '}
+choose_position_text = {'english': ' CHOOSE A LOCATION ', 'french': ' CHOISISSEZ UNE POSITION '}
+rest_screen_text = {'english': ' REST ', 'french': ' REPOS '}
+
+# ld_recognition.py specific
+correct_location_button_text = {'english': '  CORRECT LOCATION  ', 'french': ' VRAIE POSITION '}
+wrong_location_button_text = {'english': '  WRONG LOCATION  ', 'french': ' FAUSSE POSITION '}
