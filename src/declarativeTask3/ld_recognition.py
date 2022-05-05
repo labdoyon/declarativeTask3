@@ -51,7 +51,7 @@ learning_matrices = []
 matrices = []
 random_matrices = []
 for i, category in enumerate(classPictures):
-    learning_matrices.append(getPreviousMatrix(subjectName, 0, 'Encoding', i, category))
+    learning_matrices.append(getPreviousMatrix(subjectName, 0, 'generate-matrix', i, category))
     matrices.append(LdMatrix(matrixSize, windowSize))  # Create Matrix
     matrices[i].associateCategory(category)
 

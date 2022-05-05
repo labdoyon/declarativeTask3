@@ -75,21 +75,13 @@ pictures_allocation = []
 if ignore_one_learned_matrices:
     index_matrix_not_to_present_again = None
 for i, category in enumerate(classPictures):
-    previousMatrix = getPreviousMatrix(subjectName, 0, 'Encoding', i, category)
+    previousMatrix = getPreviousMatrix(subjectName, 0, 'generate-matrix', i, category)
     # previousMatrix will be <None> if there is no previous matrix, the findMatrix function will generate a new matrix
     # if it is fed <None> as previousMatrix
     matrices.append(LdMatrix(matrixSize, windowSize))  # Create matrices
     pictures_allocation.append(matrices[i].findMatrix(category, previousMatrix=previousMatrix, keep=True))
     # Find pictures_allocation
     matrices[i].associateCategory(category)
-
-# generating trials for test-encoding and retest-encoding
-if experimentName == 'Encoding':
-    with open(os.path.join(io.defaults.datafile_directory, 'matrices.pkl'), 'wb') as f:
-        pickle.dump(pictures_allocation, f)
-    subprocess.Popen(
-        [sys.executable, os.path.join(rawFolder, "src", "declarativeTask3", "generate_test_retest_trials_order.py"),
-         subjectName])
 
 control.initialize(exp)
 

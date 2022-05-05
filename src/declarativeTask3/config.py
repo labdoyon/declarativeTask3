@@ -204,6 +204,7 @@ debug = False
 
 sessions = ['expePreNap', 'expePostNap']
 experiment_session = {
+    'generate-matrix':          'expePreNap',
     'choose-sound-association': 'expePreNap',
     'choose-language':          'expePreNap',
     'soundVolumeAdjustment':    'expePreNap',

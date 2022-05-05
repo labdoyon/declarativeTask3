@@ -3,17 +3,22 @@ import sys
 import pickle
 import random
 
-from declarativeTask3.config import rawFolder, sessions
-from declarativeTask3.ld_utils import normalize_test_presentation_order
-
+from declarativeTask3.config import rawFolder, sessions, classPictures, matrixSize, windowSize
+from declarativeTask3.ld_utils import normalize_test_presentation_order, getPreviousMatrix
+from declarativeTask3.ld_matrix import LdMatrix
 
 # need subject name and session
 subjectName = sys.argv[1]
 session = sessions[0]
-matrices_file = os.path.normpath(os.path.join(
-    rawFolder, 'sourcedata', 'sub-' + subjectName, 'ses-' + session, 'beh', 'matrices.pkl'))
-with open(matrices_file, "rb") as f:
-    pictures_allocation = pickle.load(f)
+
+matrices = []
+pictures_allocation = []
+for i, category in enumerate(classPictures):
+    previousMatrix = getPreviousMatrix(subjectName, 0, 'generate-matrix', i, category)
+    if previousMatrix is None:
+        raise TypeError("no previous matrix found")
+    matrices.append(LdMatrix(matrixSize, windowSize))  # Create matrices
+    pictures_allocation.append(matrices[i].findMatrix(category, previousMatrix=previousMatrix, keep=True))
 
 # generating trials for test-encoding
 pictures_allocation = [list(picture_matrix) for picture_matrix in pictures_allocation]

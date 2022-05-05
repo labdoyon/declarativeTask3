@@ -2,11 +2,14 @@ from cursesmenu import *
 from cursesmenu.items import *
 import sys
 import os
+import subprocess
 
 import expyriment
 from declarativeTask3.config import python_interpreter, experiment_session, classPictures, classNames, sounds,\
     soundNames, rawFolder
 from declarativeTask3.ld_utils import getPrevious, generate_bids_filename, newSoundAllocation
+from declarativeTask3.ld_utils import getPreviousMatrix
+
 sep = os.path.sep
 
 subjectName = sys.argv[1]
@@ -65,6 +68,20 @@ if soundsAllocation_index is None:
     exp.data.rename(wouldbe_datafile)
     exp.events.rename(wouldbe_eventfile)
     expyriment.control.end()
+
+matrices = []
+for i, category in enumerate(classPictures):
+    matrices.append(getPreviousMatrix(subjectName, 0, 'generate-matrix', i, category))
+    # previousMatrix will be <None> if there is no previous matrix, the findMatrix function will generate a new matrix
+    # if it is fed <None> as previousMatrix
+if None in matrices:
+    subprocess.run([sys.executable, os.path.join(rawFolder, "src", "declarativeTask3", "ld_generate_matrix.py"),
+         subjectName])
+
+if True:  # condition to refine in later
+    subprocess.Popen(
+        [sys.executable, os.path.join(rawFolder, "src", "declarativeTask3", "generate_test_retest_trials_order.py"),
+         subjectName])
 
 menu_soundsAllocation_index = {classNames[language][key]: soundNames[language][soundsAllocation_index[key]] for key in soundsAllocation_index.keys()}
 # 'None' if no languages were chosen previously, said language otherwise, e.g. 'french'
