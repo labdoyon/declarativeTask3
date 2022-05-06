@@ -23,8 +23,6 @@ for i, category in enumerate(classPictures):
     # Find pictures_allocation
     matrices[i].associateCategory(category)
 
-# with open(os.path.join(output_folder, 'matrices.pkl'), 'wb') as f:
-#     pickle.dump(pictures_allocation, f)
 
 expyriment.control.set_develop_mode(on=True, intensive_logging=False, skip_wait_methods=True)
 experiment_name = 'generate-matrix'

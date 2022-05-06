@@ -3,7 +3,8 @@ import sys
 import pickle
 import random
 
-from declarativeTask3.config import rawFolder, sessions, classPictures, matrixSize, windowSize
+from declarativeTask3.config import rawFolder, sessions, classPictures, matrixSize, windowSize, tasks_to_generate, \
+    experiment_session
 from declarativeTask3.ld_utils import normalize_test_presentation_order, getPreviousMatrix
 from declarativeTask3.ld_matrix import LdMatrix
 
@@ -20,46 +21,28 @@ for i, category in enumerate(classPictures):
     matrices.append(LdMatrix(matrixSize, windowSize))  # Create matrices
     pictures_allocation.append(matrices[i].findMatrix(category, previousMatrix=previousMatrix, keep=True))
 
-# generating trials for test-encoding
-pictures_allocation = [list(picture_matrix) for picture_matrix in pictures_allocation]
-pictures_allocation = [[card.rstrip('.png') for card in picture_matrix] for picture_matrix in
-                       pictures_allocation]
-trials_order = sum(pictures_allocation, [])
-trials_order = [card.rstrip('.png') for card in trials_order]
-random.shuffle(trials_order)
-trials_order = normalize_test_presentation_order(trials_order, pictures_allocation)
+for task in tasks_to_generate:
+    pictures_allocation = [list(picture_matrix) for picture_matrix in pictures_allocation]
+    pictures_allocation = [[card.rstrip('.png') for card in picture_matrix] for picture_matrix in
+                           pictures_allocation]
+    trials_order = sum(pictures_allocation, [])
+    trials_order = [card.rstrip('.png') for card in trials_order]
+    random.shuffle(trials_order)
+    trials_order = normalize_test_presentation_order(trials_order, pictures_allocation)
 
-session = 'expePreNap'
-output_folder = os.path.normpath(os.path.join(
-    rawFolder, 'sourcedata', 'sub-' + subjectName, 'ses-' + session, 'beh'))
-session_dir = os.path.normpath(os.path.join(rawFolder, 'sourcedata', 'sub-' + subjectName, 'ses-' + session))
-output_dir = os.path.normpath(os.path.join(session_dir, 'beh'))
-if not os.path.isdir(session_dir):
-    os.mkdir(session_dir)
-if not os.path.isdir(output_dir):
-    os.mkdir(output_dir)
-test_encoding_trials_file = os.path.normpath(os.path.join(output_folder, 'test-encoding-trials.pkl'))
-with open(test_encoding_trials_file, 'wb') as f:
-    pickle.dump(trials_order, f)
+    if task[:len('Encoding')] == 'Encoding':
+        session = 'expePreNap'
+    else:
+        session = experiment_session[task]
+    output_folder = os.path.normpath(os.path.join(
+        rawFolder, 'sourcedata', 'sub-' + subjectName, 'ses-' + session, 'beh'))
+    session_dir = os.path.normpath(os.path.join(rawFolder, 'sourcedata', 'sub-' + subjectName, 'ses-' + session))
+    output_dir = os.path.normpath(os.path.join(session_dir, 'beh'))
+    if not os.path.isdir(session_dir):
+        os.mkdir(session_dir)
+    if not os.path.isdir(output_dir):
+        os.mkdir(output_dir)
 
-# generating trials for retest-encoding
-pictures_allocation = [list(picture_matrix) for picture_matrix in pictures_allocation]
-pictures_allocation = [[card.rstrip('.png') for card in picture_matrix] for picture_matrix in
-                       pictures_allocation]
-trials_order = sum(pictures_allocation, [])
-trials_order = [card.rstrip('.png') for card in trials_order]
-random.shuffle(trials_order)
-trials_order = normalize_test_presentation_order(trials_order, pictures_allocation)
-
-session = 'expePostNap'
-output_folder = os.path.normpath(os.path.join(
-    rawFolder, 'sourcedata', 'sub-' + subjectName, 'ses-' + session, 'beh'))
-session_dir = os.path.normpath(os.path.join(rawFolder, 'sourcedata', 'sub-' + subjectName, 'ses-' + session))
-output_dir = os.path.normpath(os.path.join(session_dir, 'beh'))
-if not os.path.isdir(session_dir):
-    os.mkdir(session_dir)
-if not os.path.isdir(output_dir):
-    os.mkdir(output_dir)
-retest_encoding_trials_file = os.path.normpath(os.path.join(output_folder, 'retest-encoding-trials.pkl'))
-with open(retest_encoding_trials_file, 'wb') as f:
-    pickle.dump(trials_order, f)
+    trials_file = os.path.join(output_folder, task + '_trials.pkl')
+    with open(trials_file, 'wb') as f:
+        pickle.dump(trials_order, f)

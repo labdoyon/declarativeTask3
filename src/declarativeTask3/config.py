@@ -214,3 +214,5 @@ experiment_session = {
     'Test-Encoding':            'expePreNap',
     'ReTest-Encoding':          'expePostNap',
     'DayOne-Recognition':       'expePostNap'}
+
+tasks_to_generate = ['Encoding' + str(trf_j) for trf_j in range(nbBlocksMax)] + ['Test-Encoding'] + ['ReTest-Encoding']

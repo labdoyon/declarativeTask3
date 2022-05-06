@@ -271,15 +271,15 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
         exp.add_experiment_info(
             ['StartShortRest_block_{}_timing_{}'.format(nBlock, exp.clock.time)])  # Add sync info
 
-        # Preparing Trials for test block
-        start_time = get_time()
-        pictures_allocation = [list(picture_matrix) for picture_matrix in pictures_allocation]
-        pictures_allocation = [[card.rstrip('.png') for card in picture_matrix] for picture_matrix in
-                               pictures_allocation]
-        trials_order = sum(pictures_allocation, [])
-        trials_order = [card.rstrip('.png') for card in trials_order]
-        random.shuffle(trials_order)
-        trials_order = normalize_test_presentation_order(trials_order, pictures_allocation)
+        # # Preparing Trials for test block
+        # start_time = get_time()
+        # pictures_allocation = [list(picture_matrix) for picture_matrix in pictures_allocation]
+        # pictures_allocation = [[card.rstrip('.png') for card in picture_matrix] for picture_matrix in
+        #                        pictures_allocation]
+        # trials_order = sum(pictures_allocation, [])
+        # trials_order = [card.rstrip('.png') for card in trials_order]
+        # random.shuffle(trials_order)
+        # trials_order = normalize_test_presentation_order(trials_order, pictures_allocation)
         while (get_time() - start_time) * 1000 < restPeriod:
             exp.keyboard.process_control_keys()
 
@@ -315,19 +315,13 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
     ''' Cue Recall '''
 
     if nbBlocksMax == 1 or experimentName != 'Encoding':
-        # Trials weren't created at the end of the learning phase, since there wasn't a learning phase
-        # importing Trials for test block
-        pictures_allocation = [list(picture_matrix) for picture_matrix in pictures_allocation]
-        pictures_allocation = [[card.rstrip('.png') for card in picture_matrix] for picture_matrix in
-                               pictures_allocation]
-        if experimentName == 'Test-Encoding':
-            trials_order_filename = 'test-encoding-trials.pkl'
-        elif experimentName == 'ReTest-Encoding':
-            trials_order_filename = 'retest-encoding-trials.pkl'
-        trials_order_file = os.path.join(output_dir, trials_order_filename)
+        trials_order_filename = experimentName + '_trials.pkl'
+    elif experimentName == 'Encoding':
+        trials_order_filename = experimentName + str(nBlock) + '_trials.pkl'
+    trials_order_file = os.path.join(output_dir, trials_order_filename)
 
-        with open(trials_order_file, "rb") as f:
-            trials_order = pickle.load(f)
+    with open(trials_order_file, "rb") as f:
+        trials_order = pickle.load(f)
 
     exp.add_experiment_info(
         f'Test_Block_{nBlock}_timing_{exp.clock.time}')  # Add sync info
