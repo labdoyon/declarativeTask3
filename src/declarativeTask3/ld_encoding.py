@@ -134,19 +134,19 @@ currentCorrectAnswers = correctAnswers_CorrectLocationChosen[0:len(classPictures
 correctAnswers_CorrectSoundChosen = np.zeros((len(classPictures), nbBlocksMax))
 nBlock = 0
 
-instructionRectangle = stimuli.Rectangle(size=(windowSize[0], matrices[0].gap * 2 + cardSize[1]), position=(
+instructionRectangle = stimuli.Rectangle(size=(windowSize[0], cardSize[1] * 2), position=(
     0, -windowSize[1]/float(2) + (2 * matrices[0].gap + cardSize[1])/float(2)), colour=constants.C_DARKGREY)
 
 ''' Presentation all locations '''
 presentationOrder = newRandomPresentation()
 
-instructions_ttl = stimuli.TextLine(ttl_instructions_text[language],
+instructions_ttl = stimuli.TextBox(ttl_instructions_text[language],
                                     position=(
                                         0, -windowSize[1] / float(2) + (2 * matrices[0].gap + cardSize[1]) / float(2)),
                                     text_font=None, text_size=textSize, text_bold=None, text_italic=None,
                                     text_underline=None, text_colour=textColor,
                                     background_colour=bgColor,
-                                    max_width=None)
+                                    size=(windowSize[0], 2 * cardSize[1]))
 instructionRectangle.plot(bs)
 instructions_ttl.plot(bs)
 bs.present(False, True)

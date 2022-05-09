@@ -103,15 +103,15 @@ mouse.set_logging(True)  # Log mouse
 mouse.hide_cursor(True, True)  # Hide cursor
 setCursor(arrow)
 bs = stimuli.BlankScreen(bgColor)  # Create blank screen
-instructionRectangle = stimuli.Rectangle(size=(windowSize[0], matrices[0].gap * 2 + cardSize[1]), position=(
+instructionRectangle = stimuli.Rectangle(size=(windowSize[0], 2 * cardSize[1]), position=(
     0, -windowSize[1]/float(2) + (2 * matrices[0].gap + cardSize[1])/float(2)), colour=constants.C_DARKGREY)
-instructions_ttl = stimuli.TextLine(ttl_instructions_text[language],
+instructions_ttl = stimuli.TextBox(ttl_instructions_text[language],
                                     position=(
                                         0, -windowSize[1] / float(2) + (2 * matrices[0].gap + cardSize[1]) / float(2)),
                                     text_font=None, text_size=textSize, text_bold=None, text_italic=None,
                                     text_underline=None, text_colour=textColor,
                                     background_colour=bgColor,
-                                    max_width=None)
+                                    size=(windowSize[0], 2 * cardSize[1]))
 instructionRectangle.plot(bs)
 instructions_ttl.plot(bs)
 bs.present(False, True)
@@ -309,7 +309,7 @@ for i in matrix_presentation_order:
         ISI = design.randomize.rand_int(min_max_ISI[0], min_max_ISI[1])
         exp.clock.wait(ISI, process_control_events=True)
 
-instructionRectangle = stimuli.Rectangle(size=(windowSize[0], matrices[0].gap * 2 + cardSize[1]), position=(
+instructionRectangle = stimuli.Rectangle(size=(windowSize[0], 2 * cardSize[1]), position=(
     0, -windowSize[1]/float(2) + (2 * matrices[0].gap + cardSize[1])/float(2)), colour=constants.C_DARKGREY)
 instructions = stimuli.TextLine(
     ending_screen_text[language],

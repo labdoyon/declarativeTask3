@@ -97,14 +97,14 @@ lower_volume_box.plot(bs)
 bs.present(False, True)
 
 # 2. WAIT FOR TTL
-instructions_ttl = stimuli.TextLine(ttl_instructions_text[language],
+instructions_ttl = stimuli.TextBox(ttl_instructions_text[language],
                                     position=(
                                         0, -windowSize[1] / float(2) + (cardSize[1]) / float(2)),
                                     text_font=None, text_size=textSize, text_bold=None, text_italic=None,
                                     text_underline=None, text_colour=textColor,
                                     background_colour=bgColor,
-                                    max_width=None)
-instructionRectangle = stimuli.Rectangle(size=(windowSize[0], textSize),
+                                    size=(windowSize[0], 2 * cardSize[1]))
+instructionRectangle = stimuli.Rectangle(size=(windowSize[0], 2 * cardSize[1]),
                                          position=(0, -windowSize[1]/float(2) + (cardSize[1])/float(2)),
                                          colour=bgColor)
 instructionRectangle.plot(bs)
