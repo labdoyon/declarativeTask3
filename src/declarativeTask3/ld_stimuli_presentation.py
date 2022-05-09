@@ -8,7 +8,7 @@ from expyriment.misc import constants
 from declarativeTask3.ld_matrix import LdMatrix
 from declarativeTask3.config import windowMode, windowSize, bgColor, textColor, cardSize, textSize, \
     classPictures, matrixSize, listPictures, shortRest, presentationCard, picturesFolderClass,\
-    min_max_ISI, debug, thankYouRest, sounds, experiment_session, soundNames
+    min_max_ISI, debug, thankYouRest, sounds, experiment_session, soundNames, SoundBeforeImageTime
 from declarativeTask3.ld_stimuli_names import pictureNames, classNames, ending_screen_text, ttl_instructions_text
 from declarativeTask3.ld_stimuli_names import sound_textbox
 from declarativeTask3.ld_utils import getLanguage, getPreviousSoundsAllocation, rename_output_files_to_BIDS
@@ -207,6 +207,13 @@ for category in classPicturesPresentationOrder:
 
         picture_name = picture.replace('.png', '')
         picture_title = pictureNames[language][picture_name]
+
+        sound_played_command, sound_played = m.playSound(soundsAllocation_index, volumeAdjusted=volumeAdjusted)
+        exp.add_experiment_info(f"SoundPlayed_{str(sound_played)}_timing_{exp.clock.time}")
+        exp.add_experiment_info("sound_played_command")
+        exp.add_experiment_info(sound_played_command)
+
+        exp.clock.wait(SoundBeforeImageTime)
 
         m.plotCueCard(cuecard_index, True, bs, True)  # Show Cue
         title = create_instructions_box(picture_title.upper(),
