@@ -18,7 +18,7 @@ from declarativeTask3.ld_sound import create_temp_sound_files, delete_temp_files
 from declarativeTask3.config import *
 from declarativeTask3.ttl_catch_keyboard import wait_for_ttl_keyboard
 from declarativeTask3.ld_stimuli_names import classNames, ttl_instructions_text, presentation_screen_text, rest_screen_text, \
-    ending_screen_text, choose_image_text, choose_position_text, feedback_message
+    ending_screen_text, choose_image_text, choose_position_text, feedback_message, please_get_ready
 
 if not windowMode:  # Check WindowMode and Resolution
     control.defaults.window_mode = windowMode
@@ -271,22 +271,26 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
         exp.add_experiment_info(
             ['StartShortRest_block_{}_timing_{}'.format(nBlock, exp.clock.time)])  # Add sync info
 
-        # # Preparing Trials for test block
-        # start_time = get_time()
-        # pictures_allocation = [list(picture_matrix) for picture_matrix in pictures_allocation]
-        # pictures_allocation = [[card.rstrip('.png') for card in picture_matrix] for picture_matrix in
-        #                        pictures_allocation]
-        # trials_order = sum(pictures_allocation, [])
-        # trials_order = [card.rstrip('.png') for card in trials_order]
-        # random.shuffle(trials_order)
-        # trials_order = normalize_test_presentation_order(trials_order, pictures_allocation)
-        while (get_time() - start_time) * 1000 < restPeriod:
-            exp.keyboard.process_control_keys()
+        exp.clock.wait(restPeriod - pleaseGetReadyPeriod, process_control_events=True)
+
+        instructions = stimuli.TextLine(
+            please_get_ready[language],
+            position=(0, -windowSize[1] / float(2) + (2 * matrices[0].gap + cardSize[1]) / float(2)),
+            text_font=None, text_size=textSize, text_bold=None, text_italic=None,
+            text_underline=None, text_colour=textColor, background_colour=bgColor,
+            max_width=None)
+
+        instructionRectangle.plot(bs)
+        instructions.plot(bs)
+        bs.present(False, True)
+
+        exp.clock.wait(pleaseGetReadyPeriod, process_control_events=True)
+
+        instructionRectangle.plot(bs)
+        bs.present(False, True)
 
         exp.add_experiment_info(
             ['EndShortRest_block_{}_timing_{}'.format(nBlock, exp.clock.time)])  # Add sync info
-        instructionRectangle.plot(bs)
-        bs.present(False, True)
 
     # TEST BLOCK
     instructions = stimuli.TextLine(' TEST ',
@@ -322,6 +326,10 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
 
     with open(trials_order_file, "rb") as f:
         trials_order = pickle.load(f)
+
+    pictures_allocation = [list(picture_matrix) for picture_matrix in pictures_allocation]
+    pictures_allocation = [[card.rstrip('.png') for card in picture_matrix] for picture_matrix in
+                           pictures_allocation]
 
     exp.add_experiment_info(
         f'Test_Block_{nBlock}_timing_{exp.clock.time}')  # Add sync info
@@ -625,11 +633,25 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
     bs.present(False, True)
     exp.add_experiment_info(
         ['StartShortRest_block_{}_timing_{}'.format(nBlock, exp.clock.time)])  # Add sync info
-    exp.clock.wait(restPeriod, process_control_events=True)
-    exp.add_experiment_info(
-        ['EndShortRest_block_{}_timing_{}'.format(nBlock, exp.clock.time)])  # Add sync info
+    exp.clock.wait(restPeriod - pleaseGetReadyPeriod, process_control_events=True)
+
+    instructions = stimuli.TextLine(
+        please_get_ready[language],
+        position=(0, -windowSize[1] / float(2) + (2 * matrices[0].gap + cardSize[1]) / float(2)),
+        text_font=None, text_size=textSize, text_bold=None, text_italic=None,
+        text_underline=None, text_colour=textColor, background_colour=bgColor,
+        max_width=None)
+    instructionRectangle.plot(bs)
+    instructions.plot(bs)
+    bs.present(False, True)
+
+    exp.clock.wait(pleaseGetReadyPeriod, process_control_events=True)
+
     instructionRectangle.plot(bs)
     bs.present(False, True)
+
+    exp.add_experiment_info(
+        ['EndShortRest_block_{}_timing_{}'.format(nBlock, exp.clock.time)])  # Add sync info
 
     currentCorrectAnswers = correctAnswers[:, nBlock]
     if ignore_one_learned_matrices:

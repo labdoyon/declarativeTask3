@@ -129,6 +129,7 @@ feedback_message = {'english': 'YOUR SCORE', 'french': 'VOTRE SCORE'}
 choose_image_text = {'english': ' CHOOSE AN IMAGE ', 'french': ' CHOISISSEZ UNE IMAGE '}
 choose_position_text = {'english': ' CHOOSE A LOCATION ', 'french': ' CHOISISSEZ UNE POSITION '}
 rest_screen_text = {'english': ' REST ', 'french': ' REPOS '}
+please_get_ready = {'english': ' PLEASE GET READY ', 'french': ' SOYEZ PRÊTS '}
 
 # ld_recognition.py specific
 correct_location_button_text = {'english': '  CORRECT LOCATION  ', 'french': ' VRAIE POSITION '}
