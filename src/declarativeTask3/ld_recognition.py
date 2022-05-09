@@ -181,7 +181,7 @@ for i in matrix_presentation_order:
     exp.add_experiment_info(str(list(presentationOrder)))  # Add listPictures
 
     matrixA = stimuli.TextLine(correct_location_button_text[language],
-                               position=(-windowSize[0]/float(4),
+                               position=(windowSize[0]/float(4),
                                          -windowSize[1]/float(2) + (2*matrix_i.gap + cardSize[1])/float(2)),
                                text_size=textSize,
                                text_colour=textColor,
@@ -191,8 +191,8 @@ for i in matrix_presentation_order:
                                          colour=cardColor)
 
     matrixNone = stimuli.TextLine(wrong_location_button_text[language],
-                                  position=(windowSize[0]/float(4),
-                                          -windowSize[1]/float(2) + (2*matrix_i.gap + cardSize[1])/float(2)),
+                                  position=(-windowSize[0] / float(4),
+                                            -windowSize[1] / float(2) + (2 * matrix_i.gap + cardSize[1]) / float(2)),
                                   text_size=textSize,
                                   text_colour=textColor,
                                   background_colour=cardColor)
@@ -251,7 +251,7 @@ for i in matrix_presentation_order:
                     valid_response = True
                     exp.data.add([exp.clock.time, category, showMatrix, bool(presentationOrder[1][nCard] == 0), rt])
                     matrixA = stimuli.TextLine(correct_location_button_text[language],
-                                               position=(-windowSize[0]/float(4),
+                                               position=(windowSize[0]/float(4),
                                                          -windowSize[1]/float(2) + (2*matrix_i.gap + cardSize[1])/float(2)),
                                                text_font=None, text_size=textSize, text_bold=None, text_italic=None,
                                                text_underline=None, text_colour=textColor,
@@ -261,7 +261,7 @@ for i in matrix_presentation_order:
                     bs.present(False, True)
                     exp.clock.wait(clicPeriod, process_control_events=True)
                     matrixA = stimuli.TextLine(correct_location_button_text[language],
-                                              position=(-windowSize[0]/float(4),
+                                              position=(windowSize[0]/float(4),
                                                         -windowSize[1]/float(2) + (2*matrix_i.gap + cardSize[1])/float(2)),
                                               text_font=None, text_size=textSize, text_bold=None, text_italic=None,
                                               text_underline=None, text_colour=textColor,
@@ -275,7 +275,7 @@ for i in matrix_presentation_order:
                     valid_response = True
                     exp.data.add([exp.clock.time, category, showMatrix, bool(presentationOrder[1][nCard] == 1), rt])
                     matrixNone = stimuli.TextLine(wrong_location_button_text[language],
-                                                  position=(windowSize[0]/float(4),
+                                                  position=(-windowSize[0]/float(4),
                                                             -windowSize[1]/float(2) + (2*matrix_i.gap + cardSize[1])/float(2)),
                                                   text_font=None, text_size=textSize, text_bold=None, text_italic=None,
                                                   text_underline=None, text_colour=textColor,
@@ -285,7 +285,7 @@ for i in matrix_presentation_order:
                     bs.present(False, True)
                     exp.clock.wait(clicPeriod, process_control_events=True)
                     matrixNone = stimuli.TextLine(wrong_location_button_text[language],
-                                                  position=(windowSize[0]/float(4),
+                                                  position=(-windowSize[0]/float(4),
                                                             -windowSize[1]/float(2) + (2*matrix_i.gap + cardSize[1])/float(2)),
                                                   text_font=None, text_size=textSize, text_bold=None, text_italic=None,
                                                   text_underline=None, text_colour=textColor,
