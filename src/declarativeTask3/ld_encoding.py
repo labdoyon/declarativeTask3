@@ -369,11 +369,16 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
                     pictures_to_choose_from.remove(next_trial_card)
                 except ValueError:
                     pass
-            except IndexError: # we're at the last trial
+            except IndexError:  # we're at the last trial
                 pass
             try:
                 pictures_to_choose_from.remove(dont_reuse_previous_trial_pictures[other_matrix_index])
             except ValueError:
+                pass
+            try:
+                # remove the picture at the same location from the other matrices
+                pictures_to_choose_from.remove(pictures_allocation[i][pos])
+            except ValueError:  # It was already removed
                 pass
             cueCards[i + 1]['card'] = random.choice(pictures_to_choose_from)
             dont_reuse_previous_trial_pictures[other_matrix_index] = cueCards[i + 1]['card']
