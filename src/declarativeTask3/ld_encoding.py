@@ -174,11 +174,10 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
     if 1 != nbBlocksMax or experimentName == 'Encoding':
         exp.add_experiment_info('Presentation_Block_{}_timing_{}'.format(nBlock, exp.clock.time))
 
-        if len(matrices_to_present) > 2:
-            while new_matrix_presentation_order == learning_matrix_presentation_order:
-                new_matrix_presentation_order = list(np.random.permutation(matrices_to_present))
-        else:
+        if nBlock % 2 == 0:
             new_matrix_presentation_order = list(np.random.permutation(matrices_to_present))
+        elif nBlock % 2 == 1:
+            new_matrix_presentation_order = new_matrix_presentation_order.reverse()
         learning_matrix_presentation_order = new_matrix_presentation_order
         exp.add_experiment_info(
             'Presentation_Block_{}_MatrixPresentationOrder_{}_timing_{}'.format(nBlock,
