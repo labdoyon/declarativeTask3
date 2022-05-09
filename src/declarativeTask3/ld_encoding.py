@@ -2,10 +2,9 @@ import sys
 import random
 import os
 import pickle
-import subprocess
+import datetime
 
 import numpy as np
-import pandas as pd
 from expyriment import control, stimuli, io, design, misc
 from expyriment.misc import constants
 from expyriment.misc._timer import get_time
@@ -38,7 +37,7 @@ subjectName = arguments[1]
 exp = design.Experiment(experimentName)  # Save experiment name
 
 session = experiment_session[experimentName]
-session_dir = os.path.normpath(os.path.join('sourcedata', 'sub-' + subjectName, 'ses-' + session))
+session_dir = os.path.normpath(os.path.join(rawFolder, 'sourcedata', 'sub-' + subjectName, 'ses-' + session))
 output_dir = os.path.normpath(os.path.join(session_dir, 'beh'))
 if not os.path.isdir(session_dir):
     os.mkdir(session_dir)
@@ -130,8 +129,9 @@ bs = stimuli.BlankScreen(bgColor)  # Create blank screen
 
 exp.clock.wait(shortRest, process_control_events=True)
 
-correctAnswers = np.zeros((len(classPictures), nbBlocksMax))
-currentCorrectAnswers = correctAnswers[0:len(classPictures), 0]
+correctAnswers_CorrectLocationChosen = np.zeros((len(classPictures), nbBlocksMax))
+currentCorrectAnswers = correctAnswers_CorrectLocationChosen[0:len(classPictures), 0]
+correctAnswers_CorrectSoundChosen = np.zeros((len(classPictures), nbBlocksMax))
 nBlock = 0
 
 instructionRectangle = stimuli.Rectangle(size=(windowSize[0], matrices[0].gap * 2 + cardSize[1]), position=(
@@ -177,7 +177,7 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
         if nBlock % 2 == 0:
             new_matrix_presentation_order = list(np.random.permutation(matrices_to_present))
         elif nBlock % 2 == 1:
-            new_matrix_presentation_order = new_matrix_presentation_order.reverse()
+            new_matrix_presentation_order.reverse()
         learning_matrix_presentation_order = new_matrix_presentation_order
         exp.add_experiment_info(
             'Presentation_Block_{}_MatrixPresentationOrder_{}_timing_{}'.format(nBlock,
@@ -444,6 +444,8 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
                             f"_card_{chosenCueCard['card']}"
                             f"_timing_{exp.clock.time}"
                         )
+                        if chosenCueCard['correct_card']:
+                            correctAnswers_CorrectSoundChosen[matrix_index, nBlock] += 1
                         instructionRectangle.plot(bs)
                         bs.present(False, True)
                         matrix_i.response_feedback_stimuli_frame(bs, matrix_cueCard.position, True,
@@ -505,7 +507,7 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
                                             exp.add_experiment_info("sound_played_command")
                                             exp.add_experiment_info(sound_played_command)
                                             del sound_played_command, sound_played
-                                        correctAnswers[matrix_index, nBlock] += 1
+                                        correctAnswers_CorrectLocationChosen[matrix_index, nBlock] += 1
                                     exp.data.add([exp.clock.time, nBlock,
                                                   path_leaf(matrix_i._matrix.item(chosenCueCard['pos']).stimuli[0].filename),
                                                   path_leaf(matrix_i._matrix.item(currentCard).stimuli[0].filename),
@@ -587,9 +589,9 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
     if nbBlocksMax != 1 and experimentName == 'Encoding':
         matrix_i.plotDefault(bs, draw=True, show_matrix=False)
         results_feedback = f"""{feedback_message[language]}:
-        {classNames[language][classPictures[0]]}: {str(int(correctAnswers[0, nBlock]))} out of {str(matrices[0]._matrix.size - len(removeCards))}
-        {classNames[language][classPictures[1]]}: {str(int(correctAnswers[1, nBlock]))} out of {str(matrices[1]._matrix.size - len(removeCards))}"""
-        # {classNames[language][classPictures[2]]}: {str(int(correctAnswers[2, nBlock]))} out of {str(matrices[2]._matrix.size - len(removeCards))}
+        {classNames[language][classPictures[0]]}: {str(int(correctAnswers_CorrectLocationChosen[0, nBlock]))} out of {str(matrices[0]._matrix.size - len(removeCards))}
+        {classNames[language][classPictures[1]]}: {str(int(correctAnswers_CorrectLocationChosen[1, nBlock]))} out of {str(matrices[1]._matrix.size - len(removeCards))}"""
+        # {classNames[language][classPictures[2]]}: {str(int(correctAnswers_CorrectLocationChosen[2, nBlock]))} out of {str(matrices[2]._matrix.size - len(removeCards))}
         instructions = stimuli.TextBox(results_feedback,
                                        size=(windowSize[0], 4 * cardSize[1]),
                                        position=(0, 0),
@@ -616,10 +618,10 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
             matrix_i.plotCueCard(i, False, bs, draw=True)
 
     if ignore_one_learned_matrices and \
-            [correctAnswers[i, nBlock] >= correctAnswersMax for i in range(numberClasses)].count(True) == 1:
+            [correctAnswers_CorrectLocationChosen[i, nBlock] >= correctAnswersMax for i in range(numberClasses)].count(True) == 1:
         # one learned matrix
         index_matrix_not_to_present_again =\
-            [correctAnswers[i, nBlock] >= correctAnswersMax for i in range(numberClasses)].index(True)
+            [correctAnswers_CorrectLocationChosen[i, nBlock] >= correctAnswersMax for i in range(numberClasses)].index(True)
         matrices_to_present = np.delete(matrices_to_present, index_matrix_not_to_present_again)
 
     ISI = design.randomize.rand_int(min_max_ISI[0], min_max_ISI[1])
@@ -657,10 +659,10 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
     exp.add_experiment_info(
         ['EndShortRest_block_{}_timing_{}'.format(nBlock, exp.clock.time)])  # Add sync info
 
-    currentCorrectAnswers = correctAnswers[:, nBlock]
+    currentCorrectAnswers = correctAnswers_CorrectLocationChosen[:, nBlock]
     if ignore_one_learned_matrices:
         if index_matrix_not_to_present_again is not None:
-            currentCorrectAnswers[index_matrix_not_to_present_again] = 15
+            currentCorrectAnswers[index_matrix_not_to_present_again] = correctAnswersMax
 
     nBlock += 1
 
@@ -680,25 +682,38 @@ bs.present(False, True)
 control.end()
 delete_temp_files()
 
-try:
-    import csv
-    i = 1
+# try:
+i = 1
+score_file = generate_bids_filename(subjectName, session, experimentName,
+                              filename_suffix='_score', filename_extension='.txt', run=None)
+while os.path.isfile(os.path.join(io.defaults.datafile_directory, score_file)):
+    i += 1
+    i_string = '0' * (2 - len(str(i))) + str(i)  # 0 padding, assuming 2-digits number
     score_file = generate_bids_filename(subjectName, session, experimentName,
-                                  filename_suffix='_score', filename_extension='.txt', run=None)
-    while os.path.isfile(os.path.join(io.defaults.datafile_directory, score_file)):
-        i += 1
-        i_string = '0' * (2 - len(str(i))) + str(i)  # 0 padding, assuming 2-digits number
-        score_file = generate_bids_filename(subjectName, session, experimentName,
-                                      filename_suffix='_score', filename_extension='.txt', run=i_string)
+                                  filename_suffix='_score', filename_extension='.txt', run=i_string)
 
-    with open(os.path.join(io.defaults.datafile_directory, score_file), 'w', newline='') as outfile:
-        writer = csv.writer(outfile, delimiter=';')
-        for i in range(nBlock-1):  # because there is a <nBlock += 1> at the very end
-            row = []
-            for j in range(len(classPictures)):
-                row.append(
-                    f"""category_{classPictures[j]}:{str(int(correctAnswers[j, nBlock]))}/{str(matrices[j]._matrix.size - len(removeCards))} """)
-            print(row)
-            writer.writerow(row)
-except:
-    pass
+with open(os.path.join(io.defaults.datafile_directory, score_file), 'w', newline='') as outfile:
+    now = datetime.datetime.now()
+    outfile.write("Time at the end of the task:\n")
+    outfile.write(now.strftime("AAAA MM DD HH:MM:SS\n"))
+    outfile.write(now.strftime("%Y %m %d %H:%M:%S\n"))
+    outfile.write("\n")
+
+    outfile.write(f"Experiment Name: {experimentName}\n")
+    outfile.write("\n")
+
+    for block_index in range(nBlock-1):  # because there is a <nBlock += 1> at the very end
+        for category_index in range(len(classPictures)):
+            outfile.write(f"Block: {block_index+1}\n")
+            outfile.write(
+                f"category_{classPictures[category_index]}: "
+                f"{str(int(correctAnswers_CorrectSoundChosen[category_index, block_index]))}"
+                f" Correct-Sound-Identification_out-of: "
+                f"{str(matrices[category_index]._matrix.size - len(removeCards))}")
+            outfile.write("\n")
+            outfile.write(
+                f"category_{classPictures[category_index]}: "
+                f"{str(int(correctAnswers_CorrectLocationChosen[category_index, block_index]))}"
+                f" Correct-Location-chosen_out-of: "
+                f"{str(matrices[category_index]._matrix.size - len(removeCards))}")
+            outfile.write("\n"*2)
