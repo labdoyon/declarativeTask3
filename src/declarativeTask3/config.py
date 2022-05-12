@@ -48,6 +48,7 @@ textColor = (0, 0, 0)  # expyriment.misc.constants.C_BLACK
 
 
 textSize = 50
+recognition_buttons_text_size = 40
 matrixSize = (6, 4)
 cardSize = (90, 90)
 
