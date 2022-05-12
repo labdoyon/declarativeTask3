@@ -185,7 +185,7 @@ numberClasses = len(classPictures)
 # phase, it won't appear again, during the encoding phase, again. The Encoding phase will continue, using only unlearned
 # matrices during the Encoding phase
 # Overridden for Vaishali task: we don't stop until both matrices are learned
-ignore_one_learned_matrices = True
+ignore_one_learned_matrices = False
 min_number_learned_matrices = len(classPictures)
 
 listPictures = {}
