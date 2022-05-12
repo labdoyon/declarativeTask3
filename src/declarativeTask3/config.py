@@ -13,6 +13,7 @@ picturesFolder = normpath(join(rawFolder, 'stimulis'))
 picturesExamplesFolder = normpath(join(rawFolder, 'stimulisExample'))
 picturesXFolder = normpath(join(picturesFolder, 'association_test_X'))
 soundsFolder = normpath(join(rawFolder, 'stimulis',  'sounds'))
+rawdata_folder = normpath(join(rawFolder, 'rawdata'))
 
 mouseButton = 1
 
@@ -56,7 +57,7 @@ cardSize = (90, 90)
 
 startSpace = cardSize[1] + 20
 
-nbBlocksMax = 3
+nbBlocksMax = 10
 
 presentationCard = 2000
 
