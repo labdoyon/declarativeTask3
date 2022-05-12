@@ -3,7 +3,7 @@ import sys
 import glob
 
 from expyriment.misc import data_preprocessing
-from xpd_to_tsv_config import data_path, preprocessed_data_path
+from declarativeTask3.config import rawdata_folder
 from ld_utils import Day, extract_matrix_and_data, extract_events, recognition_extract_events, \
     extract_association_data,\
     write_csv, merge_csv, delete_temp_csv
@@ -26,13 +26,14 @@ subject_id = os.path.basename(subject_location).replace('sub-', '')
 
 subject_folder = os.path.abspath(os.path.join(os.getcwd(), subject_location))
 
-output_file = os.path.abspath(os.path.join(os.getcwd(), subject_id + '_preprocessed_data.csv'))
-output_file_tests = os.path.abspath(os.path.join(os.getcwd(), subject_id + '_tests&recognition.csv'))
-output_file_learning = os.path.abspath(os.path.join(os.getcwd(), subject_id + '_learning.csv'))
+output_file = os.path.abspath(os.path.join(rawdata_folder, subject_id + '_preprocessed_data.csv'))
+output_file_tests = os.path.abspath(os.path.join(rawdata_folder, subject_id + '_tests&recognition.csv'))
+output_file_learning = os.path.abspath(os.path.join(rawdata_folder, subject_id + '_learning.csv'))
 
 # Gathering all subject files
 allFiles = glob.glob(os.path.join(subject_folder, '*', 'beh', '*.xpd'))
-print(allFiles)
+# print('\n\n')
+# print([file for file in allFiles if 'Encoding' in file])
 # encodingFiles = []
 # associationFiles = []
 # for iFile in allFiles:
@@ -73,22 +74,25 @@ for iFile in allFiles:
     if 'task-' + "Encoding" in iFile:
         events, matrices, matrix_size, classes_order, sounds_order, classes_to_sounds_index, ttl_timestamp = \
             extract_matrix_and_data(subject_folder, iFile, learning=True)
-        print(matrices)
-        day1_learning.cards_order, day1_learning.cards_distance_to_correct_card,\
-            day1_learning.position_response_reaction_time,\
-            day1_learning.number_blocks, day1_learning.show_card_absolute_time, \
-            day1_learning.hide_card_absolute_time,\
-            day1_learning.show_card_learning_absolute_time,\
-            day1_learning.hide_card_learning_absolute_time,\
-            day1_learning.cards_learning_order,\
-            day1_learning.matrices_presentation_orders,\
-            day1_learning.cards_position, \
-            day1_learning.position_response_index_responded, \
-            day1_learning.cuecard_presented_image, \
-            day1_learning.cuecard_response_image, \
-            day1_learning.cuecard_response_correct,\
-            day1_learning.cuecards_reaction_time = \
-            extract_events(events, matrix_size, classes_order, ttl_timestamp=ttl_timestamp, mode='learning')
+
+        try:
+            day1_learning.cards_order, day1_learning.cards_distance_to_correct_card,\
+                day1_learning.position_response_reaction_time,\
+                day1_learning.number_blocks, day1_learning.show_card_absolute_time, \
+                day1_learning.hide_card_absolute_time,\
+                day1_learning.show_card_learning_absolute_time,\
+                day1_learning.hide_card_learning_absolute_time,\
+                day1_learning.cards_learning_order,\
+                day1_learning.matrices_presentation_orders,\
+                day1_learning.cards_position, \
+                day1_learning.position_response_index_responded, \
+                day1_learning.cuecard_presented_image, \
+                day1_learning.cuecard_response_image, \
+                day1_learning.cuecard_response_correct,\
+                day1_learning.cuecards_reaction_time = \
+                extract_events(events, matrix_size, classes_order, ttl_timestamp=ttl_timestamp, mode='learning')
+        except UnboundLocalError:  # Missing data
+            continue
 
         write_csv(output_file_learning, matrices, number_blocks=day1_learning.number_blocks,
                   cards_order=day1_learning.cards_order,
@@ -105,7 +109,7 @@ for iFile in allFiles:
                   classes_to_sounds_index=classes_to_sounds_index,
                   day=day1_learning)
 
-    if 'task=' + "Test-Encoding" in iFile:
+    if 'task-' + "Test-Encoding" in iFile:
         day2_test.events, day2_test.matrices, day2_test.matrix_size, \
             day2_test.classes_order, day2_test.sounds_order, day2_test.classes_to_sounds_index,\
             day2_test.ttl_in_data = \
@@ -121,7 +125,7 @@ for iFile in allFiles:
                            ttl_timestamp=day2_test.ttl_in_data)
         day2_test_not_reached = False
 
-    if 'task' + "ReTest-Encoding" in iFile:
+    if 'task-' + "ReTest-Encoding" in iFile:
         day3_test.events, day3_test.matrices, day3_test.matrix_size, \
             day3_test.classes_order, day3_test.sounds_order, day3_test.classes_to_sounds_index,\
             day3_test.ttl_in_data = \
@@ -133,7 +137,7 @@ for iFile in allFiles:
             day3_test.cuecard_presented_image, day3_test.cuecard_response_image, \
             day3_test.cuecard_response_correct, day3_test.cuecards_reaction_time, \
             day3_test.position_response_index_responded, day3_test.cards_position = \
-            extract_events(day3_test.events, day3_test.matrix_size, classes_order,
+            extract_events(day3_test.events, day3_test.matrix_size, day3_test.classes_order,
                            ttl_timestamp=day3_test.ttl_in_data)
         day3_test_not_reached = False
 
