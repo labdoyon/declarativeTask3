@@ -702,18 +702,21 @@ with open(os.path.join(io.defaults.datafile_directory, score_file), 'w', newline
     outfile.write(f"Experiment Name: {experimentName}\n")
     outfile.write("\n")
 
-    for block_index in range(nBlock-1):  # because there is a <nBlock += 1> at the very end
-        for category_index in range(len(classPictures)):
-            outfile.write(f"Block: {block_index+1}\n")
-            outfile.write(
-                f"category_{classPictures[category_index]}: "
-                f"{str(int(correctAnswers_CorrectSoundChosen[category_index, block_index]))}"
-                f" Correct-Sound-Identification_out-of: "
-                f"{str(matrices[category_index]._matrix.size - len(removeCards))}")
-            outfile.write("\n")
-            outfile.write(
-                f"category_{classPictures[category_index]}: "
-                f"{str(int(correctAnswers_CorrectLocationChosen[category_index, block_index]))}"
-                f" Correct-Location-chosen_out-of: "
-                f"{str(matrices[category_index]._matrix.size - len(removeCards))}")
-            outfile.write("\n"*2)
+    for block_index in range(nBlock):  # because there is a <nBlock += 1> at the very end
+        try:
+            for category_index in range(len(classPictures)):
+                outfile.write(f"Block: {block_index+1}\n")
+                outfile.write(
+                    f"category_{classPictures[category_index]}: "
+                    f"{str(int(correctAnswers_CorrectSoundChosen[category_index, block_index]))}"
+                    f" Correct-Sound-Identification_out-of: "
+                    f"{str(matrices[category_index]._matrix.size - len(removeCards))}")
+                outfile.write("\n")
+                outfile.write(
+                    f"category_{classPictures[category_index]}: "
+                    f"{str(int(correctAnswers_CorrectLocationChosen[category_index, block_index]))}"
+                    f" Correct-Location-chosen_out-of: "
+                    f"{str(matrices[category_index]._matrix.size - len(removeCards))}")
+                outfile.write("\n"*2)
+        except IndexError:
+            pass
