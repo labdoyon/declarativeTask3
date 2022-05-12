@@ -253,7 +253,7 @@ for i in matrix_presentation_order:
                     matrixA = stimuli.TextLine(correct_location_button_text[language],
                                                position=(windowSize[0]/float(4),
                                                          -windowSize[1]/float(2) + (2*matrix_i.gap + cardSize[1])/float(2)),
-                                               text_font=recognition_buttons_text_size, text_size=textSize, text_bold=None, text_italic=None,
+                                               text_font=None, text_size=recognition_buttons_text_size, text_bold=None, text_italic=None,
                                                text_underline=None, text_colour=textColor,
                                                background_colour=clickColor,
                                                max_width=None)
@@ -263,7 +263,7 @@ for i in matrix_presentation_order:
                     matrixA = stimuli.TextLine(correct_location_button_text[language],
                                               position=(windowSize[0]/float(4),
                                                         -windowSize[1]/float(2) + (2*matrix_i.gap + cardSize[1])/float(2)),
-                                              text_font=recognition_buttons_text_size, text_size=textSize, text_bold=None, text_italic=None,
+                                              text_font=None, text_size=recognition_buttons_text_size, text_bold=None, text_italic=None,
                                               text_underline=None, text_colour=textColor,
                                               background_colour=cardColor,
                                               max_width=None)
