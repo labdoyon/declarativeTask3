@@ -9,7 +9,8 @@ from expyriment.misc._timer import get_time
 from declarativeTask3.ld_matrix import LdMatrix
 from declarativeTask3.ld_utils import setCursor, newRandomPresentation, readMouse, path_leaf, \
     rename_output_files_to_BIDS, getLanguage
-from declarativeTask3.ld_stimuli_names import example_success_feedback_message, example_failure_feedback_message
+from declarativeTask3.ld_stimuli_names import example_success_feedback_message, example_failure_feedback_message, \
+    ttl_instructions_text
 from declarativeTask3.ttl_catch_keyboard import wait_for_ttl_keyboard
 from declarativeTask3.config import *
 
@@ -46,7 +47,7 @@ exp.add_data_variable_names(['Time', 'NBlock', 'Picture', 'Answers', 'RT'])
 
 m = LdMatrix(matrixSize, windowSize)  # Create Matrix
 
-instructionRectangle = stimuli.Rectangle(size=(windowSize[0], m.gap * 2 + cardSize[1]), position=(
+instructionRectangle = stimuli.Rectangle(size=(windowSize[0], 2 * cardSize[1]), position=(
     0, -windowSize[1]/float(2) + (2 * m.gap + cardSize[1])/float(2)), colour=constants.C_DARKGREY)
 
 picturesExamples = np.random.permutation(picturesExamples)
@@ -82,7 +83,20 @@ for cuecard_tmp_index in range(len(classPictures)):
     m.plotCueCard(cuecard_tmp_index, False, bs, False)
 m.plotDefault(bs, True)  # Draw default grid
 
+instructions_ttl = stimuli.TextBox(ttl_instructions_text[language],
+                                    position=(
+                                        0, -windowSize[1] / float(2) + (2 * m.gap + cardSize[1]) / float(2)),
+                                    text_font=None, text_size=textSize, text_bold=None, text_italic=None,
+                                    text_underline=None, text_colour=textColor,
+                                    background_colour=bgColor,
+                                    size=(windowSize[0], 2 * cardSize[1]))
+instructions_ttl.plot(bs)
+bs.present(False, True)
+
 wait_for_ttl_keyboard()
+
+instructionRectangle.plot(bs)
+bs.present(False, True)
 
 exp.add_experiment_info(['Block {} - Presentation'.format(0)])  # Add listPictures
 exp.add_experiment_info(str(list(presentationOrder)))  # Add listPictures
