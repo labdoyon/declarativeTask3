@@ -7,8 +7,14 @@ import ast
 import re
 from scipy.spatial import distance
 from expyriment.misc import data_preprocessing
-from declarativeTask3.config import removeCards, matrixSize, matrixTemplate, classPictures, presentationCard, \
-    feedback_time
+
+matrixSize = (6, 4)
+matrixTemplate = [0] * 24
+removeCards = []
+classPictures = ['a', 'c']
+presentationCard = 2000
+feedback_time = 1000
+
 
 dont_suppress_card_double_checking = True
 true_sounds = ['standard', 'noise', 'A']
@@ -761,6 +767,7 @@ def write_csv(output_file, matrix_pictures,
 
     first_row = first_column_titles
 
+
     if not days:
         block_range = range(number_blocks)
         for i in block_range:
@@ -828,7 +835,8 @@ def write_csv_learning(i_csv, matrix_pictures, cards_order, matrices_presentatio
         sound = true_sounds[classes_to_sounds_index[card_class]]
         matrix_index = classes_order.index(card_class)
         position = (matrix_pictures[matrix_index]).index(card)
-        item_list = [card, card_class, sound, position]
+        matrixA_coord = matrix_index_to_xy_coordinates(position)
+        item_list = [card, card_class, sound, matrixA_coord[0], matrixA_coord[1]]
         # add answers and card orders
         for block_number in range(number_blocks):
             matrix_presentation_order_index = classes_order.index(card_class)

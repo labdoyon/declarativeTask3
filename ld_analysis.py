@@ -3,11 +3,12 @@ import sys
 import glob
 
 from expyriment.misc import data_preprocessing
-from declarativeTask3.config import rawdata_folder
 from ld_utils import Day, extract_matrix_and_data, extract_events, recognition_extract_events, \
     extract_association_data,\
     write_csv, merge_csv, delete_temp_csv
 from ld_utils import learning_file_name
+rawFolder = os.path.dirname(__file__)
+rawdata_folder = os.path.join(rawFolder, 'rawdata')
 
 # ***INSTRUCTIONS***
 # Please input the location of the subject folder containing the data you wish to convert to .csv format
