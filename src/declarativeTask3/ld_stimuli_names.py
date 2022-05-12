@@ -117,7 +117,7 @@ ttl_instructions_text = {
     'english': """ PLEASE GET READY 
  EXPERIMENTER: PRESS 5 TO BEGIN """,
     'french': """ SOYEZ PRÊTS 
- CHERCHEUR: APPUYEZ SUR 5 POUR COMMENCER"""}
+CHERCHEUR: TOUCHE 5 POUR COMMENCER"""}
 ending_screen_text = {'english': ' THANK YOU ', 'french': ' MERCI '}
 
 # ld_example.py specific
