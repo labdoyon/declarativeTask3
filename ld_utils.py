@@ -23,8 +23,8 @@ true_sounds = ['standard', 'noise', 'A']
 test_recall_suffixes = \
             ['matrixA_order'] + \
             ['matrixA_CueCard' + str(cuecard_index) for cuecard_index in range(len(classPictures))] + \
-            ['CueCardResponseImage', 'CueCardResponseCorrect', 'CueCardReactionTime', 'matrixA_distanceToMatrixA',
-             'matrixA_position_responded', 'matrixA_ReactionTime', 'matrixA_ShowTime', 'matrixA_HideTime']
+            ['CueCardResponseImage', 'CueCardResponseCorrect', 'CueCardReactionTime', 'X_clicked', 'Y_clicked',
+             'matrixA_distanceToMatrixA', 'matrixA_ReactionTime', 'matrixA_ShowTime', 'matrixA_HideTime']
 first_column_titles = ['Item', 'Class', 'Sound', 'BlocksOfLearning',
                        'MA_X_coord', 'MA_Y_coord', 'MR_X_coord', 'MR_Y_coord']
 recognition_column_titles = [
@@ -197,16 +197,8 @@ def extract_matrix_and_data(i_folder, i_file, recognition=False, learning=False,
 
     if recognition:
         matrices = learning_matrices
-    if [len(matrix) for matrix in matrices] == [48] * len(classPictures):
-        matrix_size = (7, 7)
-    elif [len(matrix) for matrix in matrices] == [36] * len(classPictures):
-        matrix_size = (6, 6)
-    elif [len(matrix) for matrix in matrices] == [24] * len(classPictures):
-        matrix_size = (5, 5)
-    elif [len(matrix) for matrix in matrices] == [16] * len(classPictures):
-        matrix_size = (4, 4)
-    elif [len(matrix) for matrix in matrices] == [20] * len(classPictures):
-        matrix_size = (5, 4)
+    if [len(matrix) for matrix in matrices] == [24] * len(classPictures):
+        matrix_size = (6, 4)
     else:
         raise ValueError('Matrix dimensions cannot be identified')
 
@@ -261,7 +253,7 @@ def extract_events(events, matrix_size, classes_order, ttl_timestamp=None, mode=
             hide_card_absolute_time.append({})
             show_card_absolute_time.append({})
             # cuecard_presented_image.append([{}] * len(classPictures))
-            cuecard_presented_image.append([{},{},{}])
+            cuecard_presented_image.append([{}, {}, {}])
             cuecard_response_image.append({})
             cuecard_response_correct.append({})
             # ADD MORE DICTIONARIES FOR MORE VALUES/FIELDS
@@ -786,8 +778,9 @@ def write_csv(output_file, matrix_pictures,
                 ['Learning_Block' + str(i) + '_CueCardResponseImage',
                  'Learning_Block' + str(i) + '_CueCardResponseCorrect',
                  'Learning_Block' + str(i) + '_CueCardReactionTime',
+                 'Learning_Block' + str(i) + '_matrixA_X_clicked',
+                 'Learning_Block' + str(i) + '_matrixA_Y_clicked',
                  'Learning_Block' + str(i) + '_matrixA_distanceToMatrixA',
-                 'Learning_Block' + str(i) + '_matrixA_position_responded',
                  'Learning_Block' + str(i) + '_matrixA_positionResponse_ReactionTime',
                  'Learning_Block' + str(i) + '_matrixA_test_ShowTime',
                  'Learning_Block' + str(i) + '_matrixA_test_HideTime',
@@ -845,15 +838,24 @@ def write_csv_learning(i_csv, matrix_pictures, cards_order, matrices_presentatio
             except ValueError:
                 matrix_presentation_order = 'noPresentation'
             try:
+                if day.position_response_index_responded[block_number][card].isnumeric():
+                    XY_clicked_coord = list(
+                        matrix_index_to_xy_coordinates(int(day.position_response_index_responded[block_number][card])))
+                elif day.position_response_index_responded[block_number][card] == 'noResponse':
+                    XY_clicked_coord = ['noResponse'] * 2
+                elif day.position_response_index_responded[block_number][card] == 'wrongCueCard':
+                    XY_clicked_coord = ['wrongCueCard'] * 2
+                else:
+                    XY_clicked_coord = ['script_failed_extract_data'] * 2
                 item_list.extend(
                     [cards_order[block_number][card]] +
                     [day.cuecard_presented_image[block_number][cuecard_index][card]
                      for cuecard_index in range(len(classPictures))] +
                     [day.cuecard_response_image[block_number][card],
                      day.cuecard_response_correct[block_number][card],
-                     day.cuecards_reaction_time[block_number][card],
-                     cards_distance_to_correct_card[block_number][card],
-                     day.position_response_index_responded[block_number][card],
+                     day.cuecards_reaction_time[block_number][card]] +
+                    XY_clicked_coord +
+                    [cards_distance_to_correct_card[block_number][card],
                      position_response_reaction_time[block_number][card],
                      show_card_absolute_time[block_number][card],
                      hide_card_absolute_time[block_number][card]]
@@ -910,15 +912,24 @@ def write_csv_test(i_csv, matrix_pictures, classes_order, days, days_not_reached
                     item_list.insert(sound_title_index, 'soundNotFound')
                 try:
                     if not day.recognition:
+                        if day.position_response_index_responded[0][card].isnumeric():
+                            XY_clicked_coord = list(
+                                matrix_index_to_xy_coordinates(int(day.position_response_index_responded[0][card])))
+                        elif day.position_response_index_responded[0][card] == 'noResponse':
+                            XY_clicked_coord = ['noResponse'] * 2
+                        elif day.position_response_index_responded[0][card] == 'wrongCueCard':
+                            XY_clicked_coord = ['wrongCueCard'] * 2
+                        else:
+                            XY_clicked_coord = ['script_failed_extract_data'] * 2
                         item_list.extend(
                             [day.cards_order[0][card]] +
                             [day.cuecard_presented_image[0][cuecard_index][card]
                              for cuecard_index in range(len(classPictures))] +
                             [day.cuecard_response_image[0][card],
                              day.cuecard_response_correct[0][card],
-                             day.cuecards_reaction_time[0][card],
-                             day.cards_distance_to_correct_card[0][card],
-                             day.position_response_index_responded[0][card],
+                             day.cuecards_reaction_time[0][card]] +
+                            XY_clicked_coord +
+                            [day.cards_distance_to_correct_card[0][card],
                              day.position_response_reaction_time[0][card], day.show_card_absolute_time[0][card],
                              day.hide_card_absolute_time[0][card]])
                     else:
