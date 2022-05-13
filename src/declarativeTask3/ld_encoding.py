@@ -628,6 +628,11 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
     exp.clock.wait(ISI, process_control_events=True)
     exp.clock.wait(shortRest, process_control_events=True)
 
+    currentCorrectAnswers = correctAnswers_CorrectLocationChosen[:, nBlock]
+    if ignore_one_learned_matrices:
+        if index_matrix_not_to_present_again is not None:
+            currentCorrectAnswers[index_matrix_not_to_present_again] = correctAnswersMax
+
     instructions = stimuli.TextLine(
         rest_screen_text[language],
         position=(0, -windowSize[1] / float(2) + (2 * matrices[0].gap + cardSize[1]) / float(2)),
@@ -641,28 +646,27 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
         ['StartShortRest_block_{}_timing_{}'.format(nBlock, exp.clock.time)])  # Add sync info
     exp.clock.wait(restPeriod - pleaseGetReadyPeriod, process_control_events=True)
 
-    instructions = stimuli.TextLine(
-        please_get_ready[language],
-        position=(0, -windowSize[1] / float(2) + (2 * matrices[0].gap + cardSize[1]) / float(2)),
-        text_font=None, text_size=textSize, text_bold=None, text_italic=None,
-        text_underline=None, text_colour=textColor, background_colour=bgColor,
-        max_width=None)
-    instructionRectangle.plot(bs)
-    instructions.plot(bs)
-    bs.present(False, True)
+    if experimentName == 'Encoding':
+        if [score >= correctAnswersMax for score in currentCorrectAnswers].count(True) < min_number_learned_matrices:
+            instructions = stimuli.TextLine(
+                please_get_ready[language],
+                position=(0, -windowSize[1] / float(2) + (2 * matrices[0].gap + cardSize[1]) / float(2)),
+                text_font=None, text_size=textSize, text_bold=None, text_italic=None,
+                text_underline=None, text_colour=textColor, background_colour=bgColor,
+                max_width=None)
+            instructionRectangle.plot(bs)
+            instructions.plot(bs)
+            bs.present(False, True)
 
     exp.clock.wait(pleaseGetReadyPeriod, process_control_events=True)
 
-    instructionRectangle.plot(bs)
-    bs.present(False, True)
+    if experimentName == 'Encoding':
+        if [score >= correctAnswersMax for score in currentCorrectAnswers].count(True) < min_number_learned_matrices:
+            instructionRectangle.plot(bs)
+            bs.present(False, True)
 
     exp.add_experiment_info(
         ['EndShortRest_block_{}_timing_{}'.format(nBlock, exp.clock.time)])  # Add sync info
-
-    currentCorrectAnswers = correctAnswers_CorrectLocationChosen[:, nBlock]
-    if ignore_one_learned_matrices:
-        if index_matrix_not_to_present_again is not None:
-            currentCorrectAnswers[index_matrix_not_to_present_again] = correctAnswersMax
 
     nBlock += 1
 
