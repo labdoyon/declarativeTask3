@@ -15,6 +15,8 @@ classPictures = ['a', 'c']
 presentationCard = 2000
 feedback_time = 1000
 
+sound_title_index = 2
+number_learning_blocks_index = 3
 
 dont_suppress_card_double_checking = True
 true_sounds = ['standard', 'noise', 'A']
@@ -25,6 +27,13 @@ test_recall_suffixes = \
              'matrixA_position_responded', 'matrixA_ReactionTime', 'matrixA_ShowTime', 'matrixA_HideTime']
 first_column_titles = ['Item', 'Class', 'Sound', 'BlocksOfLearning',
                        'MA_X_coord', 'MA_Y_coord', 'MR_X_coord', 'MR_Y_coord']
+recognition_column_titles = [
+    'TestRecognition_matrices_Presentation_order', 'TestRecognition_matrixA_order', 'TestRecognition_matrixA_answer',
+    'TestRecognition_matrixA_ReactionTime', 'TestRecognition_matrixA_ShowTime', 'TestRecognition_matrixA_HideTime',
+
+    'TestRecognition_matrixR_order', 'TestRecognition_matrixR_answer', 'TestRecognition_matrixR_ReactionTime',
+    'TestRecognition_matrixR_ShowTime', 'TestRecognition_matrixR_HideTime', 'TestRecognition_matrixR_distanceToMatrixA'
+             ]
 
 
 class CorrectCards(object):
@@ -765,7 +774,7 @@ def write_csv(output_file, matrix_pictures,
         days = []
     i_csv = csv.writer(open(output_file, "w", newline=''))
 
-    first_row = first_column_titles
+    first_row = list(first_column_titles)
 
 
     if not days:
@@ -792,17 +801,7 @@ def write_csv(output_file, matrix_pictures,
         test_recall_titles = ['TestRecall_' + item for item in test_recall_suffixes]
         retest_recall_titles = ['RetestRecall_' + item for item in test_recall_suffixes]
         first_row.extend(
-            test_recall_titles + retest_recall_titles +
-            ['TestRecognition_matrices_Presentation_order',
-             'TestRecognition_matrixA_order',
-             'TestRecognition_matrixA_answer', 'TestRecognition_matrixA_ReactionTime',
-             'TestRecognition_matrixA_ShowTime', 'TestRecognition_matrixA_HideTime',
-
-             'TestRecognition_matrixR_order', 'TestRecognition_matrixR_answer',
-             'TestRecognition_matrixR_ReactionTime', 'TestRecognition_matrixR_ShowTime',
-             'TestRecognition_matrixR_HideTime',
-             'TestRecognition_matrixR_distanceToMatrixA'
-             ])
+            test_recall_titles + retest_recall_titles + recognition_column_titles)
 
     i_csv.writerow(first_row)
     if not days:
@@ -836,7 +835,7 @@ def write_csv_learning(i_csv, matrix_pictures, cards_order, matrices_presentatio
         matrix_index = classes_order.index(card_class)
         position = (matrix_pictures[matrix_index]).index(card)
         matrixA_coord = matrix_index_to_xy_coordinates(position)
-        item_list = [card, card_class, sound, matrixA_coord[0], matrixA_coord[1]]
+        item_list = [card, card_class, sound, number_blocks, matrixA_coord[0], matrixA_coord[1], None, None]
         # add answers and card orders
         for block_number in range(number_blocks):
             matrix_presentation_order_index = classes_order.index(card_class)
@@ -889,32 +888,28 @@ def write_csv_test(i_csv, matrix_pictures, classes_order, days, days_not_reached
         card_class = card[0]
         matrix_index = classes_order.index(card_class)
         position = (matrix_pictures[matrix_index]).index(card)
-        item_list = [card, card_class, position]
+        matrixA_coord = matrix_index_to_xy_coordinates(position)
+        item_list = [card, card_class, None, matrixA_coord[0], matrixA_coord[1], None, None]
         sound_not_added = True
         for i in range(len(days)):
             day = days[i]
             if days_not_reached[i]:
-                if not day.recognition and not day.association and not day.test_association:
-                    item_list.extend(['noFile']*len(test_recall_suffixes))
-                elif day.recognition and not day.association:
-                    item_list.extend(['noFile']*12)
+                if not day.recognition:
+                    item_list.extend(['noFile'] * len(test_recall_suffixes))
+                else:
+                    item_list.extend(['noFile'] * len(recognition_column_titles))
             else:
                 try:
                     for j in range(len(day.classes_order)):
                         if day.classes_order[j] == card_class:
                             sound = true_sounds[day.classes_to_sounds_index[card_class]]
-                    if sound_not_added:
-                        item_list.insert(2, sound)
-                        sound_not_added = False
+                            if sound_not_added:
+                                item_list.insert(sound_title_index, sound)
+                                sound_not_added = False
                 except:
-                    item_list.extend(['soundNotFound'])
+                    item_list.insert(sound_title_index, 'soundNotFound')
                 try:
-                    if day.association:
-                        item_list.extend([day.trial_number_responses[card],
-                                          day.trial_reaction_time[card],
-                                          day.trial_other_card1[card],
-                                          day.trial_other_card2[card]])
-                    if not day.recognition and not day.association and not day.test_association:
+                    if not day.recognition:
                         item_list.extend(
                             [day.cards_order[0][card]] +
                             [day.cuecard_presented_image[0][cuecard_index][card]
@@ -926,7 +921,7 @@ def write_csv_test(i_csv, matrix_pictures, classes_order, days, days_not_reached
                              day.position_response_index_responded[0][card],
                              day.position_response_reaction_time[0][card], day.show_card_absolute_time[0][card],
                              day.hide_card_absolute_time[0][card]])
-                    elif day.recognition and not day.association:
+                    else:
                         item_list.extend([day.matrix_presentation_order[classes_order.index(card_class)],
                                           day.cards_order[card],
                                           day.cards_answer[card],
@@ -938,21 +933,15 @@ def write_csv_test(i_csv, matrix_pictures, classes_order, days, days_not_reached
                                           day.show_recognition_card_absolute_time[card],
                                           day.hide_recognition_card_absolute_time[card],
                                           day.cards_distance_to_correct_card[card]])
-                    elif day.test_association:
-                        item_list.extend([day.trial_response_correct[card],
-                                          day.trial_response_card[card],
-                                          day.trial_reaction_time[card],
-                                          day.trial_other_card1[card],
-                                          day.trial_other_card2[card]])
+                        position = day.recognition_matrices[matrix_index].index(card)
+                        matrixR_coord = matrix_index_to_xy_coordinates(position)
+                        item_list[6] = matrixR_coord[0]
+                        item_list[7] = matrixR_coord[1]
                 except KeyError:
-                    if not day.recognition and not day.association and not day.test_association:
-                        item_list.extend(['script_failed_extract_data']*len(test_recall_suffixes))
-                    elif day.association:
-                        item_list.extend(['script_failed_extract_data'] * 4)
-                    elif day.test_association:
-                        item_list.extend(['script_failed_extract_data'] * 5)
+                    if not day.recognition:
+                        item_list.extend(['script_failed_extract_data'] * len(test_recall_suffixes))
                     else:  # Recognition
-                        item_list.extend(['script_failed_extract_data']*12)
+                        item_list.extend(['script_failed_extract_data'] * len(recognition_column_titles))
 
         i_csv.writerow(item_list)
 
@@ -1024,8 +1013,10 @@ def merge_csv(output_file, csv_list):
                         if i == 0:
                             rows[j] += row
                         else:
-                            rows[j] += row[4:]
-                            # see first_row
+                            rows[j] += row[len(first_column_titles):]
+                        # see first_row
+                        if row[number_learning_blocks_index] is not None:
+                            rows[j][number_learning_blocks_index] = row[number_learning_blocks_index]
             except IOError:
                 pass
         for j in range(len(rows)):

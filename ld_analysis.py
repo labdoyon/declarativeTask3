@@ -2,11 +2,8 @@ import os as os
 import sys
 import glob
 
-from expyriment.misc import data_preprocessing
 from ld_utils import Day, extract_matrix_and_data, extract_events, recognition_extract_events, \
-    extract_association_data,\
     write_csv, merge_csv, delete_temp_csv
-from ld_utils import learning_file_name
 rawFolder = os.path.dirname(__file__)
 rawdata_folder = os.path.join(rawFolder, 'rawdata')
 
