@@ -25,7 +25,7 @@ test_recall_suffixes = \
             ['matrixA_CueCard' + str(cuecard_index) for cuecard_index in range(len(classPictures))] + \
             ['CueCardResponseImage', 'CueCardResponseCorrect', 'CueCardReactionTime', 'X_clicked', 'Y_clicked',
              'matrixA_distanceToMatrixA', 'matrixA_ReactionTime', 'matrixA_ShowTime', 'matrixA_HideTime']
-first_column_titles = ['Item', 'Class', 'Sound', 'BlocksOfLearning',
+first_column_titles = ['Subject', 'Item', 'Class', 'Sound', 'BlocksOfLearning',
                        'MA_X_coord', 'MA_Y_coord', 'MR_X_coord', 'MR_Y_coord']
 recognition_column_titles = [
     'TestRecognition_matrices_Presentation_order', 'TestRecognition_matrixA_order', 'TestRecognition_matrixA_answer',
@@ -760,6 +760,7 @@ def write_csv(output_file, matrix_pictures,
               hide_card_learning_absolute_time=None,
               matrices_presentation_order=None,
               days_not_reached=[False]*3,
+              subject_id=None,
               day=None):
 
     if days is None:
@@ -804,6 +805,7 @@ def write_csv(output_file, matrix_pictures,
                            cards_learning_order, show_card_learning_absolute_time, hide_card_learning_absolute_time,
                            classes_order=classes_order, sounds_order=sounds_order,
                            classes_to_sounds_index=classes_to_sounds_index,
+                           subject_id=subject_id,
                            day=day, len_learning_titles=len_learning_titles)
     else:
         write_csv_test(i_csv, matrix_pictures, classes_order, days, days_not_reached)
@@ -813,7 +815,7 @@ def write_csv_learning(i_csv, matrix_pictures, cards_order, matrices_presentatio
                        cards_distance_to_correct_card, position_response_reaction_time,
                        show_card_absolute_time, hide_card_absolute_time, number_blocks,
                        cards_learning_order, show_card_learning_absolute_time, hide_card_learning_absolute_time,
-                       classes_order=None, sounds_order=None, classes_to_sounds_index=None, day=None,
+                       classes_order=None, sounds_order=None, subject_id=None, classes_to_sounds_index=None, day=None,
                        len_learning_titles=None):
     cards = sum(matrix_pictures, [])
     cards.sort()
@@ -828,7 +830,7 @@ def write_csv_learning(i_csv, matrix_pictures, cards_order, matrices_presentatio
         matrix_index = classes_order.index(card_class)
         position = (matrix_pictures[matrix_index]).index(card)
         matrixA_coord = matrix_index_to_xy_coordinates(position)
-        item_list = [card, card_class, sound, number_blocks, matrixA_coord[0], matrixA_coord[1], None, None]
+        item_list = [subject_id, card, card_class, sound, number_blocks, matrixA_coord[0], matrixA_coord[1], None, None]
         # add answers and card orders
         for block_number in range(number_blocks):
             matrix_presentation_order_index = classes_order.index(card_class)
@@ -891,7 +893,7 @@ def write_csv_test(i_csv, matrix_pictures, classes_order, days, days_not_reached
         matrix_index = classes_order.index(card_class)
         position = (matrix_pictures[matrix_index]).index(card)
         matrixA_coord = matrix_index_to_xy_coordinates(position)
-        item_list = [card, card_class, None, matrixA_coord[0], matrixA_coord[1], None, None]
+        item_list = [None, card, card_class, None, matrixA_coord[0], matrixA_coord[1], None, None]
         sound_not_added = True
         for i in range(len(days)):
             day = days[i]
@@ -1028,6 +1030,8 @@ def merge_csv(output_file, csv_list):
                         # see first_row
                         if row[number_learning_blocks_index] is not None:
                             rows[j][number_learning_blocks_index] = row[number_learning_blocks_index]
+                        if row[0] is not None:
+                            rows[j][0] = row[0]
             except IOError:
                 pass
         for j in range(len(rows)):

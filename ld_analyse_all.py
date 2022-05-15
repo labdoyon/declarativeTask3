@@ -2,8 +2,9 @@ import os
 import subprocess
 from xpd_to_tsv_config import data_path
 
-from declarativeTask3.config import python_interpreter
-
+from declarativeTask3.config import rawFolder, python_interpreter
+sourcedata_folder = os.path.join(rawFolder, 'sourcedata')
+rawdata_folder = os.path.join(rawFolder, 'rawdata')
 # activate_python_env_prefix = \
 #     r"""C:\Users\Dreamy\Documents\GitHub\declarativeTask3_2021-04-07\venv\Scripts\activate.bat""" + ' & '
 activate_python_env_prefix = ''
@@ -24,3 +25,24 @@ for folder in folders:
         print(command)
         print('='*30)
         subprocess.call(command)
+
+all_subjects_output = open(os.path.join(rawdata_folder, "all_subjects.csv"), "w", newline='')
+
+subjectCode = folders[0]
+with open(os.path.join(rawdata_folder, subjectCode.replace('sub-', '') + '_preprocessed_data.csv'), 'r') as subject_file:
+    for line in subject_file:
+        all_subjects_output.write(line)
+# now the rest:
+for subjectCode in folders[1:]:
+    try:
+        with open(os.path.join(rawdata_folder, subjectCode.replace('sub-', '') + '_preprocessed_data.csv'), 'r') as f:
+            index = 0
+            for line in f:
+                if not index:
+                    index = 1
+                else:
+                    all_subjects_output.write(line)
+    except FileNotFoundError:
+        pass
+
+all_subjects_output.close()

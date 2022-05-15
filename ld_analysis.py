@@ -105,6 +105,7 @@ for iFile in allFiles:
                   classes_order=classes_order,
                   sounds_order=sounds_order,
                   classes_to_sounds_index=classes_to_sounds_index,
+                  subject_id=subject_id,
                   day=day1_learning)
 
     if 'task-' + "Test-Encoding" in iFile:
