@@ -16,7 +16,7 @@ presentationCard = 2000
 feedback_time = 1000
 
 sound_title_index = 2
-number_learning_blocks_index = 3
+number_learning_blocks_index = 4
 
 dont_suppress_card_double_checking = True
 true_sounds = ['standard', 'noise', 'A']
