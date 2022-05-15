@@ -235,6 +235,7 @@ def extract_events(events, matrix_size, classes_order, ttl_timestamp=None, mode=
     cuecard_response_correct = []
     cuecards_reaction_time = []  # the reaction time of the subject when presented with this card in the test phase
     register_on = False
+    block_number = 0
     if mode == 'learning':
         show_card_learning_absolute_time = []
         hide_card_learning_absolute_time = []

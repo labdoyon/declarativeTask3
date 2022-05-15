@@ -141,28 +141,31 @@ for iFile in allFiles:
         day3_test_not_reached = False
 
     if 'task-' + "DayOne-Recognition" in iFile:
-        day3_recognition.events, day3_recognition.matrices, day3_recognition.matrix_size, \
-            day3_recognition.classes_order, day3_recognition.sounds_order, \
-            day3_recognition.classes_to_sounds_index, \
-            day3_recognition.recognition_matrices, matrices_a_or_rec, \
-            presentation_orders, day3_recognition.ttl_in_data,\
-            day3_recognition.matrix_presentation_order =\
-            extract_matrix_and_data(subject_folder, iFile, recognition=True)
+        try:
+            day3_recognition.events, day3_recognition.matrices, day3_recognition.matrix_size, \
+                day3_recognition.classes_order, day3_recognition.sounds_order, \
+                day3_recognition.classes_to_sounds_index, \
+                day3_recognition.recognition_matrices, matrices_a_or_rec, \
+                presentation_orders, day3_recognition.ttl_in_data,\
+                day3_recognition.matrix_presentation_order =\
+                extract_matrix_and_data(subject_folder, iFile, recognition=True)
 
-        day3_recognition.cards_order, day3_recognition.cards_answer, day3_recognition.cards_reaction_time, \
-            day3_recognition.show_card_absolute_time, day3_recognition.hide_card_absolute_time,\
-            day3_recognition.recognition_cards_order, day3_recognition.recognition_answer,\
-            day3_recognition.recognition_cards_reaction_time,\
-            day3_recognition.show_recognition_card_absolute_time,\
-            day3_recognition.hide_recognition_card_absolute_time,\
-            day3_recognition.cards_distance_to_correct_card\
-            = recognition_extract_events(day3_recognition.events, day3_recognition.matrices,
-                                         day3_recognition.recognition_matrices, matrices_a_or_rec,
-                                         presentation_orders,
-                                         day3_recognition.matrix_size,
-                                         ttl_timestamp=day3_recognition.ttl_in_data,
-                                         )
-        day3_recognition_not_reached = False
+            day3_recognition.cards_order, day3_recognition.cards_answer, day3_recognition.cards_reaction_time, \
+                day3_recognition.show_card_absolute_time, day3_recognition.hide_card_absolute_time,\
+                day3_recognition.recognition_cards_order, day3_recognition.recognition_answer,\
+                day3_recognition.recognition_cards_reaction_time,\
+                day3_recognition.show_recognition_card_absolute_time,\
+                day3_recognition.hide_recognition_card_absolute_time,\
+                day3_recognition.cards_distance_to_correct_card\
+                = recognition_extract_events(day3_recognition.events, day3_recognition.matrices,
+                                             day3_recognition.recognition_matrices, matrices_a_or_rec,
+                                             presentation_orders,
+                                             day3_recognition.matrix_size,
+                                             ttl_timestamp=day3_recognition.ttl_in_data,
+                                             )
+            day3_recognition_not_reached = False
+        except ValueError:  # experiment was interrupted and data is missing
+            pass
 
 # for iFile in associationFiles:
 #     header = data_preprocessing.read_datafile(subject_folder + iFile, only_header_and_variable_names=True)
