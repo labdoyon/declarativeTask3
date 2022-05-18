@@ -3,6 +3,7 @@ import ntpath
 from os.path import join
 import os
 import random
+from datetime import datetime
 
 import pandas as pd
 import pygame
@@ -456,3 +457,49 @@ def rename_output_files_to_BIDS(subject_name, session, experiment_name,
                                                    filename_extension='.xpe', run=i_string)
 
     return wouldbe_datafile, wouldbe_eventfile
+
+
+def export_encoding_results(
+        subjectName, session, experimentName, score_file_output_folder, number_blocks,
+        correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen):
+    # try:
+    i = 1
+    score_file = generate_bids_filename(subjectName, session, experimentName,
+                                        filename_suffix='_score', filename_extension='.txt', run=None)
+    while os.path.isfile(os.path.join(score_file_output_folder, score_file)):
+        i += 1
+        i_string = '0' * (2 - len(str(i))) + str(i)  # 0 padding, assuming 2-digits number
+        score_file = generate_bids_filename(subjectName, session, experimentName,
+                                            filename_suffix='_score', filename_extension='.txt', run=i_string)
+
+    with open(os.path.join(score_file_output_folder, score_file), 'w', newline='') as outfile:
+        now = datetime.now()
+        outfile.write("Time at the end of the task:\n")
+        outfile.write(now.strftime("AAAA MM DD HH:MM:SS\n"))
+        outfile.write(now.strftime("%Y %m %d %H:%M:%S\n"))
+        outfile.write("\n")
+
+        outfile.write(f"Experiment Name: {experimentName}\n")
+        outfile.write("\n")
+
+        if experimentName == 'ReTest-Encoding' or experimentName == 'Test-Encoding':
+            number_blocks = 1
+
+        for block_index in range(number_blocks):  # because there is a <number_blocks += 1> at the very end
+            try:
+                for category_index in range(len(classPictures)):
+                    outfile.write(f"Block: {block_index + 1}\n")
+                    outfile.write(
+                        f"category_{classPictures[category_index]}: "
+                        f"{str(int(correctAnswers_CorrectSoundChosen[category_index, block_index]))}"
+                        f" Correct-Sound-Identification_out-of: "
+                        f"{str(matrixSize[0]*matrixSize[1] - len(removeCards))}")
+                    outfile.write("\n")
+                    outfile.write(
+                        f"category_{classPictures[category_index]}: "
+                        f"{str(int(correctAnswers_CorrectLocationChosen[category_index, block_index]))}"
+                        f" Correct-Location-chosen_out-of: "
+                        f"{str(matrixSize[0]*matrixSize[1] - len(removeCards))}")
+                    outfile.write("\n" * 2)
+            except IndexError:
+                pass

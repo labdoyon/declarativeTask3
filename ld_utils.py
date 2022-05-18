@@ -14,6 +14,7 @@ removeCards = []
 classPictures = ['a', 'c']
 presentationCard = 2000
 feedback_time = 1000
+nbBlocksMax = 10
 
 sound_title_index = 2
 number_learning_blocks_index = 4
@@ -236,6 +237,8 @@ def extract_events(events, matrix_size, classes_order, ttl_timestamp=None, mode=
     cuecards_reaction_time = []  # the reaction time of the subject when presented with this card in the test phase
     register_on = False
     block_number = 0
+    correctAnswers_CorrectSoundChosen = np.zeros((len(classPictures), nbBlocksMax))
+    correctAnswers_CorrectLocationChosen = np.zeros((len(classPictures), nbBlocksMax))
     if mode == 'learning':
         show_card_learning_absolute_time = []
         hide_card_learning_absolute_time = []
@@ -344,6 +347,8 @@ def extract_events(events, matrix_size, classes_order, ttl_timestamp=None, mode=
                 cuecard_response_image[block_number][test_card] = response_card
                 if response_card == test_card:
                     cuecard_response_correct[block_number][test_card] = 1
+                    category_index = classPictures.index(trial_category)
+                    correctAnswers_CorrectSoundChosen[category_index, block_number] += 1
                 else:
                     cuecard_response_correct[block_number][test_card] = 0
                     if mode == 'learning':
@@ -366,6 +371,8 @@ def extract_events(events, matrix_size, classes_order, ttl_timestamp=None, mode=
                 - cuecard_response_time
             if response == test_card:
                 cards_distance_to_correct_card[block_number][test_card] = 0
+                category_index = classPictures.index(trial_category)
+                correctAnswers_CorrectLocationChosen[category_index, block_number] += 1
             else:
                 response_position = re.search('pos_([0-9]+)_', event).group(1)
                 cards_distance_to_correct_card[block_number][test_card] = distance.euclidean(
@@ -386,11 +393,13 @@ def extract_events(events, matrix_size, classes_order, ttl_timestamp=None, mode=
                show_card_absolute_time, hide_card_absolute_time, show_card_learning_absolute_time, \
                hide_card_learning_absolute_time, cards_learning_order, matrices_presentation_order, \
                cards_position, position_response_index_responded, cuecard_presented_image, cuecard_response_image, \
-               cuecard_response_correct, cuecards_reaction_time
+               cuecard_response_correct, cuecards_reaction_time, \
+               correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen
     else:
         return cards_order, cards_distance_to_correct_card, position_response_reaction_time, block_number + 1, \
             show_card_absolute_time, hide_card_absolute_time, cuecard_presented_image, cuecard_response_image, \
-            cuecard_response_correct, cuecards_reaction_time, position_response_index_responded, cards_position
+            cuecard_response_correct, cuecards_reaction_time, position_response_index_responded, cards_position, \
+            correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen
 
 
 def recognition_extract_events(events, matrices_pictures, recognition_matrices, matrices_a_or_rec, presentation_orders,

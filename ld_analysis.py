@@ -4,6 +4,8 @@ import glob
 
 from ld_utils import Day, extract_matrix_and_data, extract_events, recognition_extract_events, \
     write_csv, merge_csv, delete_temp_csv
+from src.declarativeTask3.ld_utils import export_encoding_results
+
 rawFolder = os.path.dirname(__file__)
 rawdata_folder = os.path.join(rawFolder, 'rawdata')
 
@@ -87,7 +89,8 @@ for iFile in allFiles:
                 day1_learning.cuecard_presented_image, \
                 day1_learning.cuecard_response_image, \
                 day1_learning.cuecard_response_correct,\
-                day1_learning.cuecards_reaction_time = \
+                day1_learning.cuecards_reaction_time,\
+                correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen = \
                 extract_events(events, matrix_size, classes_order, ttl_timestamp=ttl_timestamp, mode='learning')
         except UnboundLocalError:  # Missing data
             continue
@@ -108,6 +111,11 @@ for iFile in allFiles:
                   subject_id=subject_id,
                   day=day1_learning)
 
+        export_encoding_results(
+            subject_id, 'expePreNap', 'Encoding', rawdata_folder, day1_learning.number_blocks,
+            correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen)
+        del correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen
+
     if 'task-' + "Test-Encoding" in iFile:
         day2_test.events, day2_test.matrices, day2_test.matrix_size, \
             day2_test.classes_order, day2_test.sounds_order, day2_test.classes_to_sounds_index,\
@@ -119,10 +127,16 @@ for iFile in allFiles:
             day2_test.hide_card_absolute_time, \
             day2_test.cuecard_presented_image, day2_test.cuecard_response_image, \
             day2_test.cuecard_response_correct, day2_test.cuecards_reaction_time, \
-            day2_test.position_response_index_responded, day2_test.cards_position = \
+            day2_test.position_response_index_responded, day2_test.cards_position,\
+            correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen = \
             extract_events(day2_test.events, day2_test.matrix_size, classes_order,
                            ttl_timestamp=day2_test.ttl_in_data)
         day2_test_not_reached = False
+
+        export_encoding_results(
+            subject_id, 'expePreNap', 'Test-Encoding', rawdata_folder, day1_learning.number_blocks,
+            correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen)
+        del correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen
 
     if 'task-' + "ReTest-Encoding" in iFile:
         day3_test.events, day3_test.matrices, day3_test.matrix_size, \
@@ -135,10 +149,16 @@ for iFile in allFiles:
             day3_test.hide_card_absolute_time, \
             day3_test.cuecard_presented_image, day3_test.cuecard_response_image, \
             day3_test.cuecard_response_correct, day3_test.cuecards_reaction_time, \
-            day3_test.position_response_index_responded, day3_test.cards_position = \
+            day3_test.position_response_index_responded, day3_test.cards_position,\
+            correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen = \
             extract_events(day3_test.events, day3_test.matrix_size, day3_test.classes_order,
                            ttl_timestamp=day3_test.ttl_in_data)
         day3_test_not_reached = False
+
+        export_encoding_results(
+            subject_id, 'expePostNap', 'ReTest-Encoding', rawdata_folder, day1_learning.number_blocks,
+            correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen)
+        del correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen
 
     if 'task-' + "DayOne-Recognition" in iFile:
         try:
