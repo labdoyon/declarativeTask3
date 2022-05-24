@@ -18,6 +18,8 @@ nbBlocksMax = 10
 
 sound_title_index = 2
 number_learning_blocks_index = 4
+matrix_r_x_coord_column_index = 7
+matrix_r_y_coord_column_index = 8
 
 dont_suppress_card_double_checking = True
 true_sounds = ['standard', 'noise', 'A']
@@ -958,8 +960,8 @@ def write_csv_test(i_csv, matrix_pictures, classes_order, days, days_not_reached
                                           day.cards_distance_to_correct_card[card]])
                         position = day.recognition_matrices[matrix_index].index(card)
                         matrixR_coord = matrix_index_to_xy_coordinates(position)
-                        item_list[6] = matrixR_coord[0]
-                        item_list[7] = matrixR_coord[1]
+                        item_list[matrix_r_x_coord_column_index] = matrixR_coord[0]
+                        item_list[matrix_r_y_coord_column_index] = matrixR_coord[1]
                 except KeyError:
                     if not day.recognition:
                         item_list.extend(['script_failed_extract_data'] * len(test_recall_suffixes))
