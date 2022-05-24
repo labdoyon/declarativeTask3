@@ -3,7 +3,6 @@ import ntpath
 from os.path import join
 import os
 import random
-from datetime import datetime
 
 import pandas as pd
 import pygame
@@ -461,7 +460,8 @@ def rename_output_files_to_BIDS(subject_name, session, experiment_name,
 
 def export_encoding_results(
         subjectName, session, experimentName, score_file_output_folder, number_blocks,
-        correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen):
+        correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen,
+        time_and_date):
     # try:
     i = 1
     score_file = generate_bids_filename(subjectName, session, experimentName,
@@ -473,10 +473,8 @@ def export_encoding_results(
                                             filename_suffix='_score', filename_extension='.txt', run=i_string)
 
     with open(os.path.join(score_file_output_folder, score_file), 'w', newline='') as outfile:
-        now = datetime.now()
         outfile.write("Time at the end of the task:\n")
-        outfile.write(now.strftime("AAAA MM DD HH:MM:SS\n"))
-        outfile.write(now.strftime("%Y %m %d %H:%M:%S\n"))
+        outfile.write(time_and_date)
         outfile.write("\n")
 
         outfile.write(f"Experiment Name: {experimentName}\n")

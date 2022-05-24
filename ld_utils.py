@@ -69,6 +69,7 @@ class Day(object):
         self.hide_card_absolute_time = []
         self.show_card_absolute_time = []
         self.matrix_presentation_order = []
+        self.time_and_date = ''
 
         self.cards_order = {}
         if not association and not learning and not recognition and not test_association:
@@ -132,6 +133,8 @@ def extract_matrix_and_data(i_folder, i_file, recognition=False, learning=False,
             ttl_event = string
             break
     ttl_timestamp = int(re.search('timing_([0-9]+)', ttl_event).group(1))
+
+    time_and_date = header[2]['date']
 
     # if not learning and not recognition:
     #     for string in header2:
@@ -210,12 +213,14 @@ def extract_matrix_and_data(i_folder, i_file, recognition=False, learning=False,
     if recognition:
         return events, learning_matrices, matrix_size, \
                classes_order, sounds_order, classes_to_sounds_index, \
-               recognition_matrices, matrices_rec_or_a, presentation_orders, ttl_timestamp, matrix_presentation_order
+               recognition_matrices, matrices_rec_or_a, presentation_orders, ttl_timestamp, matrix_presentation_order, \
+               time_and_date
     elif learning:
         return events, matrices, matrix_size, \
-               classes_order, sounds_order, classes_to_sounds_index, ttl_timestamp
+               classes_order, sounds_order, classes_to_sounds_index, ttl_timestamp, time_and_date
     else:
-        return events, matrices, matrix_size, classes_order, sounds_order, classes_to_sounds_index, ttl_timestamp
+        return events, matrices, matrix_size, classes_order, sounds_order, classes_to_sounds_index, ttl_timestamp, \
+               time_and_date
 
 
 def extract_events(events, matrix_size, classes_order, ttl_timestamp=None, mode=None):

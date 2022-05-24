@@ -72,7 +72,8 @@ for iFile in allFiles:
 
     # for field in header:
     if 'task-' + "Encoding" in iFile:
-        events, matrices, matrix_size, classes_order, sounds_order, classes_to_sounds_index, ttl_timestamp = \
+        events, matrices, matrix_size, classes_order, sounds_order, classes_to_sounds_index, ttl_timestamp, \
+            day1_learning.time_and_date = \
             extract_matrix_and_data(subject_folder, iFile, learning=True)
 
         try:
@@ -113,13 +114,14 @@ for iFile in allFiles:
 
         export_encoding_results(
             subject_id, 'expePreNap', 'Encoding', rawdata_folder, day1_learning.number_blocks,
-            correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen)
+            correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen,
+            day1_learning.time_and_date)
         del correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen
 
     if 'task-' + "Test-Encoding" in iFile:
         day2_test.events, day2_test.matrices, day2_test.matrix_size, \
             day2_test.classes_order, day2_test.sounds_order, day2_test.classes_to_sounds_index,\
-            day2_test.ttl_in_data = \
+            day2_test.ttl_in_data, day2_test.time_and_date = \
             extract_matrix_and_data(subject_folder, iFile)
 
         day2_test.cards_order, day2_test.cards_distance_to_correct_card, day2_test.position_response_reaction_time,\
@@ -135,13 +137,14 @@ for iFile in allFiles:
 
         export_encoding_results(
             subject_id, 'expePreNap', 'Test-Encoding', rawdata_folder, day1_learning.number_blocks,
-            correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen)
+            correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen,
+            day2_test.time_and_date)
         del correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen
 
     if 'task-' + "ReTest-Encoding" in iFile:
         day3_test.events, day3_test.matrices, day3_test.matrix_size, \
             day3_test.classes_order, day3_test.sounds_order, day3_test.classes_to_sounds_index,\
-            day3_test.ttl_in_data = \
+            day3_test.ttl_in_data, day3_test.time_and_date = \
             extract_matrix_and_data(subject_folder, iFile)
 
         day3_test.cards_order, day3_test.cards_distance_to_correct_card, day3_test.position_response_reaction_time,\
@@ -157,7 +160,8 @@ for iFile in allFiles:
 
         export_encoding_results(
             subject_id, 'expePostNap', 'ReTest-Encoding', rawdata_folder, day1_learning.number_blocks,
-            correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen)
+            correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen,
+            day3_test.time_and_date)
         del correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen
 
     if 'task-' + "DayOne-Recognition" in iFile:
@@ -167,7 +171,7 @@ for iFile in allFiles:
                 day3_recognition.classes_to_sounds_index, \
                 day3_recognition.recognition_matrices, matrices_a_or_rec, \
                 presentation_orders, day3_recognition.ttl_in_data,\
-                day3_recognition.matrix_presentation_order =\
+                day3_recognition.matrix_presentation_order, day3_recognition.time_and_date =\
                 extract_matrix_and_data(subject_folder, iFile, recognition=True)
 
             day3_recognition.cards_order, day3_recognition.cards_answer, day3_recognition.cards_reaction_time, \
