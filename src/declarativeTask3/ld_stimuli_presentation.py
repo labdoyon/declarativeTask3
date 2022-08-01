@@ -139,13 +139,13 @@ def show_and_hide_text_box(background, instructions_box, onscreen_time, just_sho
 
 
 if language == 'french':
-    instructions_presentation_text = """ PRÉSENTATION: 
-     PRÉSENTATION DE TOUS LES STIMULI """
+    # instructions_presentation_text = """ PRÉSENTATION:
+    #  PRÉSENTATION DE TOUS LES STIMULI """
     instructions_present1category_text = """ PRÉSENTATION:
     PRÉSENTATION DE LA CATÉGORIE: """
 elif language == 'english':
-    instructions_presentation_text = """ PRESENTATION:
-     PRESENTING ALL STIMULI """
+    # instructions_presentation_text = """ PRESENTATION:
+    #  PRESENTING ALL STIMULI """
     instructions_present1category_text = """ PRESENTATION: 
      PRESENTING CATEGORY """
 
@@ -158,9 +158,9 @@ exp.add_experiment_info(['TTL_RECEIVED_timing_{}'.format(exp.clock.time)])
 ISI = design.randomize.rand_int(min_max_ISI[0], min_max_ISI[1])
 exp.clock.wait(ISI, process_control_events=True)
 
-exp.add_experiment_info('Presentation start')
-instructions_presentation = create_instructions_box(instructions_presentation_text, (0, -(2*cardSize[1])))
-show_and_hide_text_box(bs, instructions_presentation, shortRest)
+# exp.add_experiment_info('Presentation start')
+# instructions_presentation = create_instructions_box(instructions_presentation_text, (0, -(2*cardSize[1])))
+# show_and_hide_text_box(bs, instructions_presentation, shortRest)
 
 ISI = design.randomize.rand_int(min_max_ISI[0], min_max_ISI[1])
 exp.clock.wait(ISI, process_control_events=True)
