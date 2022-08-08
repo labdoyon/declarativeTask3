@@ -40,26 +40,56 @@ dotColor = (0, 0, 0)  # expyriment.misc.constants.C_BLACK
 bgColor = (150, 150, 150)
 textColor = (0, 0, 0)  # expyriment.misc.constants.C_BLACK
 
-
-textSize = 50
-matrixSize = (5, 4)
 cardSize = (90, 90)
 
 ''' Circles '''
 
 startSpace = cardSize[1] + 20
 
-nbBlocksMax = 3
+textSize = 50
 
-presentationCard = 2000
+# Dimensions of the matrix: very important setting
+matrixSize = (5, 4)
+# IF YOU CHANGE matrixSize, change matrixTemplate as well
+# if you reduce or augment the matrix size, be careful to ensure the exact same amount of images is present in
+# stimulis/class_<class_name>
+# if you have less images than the matrix requires, the program will crash
+# if you have more images than the matrix requires, please store the extra images somewhere else. Having extra images
+# means the program might select the images at random among its available image pool. Ensure there is an equal number of
+# images available (by matrix size) and matrix size
+nbBlocksMax = 3  # Maximum number of blocks for the learning part of the experiment
 
-responseTime = 5000
+# Threshold of the performance
+# verbose: Threshold of minimum correct responses from the participant so we consider they have <learned> the matrix,
+# and can proceed
+correctAnswersMax = 13
+
+# The setting below allows the experimenter to prevent a learned matrix (currentCorrectAnswers > correctAnswersMax)
+# from appearing again during the Encoding Phase. In other words, as soon as this matrix is learned, during the encoding
+# phase, it won't appear again, during the encoding phase, again. The Encoding phase will continue, using only unlearned
+# matrices during the Encoding phase
+ignore_one_learned_matrices = True
+min_number_learned_matrices = 2
+
+#  time in ms for the experiment
+presentationCard = 2000  # time during which an image is displayed both in the cue card or in its matrix position
+responseTime = 5000  # time the subject have to respond
 AssociationResponseTime = 10000
-SoundBeforeImageTime = 200
+SoundBeforeImageTime = 200  # sound is played a little bit before the image, 200ms offset recently
 shortRest = 2500
 thankYouRest = 5000
 restPeriod = 15000
 clicPeriod = 200
+
+# colors of the feedback frame on the image sound association test during learning
+feedback_frame_correct_color = constants.C_GREEN
+feedback_frame_wrong_color = constants.C_RED
+# duration of the feedback (in ms)
+feedback_time = 1000
+inter_feedback_delay_time = 1000
+# time for the subject to choose (in ms) the correct image during image sound association test. After this time, subject
+# has failed to respond within allowed time slot and a new trial will take place.
+choose_location_minimum_response_time = 5000
 
 min_max_ISI = [500, 1500]  # [min, max] inter_stimulus interval
 
@@ -133,6 +163,9 @@ arrow1 = (' XX                                                                  
           '                                                                                ',
           '                                                                                ')
 
+# If you change matrix size, pleasure ensure there is a corresponding matrixTemplate here that you want to use
+# (and removeCards ; usually empty if there is no perfect center card, usually just that said element if there is
+# a perfect center card, see matrixSize == (5, 5) and  matrixSize == (7, 7))
 if matrixSize == (4, 4):
     matrixTemplate = [0]*16
     removeCards = []
@@ -156,18 +189,11 @@ elif matrixSize == (7, 7):
                       0, 2, 1, 2, 0, 1, 2,
                       1, 2, 1, 0, 2, 0, 1,
                       0, 1, 0, 1, 2, 2, 0]
-elif matrixSize == (5, 4):
+elif matrixSize == (5, 4):  # CURRENTLY IN USE
     matrixTemplate = [0] * 20
     removeCards = []
 
 # correctAnswersMax = int(ceil((matrixSize[0]*matrixSize[0] - len(removeCards))*7./10))
-correctAnswersMax = 13
-numberBlocksLearning = 10
-numberBlocksSubUnit = 2
-numberLearningSubUnits = 5
-if numberBlocksSubUnit * numberLearningSubUnits != numberBlocksLearning:
-    raise ValueError("""the number of blocks of learning is not equal to
-    its number of subUnits * the number of blocks during a subUnit""")
 
 classPictures = ['a', 'b', 'c']
 classNames = {'english': {'a': 'animals', 'b': 'household', 'c': 'clothes'},
@@ -177,12 +203,6 @@ classNames = {'english': {'a': 'animals', 'b': 'household', 'c': 'clothes'},
 picturesFolderClass = {category: join(picturesFolder, 'class_'+category) for category in classPictures}
 # one category (as we'll later rename (refactor) classes) should always be a single lowercase letter
 numberClasses = len(classPictures)
-# The setting below allows the experimenter to prevent a learned matrix (currentCorrectAnswers > correctAnswersMax)
-# from appearing again during the Encoding Phase. In other words, as soon as this matrix is learned, during the encoding
-# phase, it won't appear again, during the encoding phase, again. The Encoding phase will continue, using only unlearned
-# matrices during the Encoding phase
-ignore_one_learned_matrices = True
-min_number_learned_matrices = 2
 
 listPictures = {}
 for classPicture in classPictures:
@@ -192,15 +212,10 @@ for classPicture in classPictures:
 for category in classPictures:
     listPictures[category] = [basename(p) for p in listPictures[category]]
 
-feedback_frame_correct_color = constants.C_GREEN
-feedback_frame_wrong_color = constants.C_RED
-feedback_time = 1000
-inter_feedback_delay_time = 1000
-choose_location_minimum_response_time = 5000
-
-debug = False
+debug = False  # for development purposes
 
 sessions = ['expePreNap', 'expePostNap']
+# task session association
 experiment_session = {
     'choose-sound-association': 'expePreNap',
     'choose-language':          'expePreNap',
