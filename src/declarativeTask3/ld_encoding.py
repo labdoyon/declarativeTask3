@@ -646,8 +646,9 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
         ['StartShortRest_block_{}_timing_{}'.format(nBlock, exp.clock.time)])  # Add sync info
     exp.clock.wait(restPeriod - pleaseGetReadyPeriod, process_control_events=True)
 
-    if experimentName == 'Encoding':
-        if [score >= correctAnswersMax for score in currentCorrectAnswers].count(True) < min_number_learned_matrices:
+    if experimentName == 'Encoding' and \
+            [score >= correctAnswersMax for score in currentCorrectAnswers].count(True) < min_number_learned_matrices \
+            and nBlock + 1 < nbBlocksMax:
             instructions = stimuli.TextLine(
                 please_get_ready[language],
                 position=(0, -windowSize[1] / float(2) + (2 * matrices[0].gap + cardSize[1]) / float(2)),
@@ -660,10 +661,11 @@ while [score >= correctAnswersMax for score in currentCorrectAnswers].count(True
 
     exp.clock.wait(pleaseGetReadyPeriod, process_control_events=True)
 
-    if experimentName == 'Encoding':
-        if [score >= correctAnswersMax for score in currentCorrectAnswers].count(True) < min_number_learned_matrices:
-            instructionRectangle.plot(bs)
-            bs.present(False, True)
+    if experimentName == 'Encoding' and \
+            [score >= correctAnswersMax for score in currentCorrectAnswers].count(True) < min_number_learned_matrices \
+            and nBlock + 1 < nbBlocksMax:
+        instructionRectangle.plot(bs)
+        bs.present(False, True)
 
     exp.add_experiment_info(
         ['EndShortRest_block_{}_timing_{}'.format(nBlock, exp.clock.time)])  # Add sync info
