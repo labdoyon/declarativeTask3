@@ -16,7 +16,7 @@ presentationCard = 2000
 feedback_time = 1000
 nbBlocksMax = 10
 
-sound_title_index = 2
+sound_title_index = 3
 number_learning_blocks_index = 4
 matrix_r_x_coord_column_index = 7
 matrix_r_y_coord_column_index = 8
