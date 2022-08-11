@@ -25,8 +25,11 @@ dont_suppress_card_double_checking = True
 true_sounds = ['standard', 'noise', 'A']
 test_recall_suffixes = \
             ['matrixA_order'] + \
-            ['matrixA_CueCard' + str(cuecard_index) for cuecard_index in range(len(classPictures))] + \
-            ['CueCardResponseImage', 'CueCardResponseCorrect', 'CueCardReactionTime', 'X_clicked', 'Y_clicked',
+            ['matrixA_CueCard' + str(cuecard_index) + suffix
+             for cuecard_index in range(len(classPictures))
+             for suffix in ['', '_X_coord', '_Y_coord']] + \
+            ['CueCardResponseImage', 'CueCardResponseCorrect', 'CueCardReactionTime',
+             'X_clicked', 'Y_clicked',
              'matrixA_distanceToMatrixA', 'matrixA_ReactionTime', 'matrixA_ShowTime', 'matrixA_HideTime']
 first_column_titles = ['Subject', 'Item', 'Class', 'Sound', 'BlocksOfLearning',
                        'MA_X_coord', 'MA_Y_coord', 'MR_X_coord', 'MR_Y_coord']
@@ -108,8 +111,8 @@ class Day(object):
 def matrix_index_to_xy_coordinates(matrix_index):
     # this function takes the matrix_index of an image (integer from 0 to 35 in case of a 6-by-6 matrix) and returns
     # the X and Y coord of the image in the matrix
-    # (X=1, Y=1) being the top left corner of the matrix, and (X=6, Y=6) being the bottom right corner of the matrix
-    # the matrix is populated in columns: as in, matrix_index 0 to 5 are positions (1,1), (1,2), (1,3) ... (1,6),
+    # (X=1, Y=1) being the top left corner of the matrix, and (X=6, Y=6) being the bottom right corner of the matrix.
+    # The matrix is populated in columns: as in, matrix_index 0 to 5 are positions (1,1), (1,2), (1,3) ... (1,6),
     # matrix_index 6 to 11 are positions (2,1), (2,2), (2,3) ... (2,6) in (X,Y) coordinates, and so on
     # we add +1 so X and Y are index from 1 and not from 0
     matrix_x_coord, matrix_y_coord = divmod(matrix_index, matrixSize[1])
@@ -239,6 +242,8 @@ def extract_events(events, matrix_size, classes_order, ttl_timestamp=None, mode=
     show_card_absolute_time = []
     hide_card_absolute_time = []
     cuecard_presented_image = []
+    cuecard_X_coord = []
+    cuecard_Y_coord = []
     cuecard_response_image = []
     cuecard_response_correct = []
     cuecards_reaction_time = []  # the reaction time of the subject when presented with this card in the test phase
@@ -263,8 +268,10 @@ def extract_events(events, matrix_size, classes_order, ttl_timestamp=None, mode=
             position_response_index_responded.append({})
             hide_card_absolute_time.append({})
             show_card_absolute_time.append({})
-            # cuecard_presented_image.append([{}] * len(classPictures))
-            cuecard_presented_image.append([{}, {}, {}])
+            cuecard_presented_image.append([{}] * len(classPictures))
+            cuecard_X_coord.append([{}] * len(classPictures))
+            cuecard_Y_coord.append([{}] * len(classPictures))
+            # cuecard_presented_image.append([{}, {}, {}])
             cuecard_response_image.append({})
             cuecard_response_correct.append({})
             # ADD MORE DICTIONARIES FOR MORE VALUES/FIELDS
@@ -331,6 +338,12 @@ def extract_events(events, matrix_size, classes_order, ttl_timestamp=None, mode=
                 show_card_absolute_time[block_number][test_card] = int(re.search('timing_([0-9]+)', event).group(1))
             cue_card_index = int(re.search('cueCardIndex_([0-9]+)', event).group(1))
             cuecard_presented_image[block_number][cue_card_index][test_card] = re.search('card_(.+?)_', event).group(1)
+            cuecard_position = re.search('pos_([0-9]+)_', event).group(1)
+            # cuecard_position = (matrix_pictures[matrix_index]).index(card)
+            [cuecard_X_coord[block_number][cue_card_index][test_card],
+             cuecard_Y_coord[block_number][cue_card_index][test_card]] = \
+                matrix_index_to_xy_coordinates(int(cuecard_position))
+
         elif 'HideCueCard' in event and register_on:
             hide_card_time = int(re.search('timing_([0-9]+)', event).group(1))
             # Only the latest of all cue cards shown is taken as the "show Cue Card absolute time"
@@ -399,12 +412,13 @@ def extract_events(events, matrix_size, classes_order, ttl_timestamp=None, mode=
         return cards_order, cards_distance_to_correct_card, position_response_reaction_time, block_number + 1, \
                show_card_absolute_time, hide_card_absolute_time, show_card_learning_absolute_time, \
                hide_card_learning_absolute_time, cards_learning_order, matrices_presentation_order, \
-               cards_position, position_response_index_responded, cuecard_presented_image, cuecard_response_image, \
-               cuecard_response_correct, cuecards_reaction_time, \
-               correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen
+               cards_position, position_response_index_responded, cuecard_presented_image, \
+               cuecard_X_coord, cuecard_Y_coord, cuecard_response_image,  cuecard_response_correct,\
+               cuecards_reaction_time, correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen
     else:
         return cards_order, cards_distance_to_correct_card, position_response_reaction_time, block_number + 1, \
-            show_card_absolute_time, hide_card_absolute_time, cuecard_presented_image, cuecard_response_image, \
+            show_card_absolute_time, hide_card_absolute_time, cuecard_presented_image, \
+               cuecard_X_coord, cuecard_Y_coord, cuecard_response_image, \
             cuecard_response_correct, cuecards_reaction_time, position_response_index_responded, cards_position, \
             correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen
 
@@ -867,9 +881,13 @@ def write_csv_learning(i_csv, matrix_pictures, cards_order, matrices_presentatio
                 else:
                     XY_clicked_coord = ['script_failed_extract_data'] * 2
                 item_list.extend(
-                    [cards_order[block_number][card]] +
-                    [day.cuecard_presented_image[block_number][cuecard_index][card]
-                     for cuecard_index in range(len(classPictures))] +
+                    [cards_order[block_number][card]])
+                for cuecard_index in range(len(classPictures)):
+                    item_list.extend(
+                        [day.cuecard_presented_image[block_number][cuecard_index][card],
+                         day.cuecard_X_coord[block_number][cuecard_index][card],
+                         day.cuecard_Y_coord[block_number][cuecard_index][card]])
+                item_list.extend(
                     [day.cuecard_response_image[block_number][card],
                      day.cuecard_response_correct[block_number][card],
                      day.cuecards_reaction_time[block_number][card]] +
@@ -941,9 +959,13 @@ def write_csv_test(i_csv, matrix_pictures, classes_order, days, days_not_reached
                         else:
                             XY_clicked_coord = ['script_failed_extract_data'] * 2
                         item_list.extend(
-                            [day.cards_order[0][card]] +
-                            [day.cuecard_presented_image[0][cuecard_index][card]
-                             for cuecard_index in range(len(classPictures))] +
+                            [day.cards_order[0][card]])
+                        for cuecard_index in range(len(classPictures)):
+                            item_list.extend(
+                                [day.cuecard_presented_image[0][cuecard_index][card],
+                                 day.cuecard_X_coord[0][cuecard_index][card],
+                                 day.cuecard_Y_coord[0][cuecard_index][card]])
+                        item_list.extend(
                             [day.cuecard_response_image[0][card],
                              day.cuecard_response_correct[0][card],
                              day.cuecards_reaction_time[0][card]] +

@@ -88,6 +88,8 @@ for iFile in allFiles:
                 day1_learning.cards_position, \
                 day1_learning.position_response_index_responded, \
                 day1_learning.cuecard_presented_image, \
+                day1_learning.cuecard_X_coord, \
+                day1_learning.cuecard_Y_coord, \
                 day1_learning.cuecard_response_image, \
                 day1_learning.cuecard_response_correct,\
                 day1_learning.cuecards_reaction_time,\
@@ -127,7 +129,8 @@ for iFile in allFiles:
         day2_test.cards_order, day2_test.cards_distance_to_correct_card, day2_test.position_response_reaction_time,\
             day2_test.number_blocks, day2_test.show_card_absolute_time, \
             day2_test.hide_card_absolute_time, \
-            day2_test.cuecard_presented_image, day2_test.cuecard_response_image, \
+            day2_test.cuecard_presented_image, day2_test.cuecard_X_coord, \
+            day2_test.cuecard_Y_coord, day2_test.cuecard_response_image, \
             day2_test.cuecard_response_correct, day2_test.cuecards_reaction_time, \
             day2_test.position_response_index_responded, day2_test.cards_position,\
             correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen = \
@@ -150,8 +153,8 @@ for iFile in allFiles:
         day3_test.cards_order, day3_test.cards_distance_to_correct_card, day3_test.position_response_reaction_time,\
             day3_test.number_blocks, day3_test.show_card_absolute_time, \
             day3_test.hide_card_absolute_time, \
-            day3_test.cuecard_presented_image, day3_test.cuecard_response_image, \
-            day3_test.cuecard_response_correct, day3_test.cuecards_reaction_time, \
+            day3_test.cuecard_presented_image, day3_test.cuecard_X_coord, day3_test.cuecard_Y_coord,\
+            day3_test.cuecard_response_image, day3_test.cuecard_response_correct, day3_test.cuecards_reaction_time, \
             day3_test.position_response_index_responded, day3_test.cards_position,\
             correctAnswers_CorrectSoundChosen, correctAnswers_CorrectLocationChosen = \
             extract_events(day3_test.events, day3_test.matrix_size, day3_test.classes_order,
