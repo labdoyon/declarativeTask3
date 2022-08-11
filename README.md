@@ -25,4 +25,6 @@ A subject must go through all phases for the experiment to be complete
 # Installation
 Preferably use python3.8.1, though the program should work with all python>3.6
 sys.version_info(major=3, minor=8, micro=1, releaselevel='final', serial=0)
-install requirements with pip: <pip install -r requirements.txt>
+and <3.8.13
+Install requirements with pip: <pip install -r requirements.txt>
+Install the task with <pip install -e .> (from the task main directory)
