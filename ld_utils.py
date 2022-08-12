@@ -884,9 +884,9 @@ def write_csv_learning(i_csv, matrix_pictures, cards_order, matrices_presentatio
                     [cards_order[block_number][card]])
                 for cuecard_index in range(len(classPictures)):
                     item_list.extend(
-                        [day.cuecard_presented_image[block_number][cuecard_index][card],
-                         day.cuecard_X_coord[block_number][cuecard_index][card],
-                         day.cuecard_Y_coord[block_number][cuecard_index][card]])
+                        [day.cuecard_presented_image[block_number][cuecard_index][card]])
+                         # day.cuecard_X_coord[block_number][cuecard_index][card],
+                         # day.cuecard_Y_coord[block_number][cuecard_index][card]])
                 item_list.extend(
                     [day.cuecard_response_image[block_number][card],
                      day.cuecard_response_correct[block_number][card],
