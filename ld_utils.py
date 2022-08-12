@@ -268,10 +268,9 @@ def extract_events(events, matrix_size, classes_order, ttl_timestamp=None, mode=
             position_response_index_responded.append({})
             hide_card_absolute_time.append({})
             show_card_absolute_time.append({})
-            cuecard_presented_image.append([{}] * len(classPictures))
-            cuecard_X_coord.append([{}] * len(classPictures))
-            cuecard_Y_coord.append([{}] * len(classPictures))
-            # cuecard_presented_image.append([{}, {}, {}])
+            cuecard_presented_image.append([{}, {}])
+            cuecard_X_coord.append([{}, {}])
+            cuecard_Y_coord.append([{}, {}])
             cuecard_response_image.append({})
             cuecard_response_correct.append({})
             # ADD MORE DICTIONARIES FOR MORE VALUES/FIELDS
@@ -337,13 +336,12 @@ def extract_events(events, matrix_size, classes_order, ttl_timestamp=None, mode=
             else:
                 show_card_absolute_time[block_number][test_card] = int(re.search('timing_([0-9]+)', event).group(1))
             cue_card_index = int(re.search('cueCardIndex_([0-9]+)', event).group(1))
-            cuecard_presented_image[block_number][cue_card_index][test_card] = re.search('card_(.+?)_', event).group(1)
-            cuecard_position = re.search('pos_([0-9]+)_', event).group(1)
+            cuecard_presented_image[block_number][cue_card_index][test_card] = str(re.search('card_(.+?)_', event).group(1))
+            cuecard_position = int(re.search('pos_([0-9]+)_', event).group(1))
             # cuecard_position = (matrix_pictures[matrix_index]).index(card)
             [cuecard_X_coord[block_number][cue_card_index][test_card],
              cuecard_Y_coord[block_number][cue_card_index][test_card]] = \
-                matrix_index_to_xy_coordinates(int(cuecard_position))
-
+                matrix_index_to_xy_coordinates(cuecard_position)
         elif 'HideCueCard' in event and register_on:
             hide_card_time = int(re.search('timing_([0-9]+)', event).group(1))
             # Only the latest of all cue cards shown is taken as the "show Cue Card absolute time"
